@@ -1,6 +1,6 @@
 <?php
-DEFINE('swift_mailer_DATE_PATTERN', '(Mon|Tue|Wed|Thu|Fri|Sat|Sun), [0-9]{2} (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) [0-9]{4} (2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9]) (\+|\-)([01][0-2])([0-5][0-9])');
-DEFINE('swift_mailer_MAILBOX_PATTERN', '(.*\<.*@.*\>|.*@.*,)');
+DEFINE('SWIFT_MAILER_DATE_PATTERN', '(Mon|Tue|Wed|Thu|Fri|Sat|Sun), [0-9]{2} (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) [0-9]{4} (2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9]) (\+|\-)([01][0-2])([0-5][0-9])');
+DEFINE('SWIFT_MAILER_MAILBOX_PATTERN', '(.*\<.*@.*\>|.*@.*,)');
 
 /**
  * Determines the header type based on the a header key and value.
@@ -17,27 +17,27 @@ DEFINE('swift_mailer_MAILBOX_PATTERN', '(.*\<.*@.*\>|.*@.*,)');
  */
 function swift_mailer_get_headertype($key, $value) {
 
-    if (swift_mailer_is_parametrized_header($key, $value)) {
-        return swift_mailer_HEADER_PARAMETERIZED;
+    if (swift_mailer_isparametrized_header($key, $value)) {
+        return SWIFT_MAILER_HEADER_PARAMETERIZED;
     }
 
-    if (swift_mailer_is_date_header($key, $value)) {
-        return swift_mailer_HEADER_DATE;
+    if (swift_mailer_isdate_header($key, $value)) {
+        return SWIFT_MAILER_HEADER_DATE;
     }
 
-    if (swift_mailer_is_mailbox_header($key, $value)) {
-        return swift_mailer_HEADER_MAILBOX;
+    if (swift_mailer_ismailbox_header($key, $value)) {
+        return SWIFT_MAILER_HEADER_MAILBOX;
     }
 
-    if (swift_mailer_is_id_header($key, $value)) {
-        return swift_mailer_HEADER_ID;
+    if (swift_mailer_isid_header($key, $value)) {
+        return SWIFT_MAILER_HEADER_ID;
     }
 
-    if (swift_mailer_is_path_header($key, $value)) {
-        return swift_mailer_HEADER_PATH;
+    if (swift_mailer_ispath_header($key, $value)) {
+        return SWIFT_MAILER_HEADER_PATH;
     }
 
-    return swift_mailer_HEADER_TEXT;
+    return SWIFT_MAILER_HEADER_TEXT;
     
 }
 
@@ -158,7 +158,7 @@ function swift_mailer_add_parametrized_header($message, $key, $value) {
  *   TRUE if the provided header is a date header, and otherwise FALSE.
  */
 function swift_mailer_is_date_header($key, $value) {
-    if (preg_match('/' . swift_mailer_DATE_PATTERN . '/', $value)) {
+    if (preg_match('/' . SWIFT_MAILER_DATE_PATTERN . '/', $value)) {
         return true;
     } else {
         return false;
@@ -206,7 +206,7 @@ function swift_mailer_add_date_header($message, $key, $value) {
  *   TRUE if the provided header is a mailbox header, and otherwise FALSE.
  */
 function swift_mailer_is_mailbox_header($key, $value) {
-    if (preg_match('/' . swift_mailer_MAILBOX_PATTERN . '/', $value)) {
+    if (preg_match('/' . SWIFT_MAILER_MAILBOX_PATTERN . '/', $value)) {
         return true;
     } else {
         return false;

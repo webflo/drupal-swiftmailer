@@ -48,34 +48,34 @@ class SWIFTMailSystem implements MailSystemInterface {
             // first have to find out what type of header it is, and then add it to
             // the message as the particular header type.
             foreach($message['headers'] as $header_key => $header_value) {
-                $header_type = swift_mailer_get_headertype($header_key, $header_value);
+                $header_type = SWIFT_MAILER_get_headertype($header_key, $header_value);
 
                 switch($header_type) {
-                    case swift_mailer_HEADER_ID:
-                        swift_mailer_add_id_header($m, $header_key, $header_value);
+                    case SWIFT_MAILER_HEADER_ID:
+                        SWIFT_MAILER_add_id_header($m, $header_key, $header_value);
                         break;
-                    case swift_mailer_HEADER_PATH:
-                        swift_mailer_add_path_header($m, $header_key, $header_value);
+                    case SWIFT_MAILER_HEADER_PATH:
+                        SWIFT_MAILER_add_path_header($m, $header_key, $header_value);
                         break;
-                    case swift_mailer_HEADER_MAILBOX:
-                        swift_mailer_add_mailbox_header($m, $header_key, $header_value);
+                    case SWIFT_MAILER_HEADER_MAILBOX:
+                        SWIFT_MAILER_add_mailbox_header($m, $header_key, $header_value);
                         break;
-                    case swift_mailer_HEADER_DATE:
-                        swift_mailer_add_date_header($m, $header_key, $header_value);
+                    case SWIFT_MAILER_HEADER_DATE:
+                        SWIFT_MAILER_add_date_header($m, $header_key, $header_value);
                         break;
-                    case swift_mailer_HEADER_PARAMETERIZED:
-                        swift_mailer_add_parametrized_header($m, $header_key, $header_value);
+                    case SWIFT_MAILER_HEADER_PARAMETERIZED:
+                        SWIFT_MAILER_add_parametrized_header($m, $header_key, $header_value);
                         break;
                     default:
-                        swift_mailer_add_text_header($m, $header_key, $header_value);
+                        SWIFT_MAILER_add_text_header($m, $header_key, $header_value);
                         break;
                 }
             }
             
             // Set basic message details.
-            swift_mailer_remove_header($m, 'From');
-            swift_mailer_remove_header($m, 'To');
-            swift_mailer_remove_header($m, 'Subject');
+            SWIFT_MAILER_remove_header($m, 'From');
+            SWIFT_MAILER_remove_header($m, 'To');
+            SWIFT_MAILER_remove_header($m, 'Subject');
             $m->setFrom($message['from']);
             $m->setTo($message['to']);
             $m->setSubject($message['subject']);
@@ -84,9 +84,9 @@ class SWIFTMailSystem implements MailSystemInterface {
             // then we also need to update the 'Content-Type' as Drupal by default
             // sets content type to 'text/plain'. Otherwise, just add the content
             // and go with the default Drupal header.
-            if (variable_get(swift_mailer_VARIABLE_FORMAT) == swift_mailer_FORMAT_HTML) {
+            if (variable_get(SWIFT_MAILER_VARIABLE_FORMAT) == SWIFT_MAILER_FORMAT_HTML) {
                 $m->getHeaders()->removeAll('Content-Type');
-                $m->setBody($message['body'], swift_mailer_FORMAT_HTML);
+                $m->setBody($message['body'], SWIFT_MAILER_FORMAT_HTML);
             } else {
                 $m->setBody($message['body']);
             }
