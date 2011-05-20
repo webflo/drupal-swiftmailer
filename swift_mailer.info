@@ -1,1 +1,7 @@
-name = Swift Mailer
+name = SWIFT mailer
+description = This module is an implementation of the SWIFT mailer.
+core = 7.x
+version = alpha
+package = E-mail
+files[] = swiftmailer.module
+files[] = swiftmailer.install
