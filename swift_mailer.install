@@ -25,3 +25,17 @@ function swift_mailer_disable() {
     variable_del('mail_system_old');
 
 }
+
+function swift_mailer_uninstall() {
+    variable_del(SWIFT_MAILER_VARIABLE_PATH);
+    variable_del(SWIFT_MAILER_VARIABLE_FORMAT);
+    variable_del(SWIFT_MAILER_VARIABLE_TRANSPORT);
+    variable_del(SWIFT_MAILER_VARIABLE_SMTP_HOST);
+    variable_del(SWIFT_MAILER_VARIABLE_SMTP_PORT);
+    variable_del(SWIFT_MAILER_VARIABLE_SMTP_ENCRYPTION);
+    variable_del(SWIFT_MAILER_VARIABLE_SMTP_USERNAME);
+    variable_del(SWIFT_MAILER_VARIABLE_SMTP_PASSWORD);
+    variable_del(SWIFT_MAILER_VARIABLE_SENDMAIL_PATH);
+    variable_del(SWIFT_MAILER_VARIABLE_SENDMAIL_MODE);
+    variable_del(SWIFT_MAILER_VARIABLE_CHARACTER_SET);
+}
