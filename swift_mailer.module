@@ -58,14 +58,6 @@ DEFINE('SWIFT_MAILER_VARIABLE_CHARACTER_SET_DEFAULT', 'UTF-8');
  */
 function swift_mailer_menu() {
     
-  $items['swift_mailer/test'] = array(
-    'type'              => MENU_CALLBACK,
-    'title'             => 'Swift Mailer Test Page',
-    'page callback'     => 'swift_mailer_page_swift_mailer_test',
-    'file'              => 'includes/pages/swift_mailer_page_swift_mailer_test.inc',
-    'access arguments'  => array('access content'),
-  );
-
   $items['admin/config/swift_mailer'] = array(
     'type'              => MENU_NORMAL_ITEM,
     'title'             => 'Swift Mailer',

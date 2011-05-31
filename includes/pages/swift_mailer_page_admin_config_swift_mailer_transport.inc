@@ -64,7 +64,7 @@ function swift_mailer_page_admin_config_swift_mailer_form_transport($form, &$for
         $form['transport']['submit'] = array(
             '#type' => 'submit',
             '#id' => 'transport_configuration_submit',
-            '#value' => 'Configure',
+            '#value' => t('Configure'),
             '#submit' => array('swift_mailer_page_admin_config_swift_mailer_form_default_submit_configure'),
             '#limit_validation_errors' => array(array('transport', 'type')),
             );
@@ -96,14 +96,14 @@ function swift_mailer_page_admin_config_swift_mailer_form_transport($form, &$for
             '#title' => t('SMTP server'),
             '#description' => t('The hostname or IP address at which the SMTP server can be reached.'),
             '#required' => true,
-            '#default_value' => variable_get(SWIFT_MAILER_VARIABLE_SMTP_HOST, SWIFT_MAILER_VARIABLE_SMTP_HOST_DEFAULT),
+            '#default_value' => check_plain(variable_get(SWIFT_MAILER_VARIABLE_SMTP_HOST, SWIFT_MAILER_VARIABLE_SMTP_HOST_DEFAULT)),
             );
 
         $form['transport']['configuration'][SWIFT_MAILER_TRANSPORT_SMTP]['port'] = array(
             '#type' => 'textfield',
             '#title' => t('Port'),
             '#description' => t('The port at which the SMTP server can be reached (defaults to 25)'),
-            '#default_value' => variable_get(SWIFT_MAILER_VARIABLE_SMTP_PORT, SWIFT_MAILER_VARIABLE_SMTP_PORT_DEFAULT),
+            '#default_value' => check_plain(variable_get(SWIFT_MAILER_VARIABLE_SMTP_PORT, SWIFT_MAILER_VARIABLE_SMTP_PORT_DEFAULT)),
             '#size' => 10,
             );
 
@@ -119,14 +119,14 @@ function swift_mailer_page_admin_config_swift_mailer_form_transport($form, &$for
             '#type' => 'textfield',
             '#title' => t('Username'),
             '#description' => t('A username required by the SMTP server (leave blank if not required)'),
-            '#default_value' => variable_get(SWIFT_MAILER_VARIABLE_SMTP_USERNAME, SWIFT_MAILER_VARIABLE_SMTP_USERNAME_DEFAULT),
+            '#default_value' => check_plain(variable_get(SWIFT_MAILER_VARIABLE_SMTP_USERNAME, SWIFT_MAILER_VARIABLE_SMTP_USERNAME_DEFAULT)),
             );
 
         $form['transport']['configuration'][SWIFT_MAILER_TRANSPORT_SMTP]['password'] = array(
             '#type' => 'textfield',
             '#title' => t('Password'),
             '#description' => t('A password required by the SMTP server (leave blank if not required)'),
-            '#default_value' => variable_get(SWIFT_MAILER_VARIABLE_SMTP_PASSWORD, SWIFT_MAILER_VARIABLE_SMTP_PASSWORD_DEFAULT),
+            '#default_value' => check_plain(variable_get(SWIFT_MAILER_VARIABLE_SMTP_PASSWORD, SWIFT_MAILER_VARIABLE_SMTP_PASSWORD_DEFAULT)),
             );
 
         $form['transport']['configuration'][SWIFT_MAILER_TRANSPORT_SENDMAIL] = array(
@@ -152,7 +152,7 @@ function swift_mailer_page_admin_config_swift_mailer_form_transport($form, &$for
             '#type' => 'textfield',
             '#title' => t('MTA path'),
             '#description' => t('The absolute path to the locally installed MTA.'),
-            '#default_value' => variable_get(SWIFT_MAILER_VARIABLE_SENDMAIL_PATH, SWIFT_MAILER_VARIABLE_SENDMAIL_PATH_DEFAULT),
+            '#default_value' => check_plain(variable_get(SWIFT_MAILER_VARIABLE_SENDMAIL_PATH, SWIFT_MAILER_VARIABLE_SENDMAIL_PATH_DEFAULT)),
             );
 
         $form['transport']['configuration'][SWIFT_MAILER_TRANSPORT_SENDMAIL]['mode'] = array(
@@ -183,7 +183,7 @@ function swift_mailer_page_admin_config_swift_mailer_form_transport($form, &$for
 
         $form['submit'] = array(
             '#type' => 'submit',
-            '#value' => 'Save',
+            '#value' => t('Save'),
             );
 
     } else {

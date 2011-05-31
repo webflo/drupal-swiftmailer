@@ -10,9 +10,6 @@ function swift_mailer_page_admin_config_swift_mailer_messages() {
  */
 function swift_mailer_page_admin_config_swift_mailer_form_messages($form, &$form_state) {
 
-    drupal_add_css(drupal_get_path('module', 'swift_mailer') . '/css/swift_mailer.css',
-            array('type' => 'file', 'preprocess' => false));
-
     $form['#tree'] = true;
 
     $form['description'] = array(
@@ -50,7 +47,7 @@ function swift_mailer_page_admin_config_swift_mailer_form_messages($form, &$form
 
         $form['submit'] = array(
             '#type' => 'submit',
-            '#value' => 'Save',
+            '#value' => t('Save'),
             );
 
     } else {

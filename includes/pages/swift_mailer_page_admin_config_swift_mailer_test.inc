@@ -24,12 +24,12 @@ function swift_mailer_page_admin_config_swift_mailer_form_test($form, &$form_sta
         $form['test']['recipient'] = array(
             '#title' => t('E-mail'),
             '#type' => 'textfield',
-            '#default_value' => $user->mail,
+            '#default_value' => check_plain($user->mail),
             );
 
         $form['submit'] = array(
             '#type' => 'submit',
-            '#value' => 'Send',
+            '#value' => t('Send'),
             );
 
     } else {

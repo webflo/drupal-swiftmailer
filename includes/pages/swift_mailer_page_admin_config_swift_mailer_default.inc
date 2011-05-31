@@ -36,22 +36,22 @@ function swift_mailer_page_admin_config_swift_mailer_form_default($form, &$form_
         $class = 'error';
 
         $form['library']['message'] = array(
-            '#markup' => '<p>The Swift Mailer library could not be found in the path provided below.</p>',
+            '#markup' => t('<p>The Swift Mailer library could not be found in the path provided below.</p>'),
             );
     }
 
     $form['library']['path'] = array(
         '#type' => 'textfield',
         '#title' => t('Library path'),
-        '#description' => 'The path to the Swift Mailer directory (e.g. sites/all/libraries/swift_mailer)',
+        '#description' => t('The path to the Swift Mailer directory (e.g. sites/all/libraries/swift_mailer)'),
         '#required' => true,
-        '#default_value' => variable_get(SWIFT_MAILER_VARIABLE_PATH, SWIFT_MAILER_VARIABLE_PATH_DEFAULT),
+        '#default_value' => check_plain(variable_get(SWIFT_MAILER_VARIABLE_PATH, SWIFT_MAILER_VARIABLE_PATH_DEFAULT)),
         '#attributes' => array('class' => array($class)),
         );
 
     $form['submit'] = array(
         '#type' => 'submit',
-        '#value' => 'Save',
+        '#value' => t('Save'),
         );
     
     return $form;
