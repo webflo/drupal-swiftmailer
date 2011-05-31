@@ -3,12 +3,13 @@ function swift_mailer_page_admin_config_swift_mailer_default() {
     return drupal_get_form('swift_mailer_page_admin_config_swift_mailer_form_default');
 }
 
+/**
+ * Form builder; the default form.
+ *
+ * @see swift_mailer_page_admin_config_swift_mailer_form_default_validate()
+ * @see swift_mailer_page_admin_config_swift_mailer_form_default_submit()
+ */
 function swift_mailer_page_admin_config_swift_mailer_form_default($form, &$form_state) {
-
-    drupal_add_css(drupal_get_path('module', 'swift_mailer') . '/css/swift_mailer.css',
-            array('type' => 'file', 'preprocess' => false));
-    drupal_add_js('jQuery(document).ready(function() { jQuery("#transport_configuration_submit").hide(); })',
-            array('type' => 'inline', 'scope' => 'header'));
 
     $form['#tree'] = true;
 
@@ -56,6 +57,9 @@ function swift_mailer_page_admin_config_swift_mailer_form_default($form, &$form_
     return $form;
 }
 
+/**
+ * Form validation handler for swift_mailer_page_admin_config_swift_mailer_form_default().
+ */
 function swift_mailer_page_admin_config_swift_mailer_form_default_validate($form, &$form_state) {
 
     if (!swift_mailer_validate_library($form_state['values']['library']['path'])) {
@@ -64,6 +68,9 @@ function swift_mailer_page_admin_config_swift_mailer_form_default_validate($form
 
 }
 
+/**
+ * Form submission handler for swift_mailer_page_admin_config_swift_mailer_form_default().
+ */
 function swift_mailer_page_admin_config_swift_mailer_form_default_submit($form, &$form_state) {
 
     if (isset($form_state['values']['library']['path'])) {
@@ -71,5 +78,3 @@ function swift_mailer_page_admin_config_swift_mailer_form_default_submit($form, 
     }
 
 }
-
-?>

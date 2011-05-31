@@ -138,4 +138,3 @@ function swift_mailer_mail($key, &$message, $params) {
             break;
     }
 }
-?>

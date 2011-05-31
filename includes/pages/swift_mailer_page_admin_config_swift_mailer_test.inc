@@ -53,5 +53,3 @@ function swift_mailer_page_admin_config_swift_mailer_form_test_submit($form, &$f
     }
 
 }
-
-?>

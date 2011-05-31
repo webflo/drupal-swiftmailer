@@ -3,15 +3,26 @@ function swift_mailer_page_admin_config_swift_mailer_transport() {
     return drupal_get_form('swift_mailer_page_admin_config_swift_mailer_form_transport');
 }
 
+/**
+ * Form builder; the transport form.
+ *
+ * @see swift_mailer_page_admin_config_swift_mailer_form_default_ajax()
+ * @see swift_mailer_page_admin_config_swift_mailer_form_default_submit_configure()
+ * @see swift_mailer_page_admin_config_swift_mailer_form_default_submit()
+ */
 function swift_mailer_page_admin_config_swift_mailer_form_transport($form, &$form_state) {
 
-    drupal_add_css(drupal_get_path('module', 'swift_mailer') . '/css/swift_mailer.css',
-            array('type' => 'file', 'preprocess' => false));
+    // The configuration options for the selected transport type should be
+    // displayed using AJAX if JavaScript is enabled. However, we need to
+    // disable the 'Configure' button if JavaScript is enabled as the button
+    // only is needed when JavaScript is disabled.
     drupal_add_js('jQuery(document).ready(function() { jQuery("#transport_configuration_submit").hide(); })',
             array('type' => 'inline', 'scope' => 'header'));
 
+    // Submitted form values should be nested.
     $form['#tree'] = true;
 
+    // Display a page description.
     $form['description'] = array(
         '#markup' => t('<p>The Swift Mailer module replaces the default mail system that is shipped
                         with Drupal and installs itself as the primary mail system. This allows
@@ -20,6 +31,8 @@ function swift_mailer_page_admin_config_swift_mailer_form_transport($form, &$for
                         about how this module works, please have a look at the !documentation.</p>'),
         );
 
+    // Validate that the Swift Mailer library is available. Configuration options
+    // should only be displayed if the library is available.
     if (swift_mailer_validate_library(variable_get(SWIFT_MAILER_VARIABLE_PATH, SWIFT_MAILER_VARIABLE_PATH_DEFAULT))) {
 
         $form['transport'] = array(
@@ -186,10 +199,23 @@ function swift_mailer_page_admin_config_swift_mailer_form_transport($form, &$for
     return $form;
 }
 
+/**
+ * Partial form submission handler for swift_mailer_page_admin_config_swift_mailer_form_transport().
+ */
 function swift_mailer_page_admin_config_swift_mailer_form_default_ajax($form, &$form_state) {
   return $form['transport']['configuration'];
 }
 
+/**
+ * Partial form submission handler for swift_mailer_page_admin_config_swift_mailer_form_transport().
+ */
+function swift_mailer_page_admin_config_swift_mailer_form_default_submit_configure($form, &$form_state) {
+    $form_state['rebuild'] = true;
+}
+
+/**
+ * Form submission handler for swift_mailer_page_admin_config_swift_mailer_form_transport().
+ */
 function swift_mailer_page_admin_config_swift_mailer_form_default_submit($form, &$form_state) {
 
     if (isset($form_state['values']['transport']['type'])) {
@@ -216,9 +242,3 @@ function swift_mailer_page_admin_config_swift_mailer_form_default_submit($form, 
     }
 
 }
-
-function swift_mailer_page_admin_config_swift_mailer_form_default_submit_configure($form, &$form_state) {
-    $form_state['rebuild'] = true;
-}
-
-?>

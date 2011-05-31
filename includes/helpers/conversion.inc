@@ -377,4 +377,3 @@ function swift_mailer_remove_header($message, $key) {
     $headers->removeAll($key);
 
 }
-?>

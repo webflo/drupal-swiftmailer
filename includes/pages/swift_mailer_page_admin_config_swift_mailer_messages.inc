@@ -3,6 +3,11 @@ function swift_mailer_page_admin_config_swift_mailer_messages() {
     return drupal_get_form('swift_mailer_page_admin_config_swift_mailer_form_messages');
 }
 
+/**
+ * Form builder; the messages form.
+ *
+ * @see swift_mailer_page_admin_config_swift_mailer_form_messages_submit()
+ */
 function swift_mailer_page_admin_config_swift_mailer_form_messages($form, &$form_state) {
 
     drupal_add_css(drupal_get_path('module', 'swift_mailer') . '/css/swift_mailer.css',
@@ -72,5 +77,3 @@ function swift_mailer_page_admin_config_swift_mailer_form_messages_submit($form,
     }
 
 }
-
-?>

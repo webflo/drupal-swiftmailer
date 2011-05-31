@@ -212,4 +212,3 @@ class SWIFTMailSystem implements MailSystemInterface {
         }
     }
 }
-?>

@@ -63,6 +63,12 @@ function swift_mailer_get_encryption_options() {
 
 }
 
+/**
+ * Returns available character sets.
+ *
+ * @return  array
+ *   A list of available character sets.
+ */
 function swift_mailer_get_character_set_options() {
 
     $character_set_options = array(
@@ -89,6 +95,14 @@ function swift_mailer_get_character_set_options() {
     return $character_set_options;
 }
 
+/**
+ * Returns a list of e-mail headers which could be provided by Drupal, but which
+ * should be ignored in order to make Swift Mailer work as smooth as possible.
+ *
+ * @return array
+ *   A list of e-mail headers which could be provided by Drupal, but which should
+ *   be ignored.
+ */
 function swift_mailer_get_supressable_headers() {
 
     return array(
@@ -96,4 +110,3 @@ function swift_mailer_get_supressable_headers() {
     );
 
 }
-?>
