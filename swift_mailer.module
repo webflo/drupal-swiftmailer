@@ -3,13 +3,10 @@
 //Include required files.
 module_load_include('inc', 'swift_mailer', '/includes/classes/SWIFTMailSystem');
 module_load_include('inc', 'swift_mailer', '/includes/helpers/conversion');
+module_load_include('inc', 'swift_mailer', '/includes/helpers/utilities');
 
 //Define permissions
 DEFINE('SWIFT_MAILER_ADMINISTER', 'swift_mailer_administer');
-
-//Define system variables.
-DEFINE('SWIFT_MAILER_VARIABLE_FORMAT', 'swift_mailer_format');
-DEFINE('SWIFT_MAILER_VARIABLE_TRANSPORT', 'swift_mailer_transport');
 
 //Define message formats.
 DEFINE('SWIFT_MAILER_FORMAT_PLAIN', 'text/plain');
@@ -20,12 +17,39 @@ DEFINE('SWIFT_MAILER_TRANSPORT_SMTP', 'smtp');
 DEFINE('SWIFT_MAILER_TRANSPORT_SENDMAIL', 'sendmail');
 DEFINE('SWIFT_MAILER_TRANSPORT_NATIVE', 'native');
 
+//Define header types.
 DEFINE('SWIFT_MAILER_HEADER_TEXT', 'text');
 DEFINE('SWIFT_MAILER_HEADER_PARAMETERIZED', 'parameterized');
 DEFINE('SWIFT_MAILER_HEADER_MAILBOX', 'mailbox');
 DEFINE('SWIFT_MAILER_HEADER_DATE', 'date');
 DEFINE('SWIFT_MAILER_HEADER_ID', 'ID');
 DEFINE('SWIFT_MAILER_HEADER_PATH', 'path');
+
+//Define system variables.
+DEFINE('SWIFT_MAILER_VARIABLE_PATH', 'swift_mailer_path');
+DEFINE('SWIFT_MAILER_VARIABLE_FORMAT', 'swift_mailer_format');
+DEFINE('SWIFT_MAILER_VARIABLE_TRANSPORT', 'swift_mailer_transport');
+DEFINE('SWIFT_MAILER_VARIABLE_SMTP_HOST', 'swift_mailer_smtp_host');
+DEFINE('SWIFT_MAILER_VARIABLE_SMTP_PORT', 'swift_mailer_smtp_port');
+DEFINE('SWIFT_MAILER_VARIABLE_SMTP_ENCRYPTION', 'swift_mailer_smtp_encryption');
+DEFINE('SWIFT_MAILER_VARIABLE_SMTP_USERNAME', 'swift_mailer_smtp_username');
+DEFINE('SWIFT_MAILER_VARIABLE_SMTP_PASSWORD', 'swift_mailer_smtp_password');
+DEFINE('SWIFT_MAILER_VARIABLE_SENDMAIL_PATH', 'swift_mailer_sendmail_path');
+DEFINE('SWIFT_MAILER_VARIABLE_SENDMAIL_MODE', 'swift_mailer_sendmail_mode');
+DEFINE('SWIFT_MAILER_VARIABLE_CHARACTER_SET', 'swift_mailer_character_set');
+
+//Define system variables defaults.
+DEFINE('SWIFT_MAILER_VARIABLE_PATH_DEFAULT', '');
+DEFINE('SWIFT_MAILER_VARIABLE_FORMAT_DEFAULT', 'text/plain');
+DEFINE('SWIFT_MAILER_VARIABLE_TRANSPORT_DEFAULT', 'native');
+DEFINE('SWIFT_MAILER_VARIABLE_SMTP_HOST_DEFAULT', '');
+DEFINE('SWIFT_MAILER_VARIABLE_SMTP_PORT_DEFAULT', '25');
+DEFINE('SWIFT_MAILER_VARIABLE_SMTP_ENCRYPTION_DEFAULT', '');
+DEFINE('SWIFT_MAILER_VARIABLE_SMTP_USERNAME_DEFAULT', '');
+DEFINE('SWIFT_MAILER_VARIABLE_SMTP_PASSWORD_DEFAULT', '');
+DEFINE('SWIFT_MAILER_VARIABLE_SENDMAIL_PATH_DEFAULT', '/usr/bin/sendmail');
+DEFINE('SWIFT_MAILER_VARIABLE_SENDMAIL_MODE_DEFAULT', 'bs');
+DEFINE('SWIFT_MAILER_VARIABLE_CHARACTER_SET_DEFAULT', 'UTF-8');
 
 /**
  *
@@ -45,10 +69,51 @@ function swift_mailer_menu() {
   $items['admin/config/swift_mailer'] = array(
     'type'              => MENU_NORMAL_ITEM,
     'title'             => 'Swift Mailer',
-    'description'       => 'Configure how Swift Mailer will send e-mails.',
-    'page callback'     => 'swift_mailer_page_admin_config_swift_mailer',
-    'file'              => 'includes/pages/swift_mailer_page_admin_config_swift_mailer.inc',
+    'description'       => 'Configure Swift Mailer',
+    'page callback'     => 'swift_mailer_page_admin_config_swift_mailer_default',
+    'file'              => 'includes/pages/swift_mailer_page_admin_config_swift_mailer_default.inc',
     'access arguments'  => array(SWIFT_MAILER_ADMINISTER),
+  );
+
+
+  $items['admin/config/swift_mailer/default'] = array(
+    'type'              => MENU_DEFAULT_LOCAL_TASK,
+    'title'             => 'Library',
+    'description'       => 'Configure where the Swift Mailer Library is located.',
+    'page callback'     => 'swift_mailer_page_admin_config_swift_mailer_default',
+    'file'              => 'includes/pages/swift_mailer_page_admin_config_swift_mailer_default.inc',
+    'access arguments'  => array(SWIFT_MAILER_ADMINISTER),
+    'weight'            => 0,
+  );
+
+  $items['admin/config/swift_mailer/transport'] = array(
+    'type'              => MENU_LOCAL_TASK,
+    'title'             => 'Transport',
+    'description'       => 'Configure how Swift Mailer will send e-mails.',
+    'page callback'     => 'swift_mailer_page_admin_config_swift_mailer_transport',
+    'file'              => 'includes/pages/swift_mailer_page_admin_config_swift_mailer_transport.inc',
+    'access arguments'  => array(SWIFT_MAILER_ADMINISTER),
+      'weight'            => 1,
+  );
+
+  $items['admin/config/swift_mailer/messages'] = array(
+    'type'              => MENU_LOCAL_TASK,
+    'title'             => 'Messages',
+    'description'       => 'Configure how Swift Mailer will compose messages.',
+    'page callback'     => 'swift_mailer_page_admin_config_swift_mailer_messages',
+    'file'              => 'includes/pages/swift_mailer_page_admin_config_swift_mailer_messages.inc',
+    'access arguments'  => array(SWIFT_MAILER_ADMINISTER),
+    'weight'            => 2,
+  );
+
+  $items['admin/config/swift_mailer/test'] = array(
+    'type'              => MENU_LOCAL_TASK,
+    'title'             => 'Test',
+    'description'       => 'Configure how Swift Mailer will compose messages.',
+    'page callback'     => 'swift_mailer_page_admin_config_swift_mailer_test',
+    'file'              => 'includes/pages/swift_mailer_page_admin_config_swift_mailer_test.inc',
+    'access arguments'  => array(SWIFT_MAILER_ADMINISTER),
+    'weight'            => 2,
   );
 
   return $items;
@@ -62,16 +127,14 @@ function swift_mailer_mail($key, &$message, $params) {
 
     switch($key) {
         default:
-            $text[] = '<strong>Dear User,</strong>';
-            $text[] = '<p>';
-            $text[] = 'This is a test e-mail automatically generated by the Swift Mailer module.';
-            $text[] = '</p>';
-            $text[] = 'Kind regards<br />';
-            $text[] = '<br />';
-            $text[] = 'The Swift Mailer module<br />';
-
+            global $user;
+            $text[] = t('<strong>Dear !user,</strong>', array('!user' => $user->name));
+            $text[] = t('<p>This e-mail has been sent by the Swift Mailer</p>');
+            $text[] = t('Kind regards<br /><br />');
+            $text[] = t('The Swift Mailer module');
+            
             $message['subject'] = t('Swift Mailer Test');
-            $message['body'][] = t(implode($text));
+            $message['body'] = $text;
             break;
     }
 }

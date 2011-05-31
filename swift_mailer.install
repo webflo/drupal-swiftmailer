@@ -1,6 +1,6 @@
 <?php
 
-function swiftmailer_enable() {
+function swift_mailer_enable() {
 
     //Get the existing mail configuration.
     $configuration = variable_get('mail_system', array('default-system' => 'DefaultMailSystem'));
@@ -13,7 +13,7 @@ function swiftmailer_enable() {
 
 }
 
-function swiftmailer_disable() {
+function swift_mailer_disable() {
 
     //Get the old mail configuration.
     $configuration = variable_get('mail_system_old', array('default-system' => 'DefaultMailSystem'));

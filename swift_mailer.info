@@ -3,5 +3,5 @@ description = This module is an implementation of the SWIFT mailer.
 core = 7.x
 version = alpha
 package = E-mail
-files[] = swiftmailer.module
-files[] = swiftmailer.install
+files[] = swift_mailer.module
+files[] = swift_mailer.install
