@@ -16,7 +16,11 @@ class SWIFTMailSystem implements MailSystemInterface {
      *   The message as it should be sent.
      */
     public function format(array $message) {
-        $message['body'] = implode("\r\n", $message['body']);
+        if (!empty($message) && is_array($message)) {
+            $line_endings = variable_get('mail_line_endings', MAIL_LINE_ENDINGS);
+            $message['body'] = implode($line_endings, $message['body']);
+        }
+
         return $message;
     }
 
@@ -52,7 +56,7 @@ class SWIFTMailSystem implements MailSystemInterface {
             // Not all Drupal headers should be added to the e-mail message.
             // Some headers must be supressed in order for Swift Mailer to
             // do its work properly.
-            $supressable_headers = swift_mailer_get_supressable_headers();
+            $suppressable_headers = swift_mailer_get_supressable_headers();
 
             // Process headers provided by Drupal. We want to add all headers which
             // are provided by Drupal to be added to the message. For each header we
@@ -63,7 +67,7 @@ class SWIFTMailSystem implements MailSystemInterface {
 
                 // Check wheter the current header key represents a header that
                 // should be supressed.
-                if (in_array($header_key, $supressable_headers)) {
+                if (in_array($header_key, $suppressable_headers)) {
                     continue;
                 }
 
@@ -117,7 +121,7 @@ class SWIFTMailSystem implements MailSystemInterface {
                 $m->setCharset($message['params']['charset']);
             }
 
-            // Process attachments. All attachments needs to be provided in the
+            // Process attachments. All attachments need to be provided in the
             // array ['params']['attachments'] in the $message variable. The
             // array needs to hold stdClass instances each representing a file.
             // Each of the instances can simply be a file instance provided by
@@ -206,7 +210,7 @@ class SWIFTMailSystem implements MailSystemInterface {
         } catch (Exception $e) {
 
             // Log error and notify user.
-            watchdog('swift_mailer', 'An attempt to send an e-mail message failed: ' . ((substr(trim($e->getMessage()), -1) == '.') ? trim($e->getMessage()) : trim($e->getMessage()) . '.'), array(), WATCHDOG_ERROR);
+            watchdog('swift_mailer', 'An attempt to send an e-mail message failed: !exception_message', array('!exception_message' => (substr(trim($e->getMessage()), -1) == '.') ? trim($e->getMessage()) : trim($e->getMessage()) . '.'), WATCHDOG_ERROR);
             drupal_set_message(t('An attempt to send an e-mail message failed.'), 'error');
 
         }
