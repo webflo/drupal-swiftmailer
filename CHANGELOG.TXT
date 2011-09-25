@@ -16,3 +16,12 @@
 - Dynamic values which are to be passed to watchdog() are now provided via the
   $variables argument, instead of being embedded in the actual message, in
   SwiftMailSystem.inc.
+
+2011-24-09
+ - Replaced 'parametrized' with 'parameterized' in functions names in conversion.inc
+ - Removed blank lines between subsequent @param declarations in conversion.inc
+ - Updated function signatures to reflect documentation in conversion.inc
+ - Replaced 'excact' with 'exact' in documentation in conversion.inc
+ - Replaced 'prodived' with 'provided' in utilities.inc
+ - Renamed files and functions for administration to follow naming conventions.
+ - Changed module name from 'swift_mailer' to 'swiftmailer'.

@@ -38,9 +38,9 @@ class SWIFTMailSystem implements MailSystemInterface {
     public function mail(array $message) {
 
         //Validate whether the Swift Mailer module has been configured.
-        $library_path = variable_get(SWIFT_MAILER_VARIABLE_PATH, SWIFT_MAILER_VARIABLE_PATH_DEFAULT);
+        $library_path = variable_get(SWIFTMAILER_VARIABLE_PATH, SWIFTMAILER_VARIABLE_PATH_DEFAULT);
         if (empty($library_path)) {
-            watchdog('swift_mailer', 'An attempt to send an e-mail failed. The Swift Mailer library could not be found by the Swift Mailer module.', array(), WATCHDOG_ERROR);
+            watchdog('swiftmailer', 'An attempt to send an e-mail failed. The Swift Mailer library could not be found by the Swift Mailer module.', array(), WATCHDOG_ERROR);
             drupal_set_message(t('An attempt to send the e-mail failed. The e-mail has not been sent.'), 'error');
             return;
         }
@@ -56,16 +56,23 @@ class SWIFTMailSystem implements MailSystemInterface {
             // Not all Drupal headers should be added to the e-mail message.
             // Some headers must be supressed in order for Swift Mailer to
             // do its work properly.
-            $suppressable_headers = swift_mailer_get_supressable_headers();
+            $suppressable_headers = swiftmailer_get_supressable_headers();
 
             // Process headers provided by Drupal. We want to add all headers which
             // are provided by Drupal to be added to the message. For each header we
             // first have to find out what type of header it is, and then add it to
             // the message as the particular header type.
             foreach($message['headers'] as $header_key => $header_value) {
-                $header_type = swift_mailer_get_headertype($header_key, $header_value);
 
-                // Check wheter the current header key represents a header that
+                // Skip header if header key is empty.
+                if (empty($header_key)) {
+                    continue;
+                }
+
+                // Get header type.
+                $header_type = swiftmailer_get_headertype($header_key, $header_value);
+
+                // Check wether the current header key represents a header that
                 // should be supressed.
                 if (in_array($header_key, $suppressable_headers)) {
                     continue;
@@ -73,31 +80,31 @@ class SWIFTMailSystem implements MailSystemInterface {
 
                 // Add the current header to the e-mail message.
                 switch($header_type) {
-                    case SWIFT_MAILER_HEADER_ID:
-                        swift_mailer_add_id_header($m, $header_key, $header_value);
+                    case SWIFTMAILER_HEADER_ID:
+                        swiftmailer_add_id_header($m, $header_key, $header_value);
                         break;
-                    case SWIFT_MAILER_HEADER_PATH:
-                        swift_mailer_add_path_header($m, $header_key, $header_value);
+                    case SWIFTMAILER_HEADER_PATH:
+                        swiftmailer_add_path_header($m, $header_key, $header_value);
                         break;
-                    case SWIFT_MAILER_HEADER_MAILBOX:
-                        swift_mailer_add_mailbox_header($m, $header_key, $header_value);
+                    case SWIFTMAILER_HEADER_MAILBOX:
+                        swiftmailer_add_mailbox_header($m, $header_key, $header_value);
                         break;
-                    case SWIFT_MAILER_HEADER_DATE:
-                        swift_mailer_add_date_header($m, $header_key, $header_value);
+                    case SWIFTMAILER_HEADER_DATE:
+                        swiftmailer_add_date_header($m, $header_key, $header_value);
                         break;
-                    case SWIFT_MAILER_HEADER_PARAMETERIZED:
-                        swift_mailer_add_parametrized_header($m, $header_key, $header_value);
+                    case SWIFTMAILER_HEADER_PARAMETERIZED:
+                        swiftmailer_add_parameterized_header($m, $header_key, $header_value);
                         break;
                     default:
-                        swift_mailer_add_text_header($m, $header_key, $header_value);
+                        swiftmailer_add_text_header($m, $header_key, $header_value);
                         break;
                 }
             }
             
             // Set basic message details.
-            swift_mailer_remove_header($m, 'From');
-            swift_mailer_remove_header($m, 'To');
-            swift_mailer_remove_header($m, 'Subject');
+            swiftmailer_remove_header($m, 'From');
+            swiftmailer_remove_header($m, 'To');
+            swiftmailer_remove_header($m, 'Subject');
             $m->setFrom($message['from']);
             $m->setTo($message['to']);
             $m->setSubject($message['subject']);
@@ -107,7 +114,7 @@ class SWIFTMailSystem implements MailSystemInterface {
             // $message['params']['charset'].
             $m->getHeaders()->removeAll('Content-Type');
             if (empty($message['params']['format'])) {
-                $m->setBody($message['body'], variable_get(SWIFT_MAILER_VARIABLE_FORMAT, SWIFT_MAILER_VARIABLE_FORMAT_DEFAULT));
+                $m->setBody($message['body'], variable_get(SWIFTMAILER_VARIABLE_FORMAT, SWIFTMAILER_VARIABLE_FORMAT_DEFAULT));
             } else {
                 $m->setBody($message['body'], $message['params']['format']);
             }
@@ -116,52 +123,36 @@ class SWIFTMailSystem implements MailSystemInterface {
             // be applied to the message unless a charset is provided in
             // $message['params']['charset'].
             if (empty($message['params']['charset'])) {
-                $m->setCharset(variable_get(SWIFT_MAILER_VARIABLE_CHARACTER_SET, SWIFT_MAILER_VARIABLE_CHARACTER_SET_DEFAULT));
+                $m->setCharset(variable_get(SWIFTMAILER_VARIABLE_CHARACTER_SET, SWIFTMAILER_VARIABLE_CHARACTER_SET_DEFAULT));
             } else {
                 $m->setCharset($message['params']['charset']);
             }
 
-            // Process attachments. All attachments need to be provided in the
-            // array ['params']['attachments'] in the $message variable. The
-            // array needs to hold stdClass instances each representing a file.
-            // Each of the instances can simply be a file instance provided by
-            // Drupal, or a file instance programatically generated.
-            if (!empty($message['params']['attachments'])) {
-                foreach($message['params']['attachments'] as $attachment) {
-                    if ($attachment instanceof stdClass) {
+            // Process attachments.
+            if (!empty($message['params']['attachments']) && is_array($message['params']['attachments'])) {
+                $this->attach($m, $message['params']['attachments']);
+            }
 
-                        //Validate attachment properties.
-                        if (empty($attachment->uri) || empty($attachment->filename) || empty($attachment->filemime)) {
-                            continue;
-                        }
-
-                        // Prepare attachment details.
-                        $attachment_content = file_get_contents(drupal_realpath($attachment->uri));
-                        $attachment_filename = $attachment->filename;
-                        $attachment_filemime = $attachment->filemime;
-
-                        // Create attachment
-                        $m->attach(Swift_Attachment::newInstance($attachment_content, $attachment_filename, $attachment_filemime));
-                        
-                    }
-                }
+            // Process images.
+            if (!empty($message['params']['images']) && is_array($message['params']['images'])) {
+                $this->embed($m, $message['params']['images']);
             }
 
             // Create a mailer which we will use to send the message.
             if (empty(static::$mailer)) {
 
                 //Get the configured transport type.
-                $transport_type = variable_get(SWIFT_MAILER_VARIABLE_TRANSPORT, SWIFT_MAILER_VARIABLE_TRANSPORT_DEFAULT);
+                $transport_type = variable_get(SWIFTMAILER_VARIABLE_TRANSPORT, SWIFTMAILER_VARIABLE_TRANSPORT_DEFAULT);
 
                 switch($transport_type) {
-                    case SWIFT_MAILER_TRANSPORT_SMTP:
+                    case SWIFTMAILER_TRANSPORT_SMTP:
 
                         //Get transport configuration.
-                        $host = variable_get(SWIFT_MAILER_VARIABLE_SMTP_HOST, SWIFT_MAILER_VARIABLE_SMTP_HOST_DEFAULT);
-                        $port = variable_get(SWIFT_MAILER_VARIABLE_SMTP_PORT, SWIFT_MAILER_VARIABLE_SMTP_PORT_DEFAULT);
-                        $encryption = variable_get(SWIFT_MAILER_VARIABLE_SMTP_ENCRYPTION, SWIFT_MAILER_VARIABLE_SMTP_ENCRYPTION_DEFAULT);
-                        $username = variable_get(SWIFT_MAILER_VARIABLE_SMTP_USERNAME, SWIFT_MAILER_VARIABLE_SMTP_USERNAME_DEFAULT);
-                        $password = variable_get(SWIFT_MAILER_VARIABLE_SMTP_PASSWORD, SWIFT_MAILER_VARIABLE_SMTP_PASSWORD_DEFAULT);
+                        $host = variable_get(SWIFTMAILER_VARIABLE_SMTP_HOST, SWIFTMAILER_VARIABLE_SMTP_HOST_DEFAULT);
+                        $port = variable_get(SWIFTMAILER_VARIABLE_SMTP_PORT, SWIFTMAILER_VARIABLE_SMTP_PORT_DEFAULT);
+                        $encryption = variable_get(SWIFTMAILER_VARIABLE_SMTP_ENCRYPTION, SWIFTMAILER_VARIABLE_SMTP_ENCRYPTION_DEFAULT);
+                        $username = variable_get(SWIFTMAILER_VARIABLE_SMTP_USERNAME, SWIFTMAILER_VARIABLE_SMTP_USERNAME_DEFAULT);
+                        $password = variable_get(SWIFTMAILER_VARIABLE_SMTP_PASSWORD, SWIFTMAILER_VARIABLE_SMTP_PASSWORD_DEFAULT);
 
                         //Instantiate transport.
                         $transport = Swift_SmtpTransport::newInstance($host, $port);
@@ -184,18 +175,18 @@ class SWIFTMailSystem implements MailSystemInterface {
                         static::$mailer = Swift_Mailer::newInstance($transport);
                         break;
 
-                    case SWIFT_MAILER_TRANSPORT_SENDMAIL:
+                    case SWIFTMAILER_TRANSPORT_SENDMAIL:
 
                         //Get transport configuration.
-                        $path = variable_get(SWIFT_MAILER_VARIABLE_SENDMAIL_PATH, SWIFT_MAILER_VARIABLE_SENDMAIL_PATH_DEFAULT);
-                        $mode = variable_get(SWIFT_MAILER_VARIABLE_SENDMAIL_MODE, SWIFT_MAILER_VARIABLE_SENDMAIL_MODE_DEFAULT);
+                        $path = variable_get(SWIFTMAILER_VARIABLE_SENDMAIL_PATH, SWIFTMAILER_VARIABLE_SENDMAIL_PATH_DEFAULT);
+                        $mode = variable_get(SWIFTMAILER_VARIABLE_SENDMAIL_MODE, SWIFTMAILER_VARIABLE_SENDMAIL_MODE_DEFAULT);
 
                         //Instantiate transport.
                         $transport = Swift_SendmailTransport::newInstance($path .' -'. $mode);
                         static::$mailer = Swift_Mailer::newInstance($transport);
                         break;
 
-                    case SWIFT_MAILER_TRANSPORT_NATIVE:
+                    case SWIFTMAILER_TRANSPORT_NATIVE:
 
                         //Instantiate transport.
                         $transport = Swift_MailTransport::newInstance();
@@ -210,9 +201,65 @@ class SWIFTMailSystem implements MailSystemInterface {
         } catch (Exception $e) {
 
             // Log error and notify user.
-            watchdog('swift_mailer', 'An attempt to send an e-mail message failed: !exception_message', array('!exception_message' => (substr(trim($e->getMessage()), -1) == '.') ? trim($e->getMessage()) : trim($e->getMessage()) . '.'), WATCHDOG_ERROR);
+            watchdog('swiftmailer', 'An attempt to send an e-mail message failed: !exception_message', array('!exception_message' => (substr(trim($e->getMessage()), -1) == '.') ? trim($e->getMessage()) : trim($e->getMessage()) . '.'), WATCHDOG_ERROR);
             drupal_set_message(t('An attempt to send an e-mail message failed.'), 'error');
 
         }
+    }
+
+    private function attach(Swift_Message $m, $files) {
+
+        // Iterate through each array element.
+        foreach($files as $file) {
+
+            if ($file instanceof stdClass) {
+
+                //Validate required fields.
+                if (empty($file->uri) || empty($file->filename) || empty($file->filemime)) {
+                    continue;
+                }
+
+                // Get file data.
+                $content = file_get_contents(drupal_realpath($file->uri));
+                $filename = $file->filename;
+                $filemime = $file->filemime;
+
+                // Attach file.
+                $m->attach(Swift_Attachment::newInstance($content, $filename, $filemime));
+            }
+        }
+
+    }
+
+    private function embed(Swift_Message $m, $images) {
+        
+        // Iterate through each array element.
+        foreach($images as $image) {
+
+            if ($image instanceof stdClass) {
+
+                // Validate required fields.
+                if (empty($image->uri) || empty($image->filename) || empty($image->filemime) || empty($image->cid)) {
+                    continue;
+                }
+
+                // Keep track of the 'cid' assigned to the embedded image.
+                $cid = null;
+
+                // Get image data.
+                $content = file_get_contents(drupal_realpath($image->uri));
+                $filename = $image->filename;
+                $filemime = $image->filemime;
+
+                // Embed image.
+                $cid = $m->embed(Swift_Image::newInstance($content, $filename, $filemime));
+                
+                // The provided 'cid' needs to be replaced with the 'cid' returned
+                // by the Swift Mailer library.
+                $body = $m->getBody();
+                $body = preg_replace('/cid.*' . $image->cid . '/', $cid, $body);
+                $m->setBody($body);
+            }
+        }        
     }
 }

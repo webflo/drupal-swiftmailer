@@ -1,0 +1,148 @@
+<?php
+
+//Include required files.
+module_load_include('inc', 'swiftmailer', '/includes/classes/SWIFTMailSystem');
+module_load_include('inc', 'swiftmailer', '/includes/helpers/conversion');
+module_load_include('inc', 'swiftmailer', '/includes/helpers/utilities');
+
+//Define permissions
+DEFINE('SWIFTMAILER_ADMINISTER', 'swiftmailer_administer');
+
+//Define message formats.
+DEFINE('SWIFTMAILER_FORMAT_PLAIN', 'text/plain');
+DEFINE('SWIFTMAILER_FORMAT_HTML', 'text/html');
+
+//Define transport types
+DEFINE('SWIFTMAILER_TRANSPORT_SMTP', 'smtp');
+DEFINE('SWIFTMAILER_TRANSPORT_SENDMAIL', 'sendmail');
+DEFINE('SWIFTMAILER_TRANSPORT_NATIVE', 'native');
+
+//Define header types.
+DEFINE('SWIFTMAILER_HEADER_TEXT', 'text');
+DEFINE('SWIFTMAILER_HEADER_PARAMETERIZED', 'parameterized');
+DEFINE('SWIFTMAILER_HEADER_MAILBOX', 'mailbox');
+DEFINE('SWIFTMAILER_HEADER_DATE', 'date');
+DEFINE('SWIFTMAILER_HEADER_ID', 'ID');
+DEFINE('SWIFTMAILER_HEADER_PATH', 'path');
+
+//Define system variables.
+DEFINE('SWIFTMAILER_VARIABLE_MAIL_SYSTEM_OLD', 'swiftmailer_mail_system_old');
+DEFINE('SWIFTMAILER_VARIABLE_PATH', 'swiftmailer_path');
+DEFINE('SWIFTMAILER_VARIABLE_FORMAT', 'swiftmailer_format');
+DEFINE('SWIFTMAILER_VARIABLE_TRANSPORT', 'swiftmailer_transport');
+DEFINE('SWIFTMAILER_VARIABLE_SMTP_HOST', 'swiftmailer_smtp_host');
+DEFINE('SWIFTMAILER_VARIABLE_SMTP_PORT', 'swiftmailer_smtp_port');
+DEFINE('SWIFTMAILER_VARIABLE_SMTP_ENCRYPTION', 'swiftmailer_smtp_encryption');
+DEFINE('SWIFTMAILER_VARIABLE_SMTP_USERNAME', 'swiftmailer_smtp_username');
+DEFINE('SWIFTMAILER_VARIABLE_SMTP_PASSWORD', 'swiftmailer_smtp_password');
+DEFINE('SWIFTMAILER_VARIABLE_SENDMAIL_PATH', 'swiftmailer_sendmail_path');
+DEFINE('SWIFTMAILER_VARIABLE_SENDMAIL_MODE', 'swiftmailer_sendmail_mode');
+DEFINE('SWIFTMAILER_VARIABLE_CHARACTER_SET', 'swiftmailer_character_set');
+
+//Define system variables defaults.
+DEFINE('SWIFTMAILER_VARIABLE_MAIL_SYSTEM_OLD_DEFAULT', '');
+DEFINE('SWIFTMAILER_VARIABLE_PATH_DEFAULT', '');
+DEFINE('SWIFTMAILER_VARIABLE_FORMAT_DEFAULT', 'text/plain');
+DEFINE('SWIFTMAILER_VARIABLE_TRANSPORT_DEFAULT', 'native');
+DEFINE('SWIFTMAILER_VARIABLE_SMTP_HOST_DEFAULT', '');
+DEFINE('SWIFTMAILER_VARIABLE_SMTP_PORT_DEFAULT', '25');
+DEFINE('SWIFTMAILER_VARIABLE_SMTP_ENCRYPTION_DEFAULT', '');
+DEFINE('SWIFTMAILER_VARIABLE_SMTP_USERNAME_DEFAULT', '');
+DEFINE('SWIFTMAILER_VARIABLE_SMTP_PASSWORD_DEFAULT', '');
+DEFINE('SWIFTMAILER_VARIABLE_SENDMAIL_PATH_DEFAULT', '/usr/bin/sendmail');
+DEFINE('SWIFTMAILER_VARIABLE_SENDMAIL_MODE_DEFAULT', 'bs');
+DEFINE('SWIFTMAILER_VARIABLE_CHARACTER_SET_DEFAULT', 'UTF-8');
+
+/**
+ *
+ * Implementation of hook_menu().
+ *
+ */
+function swiftmailer_menu() {
+    
+  $items['admin/config/swiftmailer'] = array(
+    'type'              => MENU_NORMAL_ITEM,
+    'title'             => 'Swift Mailer',
+    'description'       => 'Configure Swift Mailer',
+    'page callback'     => 'swiftmailer_admin_default_page',
+    'file'              => 'includes/pages/swiftmailer_admin_default.inc',
+    'access arguments'  => array(SWIFTMAILER_ADMINISTER),
+  );
+
+
+  $items['admin/config/swiftmailer/default'] = array(
+    'type'              => MENU_DEFAULT_LOCAL_TASK,
+    'title'             => 'Library',
+    'description'       => 'Configure where the Swift Mailer Library is located.',
+    'page callback'     => 'swiftmailer_admin_default_page',
+    'file'              => 'includes/pages/swiftmailer_admin_default.inc',
+    'access arguments'  => array(SWIFTMAILER_ADMINISTER),
+    'weight'            => 0,
+  );
+
+  $items['admin/config/swiftmailer/transport'] = array(
+    'type'              => MENU_LOCAL_TASK,
+    'title'             => 'Transport',
+    'description'       => 'Configure how Swift Mailer will send e-mails.',
+    'page callback'     => 'swiftmailer_admin_transport_page',
+    'file'              => 'includes/pages/swiftmailer_admin_transport.inc',
+    'access arguments'  => array(SWIFTMAILER_ADMINISTER),
+      'weight'            => 1,
+  );
+
+  $items['admin/config/swiftmailer/messages'] = array(
+    'type'              => MENU_LOCAL_TASK,
+    'title'             => 'Messages',
+    'description'       => 'Configure how Swift Mailer will compose messages.',
+    'page callback'     => 'swiftmailer_admin_messages_page',
+    'file'              => 'includes/pages/swiftmailer_admin_messages.inc',
+    'access arguments'  => array(SWIFTMAILER_ADMINISTER),
+    'weight'            => 2,
+  );
+
+  $items['admin/config/swiftmailer/test'] = array(
+    'type'              => MENU_LOCAL_TASK,
+    'title'             => 'Test',
+    'description'       => 'Configure how Swift Mailer will compose messages.',
+    'page callback'     => 'swiftmailer_admin_test_page',
+    'file'              => 'includes/pages/swiftmailer_admin_test.inc',
+    'access arguments'  => array(SWIFTMAILER_ADMINISTER),
+    'weight'            => 2,
+  );
+
+  return $items;
+    
+}
+
+/**
+ * Implementation of hook_mail().
+ */
+function swiftmailer_mail($key, &$message) {
+
+    switch($key) {
+        default:
+            global $user;
+
+            $image = new stdClass();
+            $image->uri = 'sites/all/modules/swiftmailer/images/drupal.jpg';
+            $image->type = 'file';
+            $image->filemime = 'image/jpeg';
+            $image->filename = 'drupal.jpg';
+            $image->cid = 'drupal-img';
+
+
+            $message['params']['format'] = SWIFTMAILER_FORMAT_HTML;
+            $message['params']['images'] = array($image);
+
+            $text[] = '<img src="cid:drupal-img" />';
+            $text[] = t('<strong>Dear !user,</strong>', array('!user' => $user->name));
+            $text[] = t('<p>This e-mail has been sent from !site by the Swift Mailer module. The module has been successfully configured if this message has arrived to your inbox.</p>', array('!site' => variable_get('site_name', 'a Drupal site')));
+            $text[] = t('Kind regards<br /><br />');
+            $text[] = t('The Swift Mailer module');
+            
+            $message['subject'] = t('Swift Mailer Test');
+            $message['body'] = $text;
+
+            break;
+    }
+}

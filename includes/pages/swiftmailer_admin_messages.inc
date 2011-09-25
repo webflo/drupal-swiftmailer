@@ -1,14 +1,20 @@
 <?php
-function swift_mailer_page_admin_config_swift_mailer_messages() {
-    return drupal_get_form('swift_mailer_page_admin_config_swift_mailer_form_messages');
+/**
+ * @file
+ * An administration page which allows for configuration of how messages are
+ * to be formatted.
+ */
+
+function swiftmailer_admin_messages_page() {
+    return drupal_get_form('swiftmailer_admin_messages_form');
 }
 
 /**
  * Form builder; the messages form.
  *
- * @see swift_mailer_page_admin_config_swift_mailer_form_messages_submit()
+ * @see swiftmailer_admin_messages_form_submit()
  */
-function swift_mailer_page_admin_config_swift_mailer_form_messages($form, &$form_state) {
+function swiftmailer_admin_messages_form($form, &$form_state) {
 
     $form['#tree'] = true;
 
@@ -16,7 +22,7 @@ function swift_mailer_page_admin_config_swift_mailer_form_messages($form, &$form
         '#markup' => t('<p>This page allows you to configure settings which applies to e-mail messages.</p>'),
         );
 
-    if (swift_mailer_validate_library(variable_get(SWIFT_MAILER_VARIABLE_PATH, SWIFT_MAILER_VARIABLE_PATH_DEFAULT))) {
+    if (swiftmailer_validate_library(variable_get(SWIFTMAILER_VARIABLE_PATH, SWIFTMAILER_VARIABLE_PATH_DEFAULT))) {
 
         $form['format'] = array(
             '#type' => 'fieldset',
@@ -27,8 +33,8 @@ function swift_mailer_page_admin_config_swift_mailer_form_messages($form, &$form
 
         $form['format']['type'] = array(
             '#type' => 'radios',
-            '#options' => array(SWIFT_MAILER_FORMAT_PLAIN => t('Plain Text'), SWIFT_MAILER_FORMAT_HTML => t('HTML')),
-            '#default_value' => variable_get(SWIFT_MAILER_VARIABLE_FORMAT, SWIFT_MAILER_VARIABLE_FORMAT_DEFAULT),
+            '#options' => array(SWIFTMAILER_FORMAT_PLAIN => t('Plain Text'), SWIFTMAILER_FORMAT_HTML => t('HTML')),
+            '#default_value' => variable_get(SWIFTMAILER_VARIABLE_FORMAT, SWIFTMAILER_VARIABLE_FORMAT_DEFAULT),
             );
 
         $form['character_set'] = array(
@@ -41,8 +47,8 @@ function swift_mailer_page_admin_config_swift_mailer_form_messages($form, &$form
 
         $form['character_set']['type'] = array(
             '#type' => 'select',
-            '#options' => swift_mailer_get_character_set_options(),
-            '#default_value' => variable_get(SWIFT_MAILER_VARIABLE_CHARACTER_SET, SWIFT_MAILER_VARIABLE_CHARACTER_SET_DEFAULT),
+            '#options' => swiftmailer_get_character_set_options(),
+            '#default_value' => variable_get(SWIFTMAILER_VARIABLE_CHARACTER_SET, SWIFTMAILER_VARIABLE_CHARACTER_SET_DEFAULT),
             );
 
         $form['submit'] = array(
@@ -55,7 +61,7 @@ function swift_mailer_page_admin_config_swift_mailer_form_messages($form, &$form
         $form['message'] = array(
             '#markup' => t('<p>You need to configure the location of the Swift Mailer library. Please visit the !page
                             and configure the library to enable the configuration options on this page.</p>',
-                           array('!page' => l('library configuration page', 'admin/config/swift_mailer'))),
+                           array('!page' => l('library configuration page', 'admin/config/swiftmailer'))),
             );
 
     }
@@ -63,14 +69,14 @@ function swift_mailer_page_admin_config_swift_mailer_form_messages($form, &$form
     return $form;
 }
 
-function swift_mailer_page_admin_config_swift_mailer_form_messages_submit($form, &$form_state) {
+function swiftmailer_admin_messages_form_submit($form, &$form_state) {
 
     if (isset($form_state['values']['format']['type'])) {
-        variable_set(SWIFT_MAILER_VARIABLE_FORMAT, $form_state['values']['format']['type']);
+        variable_set(SWIFTMAILER_VARIABLE_FORMAT, $form_state['values']['format']['type']);
     }
 
     if (isset($form_state['values']['character_set']['type'])) {
-        variable_set(SWIFT_MAILER_VARIABLE_CHARACTER_SET, $form_state['values']['character_set']['type']);
+        variable_set(SWIFTMAILER_VARIABLE_CHARACTER_SET, $form_state['values']['character_set']['type']);
     }
 
 }

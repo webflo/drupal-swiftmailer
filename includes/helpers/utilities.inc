@@ -8,9 +8,9 @@
  *
  * @return mixed
  *   The provided path exluding leading and trailing slashes if the Swift Mailer
- *   library is available at the prodived path, and otherwise FALSE.
+ *   library is available at the provided path, and otherwise FALSE.
  */
-function swift_mailer_validate_library($path) {
+function swiftmailer_validate_library($path) {
 
     //Remove leading slashes.
     while (substr($path, 0, 1) === '/') {
@@ -40,7 +40,7 @@ function swift_mailer_validate_library($path) {
  * @return array
  *   A list of available encryption options.
  */
-function swift_mailer_get_encryption_options() {
+function swiftmailer_get_encryption_options() {
 
     //Define a variable to hold the various encryption options.
     $encryption_options[0] = t('No Encryption');
@@ -69,7 +69,7 @@ function swift_mailer_get_encryption_options() {
  * @return  array
  *   A list of available character sets.
  */
-function swift_mailer_get_character_set_options() {
+function swiftmailer_get_character_set_options() {
 
     $character_set_options = array(
         'UCS-4' => 'UCS-4', 'UCS-4BE' => 'UCS-4BE', 'UCS-4LE' => 'UCS-4LE',
@@ -103,7 +103,7 @@ function swift_mailer_get_character_set_options() {
  *   A list of e-mail headers which could be provided by Drupal, but which should
  *   be ignored.
  */
-function swift_mailer_get_supressable_headers() {
+function swiftmailer_get_supressable_headers() {
 
     return array(
         'Content-Transfer-Encoding',
