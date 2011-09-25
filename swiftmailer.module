@@ -55,11 +55,10 @@ DEFINE('SWIFTMAILER_VARIABLE_CHARACTER_SET_DEFAULT', 'UTF-8');
 
 /**
  *
- * Implementation of hook_menu().
+ * Implements hook_menu().
  *
  */
 function swiftmailer_menu() {
-    
   $items['admin/config/swiftmailer'] = array(
     'type'              => MENU_NORMAL_ITEM,
     'title'             => 'Swift Mailer',
@@ -111,15 +110,13 @@ function swiftmailer_menu() {
   );
 
   return $items;
-    
 }
 
 /**
- * Implementation of hook_mail().
+ * Implements hook_mail().
  */
 function swiftmailer_mail($key, &$message) {
-
-    switch($key) {
+    switch ($key) {
         default:
             global $user;
 
@@ -142,7 +139,6 @@ function swiftmailer_mail($key, &$message) {
             
             $message['subject'] = t('Swift Mailer Test');
             $message['body'] = $text;
-
             break;
     }
 }

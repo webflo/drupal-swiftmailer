@@ -1,4 +1,9 @@
 <?php
+/**
+ * @file
+ * This file contains conversion functions.
+ */
+
 DEFINE('SWIFTMAILER_DATE_PATTERN', '(Mon|Tue|Wed|Thu|Fri|Sat|Sun), [0-9]{2} (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) [0-9]{4} (2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9]) (\+|\-)([01][0-2])([0-5][0-9])');
 DEFINE('SWIFTMAILER_MAILBOX_PATTERN', '(.*\<.*@.*\>|.*@.*,)');
 
@@ -74,9 +79,9 @@ function swiftmailer_add_text_header(Swift_Message $message, $key, $value) {
  */
 function swiftmailer_is_parameterized_header($key, $value) {
     if (preg_match('/;/', $value)) {
-        return true;
+        return TRUE;
     } else {
-        return false;
+        return FALSE;
     }
 }
 
@@ -96,10 +101,10 @@ function swiftmailer_add_parameterized_header(Swift_Message $message, $key, $val
     swiftmailer_remove_header($message, $key);
 
     // Define variables to hold the header's value and parameters.
-    $header_value = null;
+    $header_value = NULL;
     $header_parameters = array();
 
-    // Split the provided value by ';' (semicolon), which we assume is the 
+    // Split the provided value by ';' (semicolon), which we assume is the
     // character is used to separate the parameters.
     $parameter_pairs = explode(';', $value);
 
@@ -108,7 +113,7 @@ function swiftmailer_add_parameterized_header(Swift_Message $message, $key, $val
     // parameter and one or more key/value parameters in the provided header
     // value. We assume that a '=' (equals) character is used to separate the
     // key and value for each of the parameters.
-    foreach($parameter_pairs as $parameter_pair) {
+    foreach ($parameter_pairs as $parameter_pair) {
 
         // Find out whether the current parameter pair really is a parameter
         // pair or just a single value.
@@ -150,9 +155,9 @@ function swiftmailer_add_parameterized_header(Swift_Message $message, $key, $val
  */
 function swiftmailer_is_date_header($key, $value) {
     if (preg_match('/' . SWIFTMAILER_DATE_PATTERN . '/', $value)) {
-        return true;
+        return TRUE;
     } else {
-        return false;
+        return FALSE;
     }
 }
 
@@ -195,9 +200,9 @@ function swift_mailer_add_date_header(Swift_Message $message, $key, $value) {
  */
 function swiftmailer_is_mailbox_header($key, $value) {
     if (preg_match('/' . SWIFTMAILER_MAILBOX_PATTERN . '/', $value)) {
-        return true;
+        return TRUE;
     } else {
-        return false;
+        return FALSE;
     }
 }
 
@@ -220,7 +225,7 @@ function swiftmailer_add_mailbox_header(Swift_Message $message, $key, $value) {
     // added to the mailbox header.
     $header_mailboxes = array();
 
-    // Split the provided value by ',' (comma), which we assume is the 
+    // Split the provided value by ',' (comma), which we assume is the
     // character is used to separate the mailboxes.
     $mailboxes = explode(',', $value);
 
@@ -230,7 +235,7 @@ function swiftmailer_add_mailbox_header(Swift_Message $message, $key, $value) {
     // Mailboxes represented as  a single address should be in the format
     // '[address]', while pairs of name and address should be in the format
     // '[name] <[address]>'.
-    foreach($mailboxes as $mailbox) {
+    foreach ($mailboxes as $mailbox) {
 
         // Find out whether the current mailbox is a pair of name and address,
         // or just an address.
@@ -269,9 +274,9 @@ function swiftmailer_add_mailbox_header(Swift_Message $message, $key, $value) {
  */
 function swiftmailer_is_id_header($key, $value) {
     if (valid_email_address($value) && $key == 'Message-ID') {
-        return true;
+        return TRUE;
     } else {
-        return false;
+        return FALSE;
     }
 }
 
@@ -313,9 +318,9 @@ function swiftmailer_add_id_header(Swift_Message $message, $key, $value) {
  */
 function swiftmailer_is_path_header($key, $value) {
     if (valid_email_address($value) && $key == 'Return-Path') {
-        return true;
+        return TRUE;
     } else {
-        return false;
+        return FALSE;
     }
 }
 
@@ -344,7 +349,7 @@ function swiftmailer_add_path_header(Swift_Message $message, $key, $value) {
  * 
  * @param Swift_Message $message
  *   The message which the header is to be removed from.
- * @param string $key 
+ * @param string $key
  *   The header key.
  */
 function swiftmailer_remove_header(Swift_Message $message, $key) {

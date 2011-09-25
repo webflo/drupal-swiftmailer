@@ -1,4 +1,8 @@
 <?php
+/**
+ * @file
+ * This is the install file.
+ */
 
 function swiftmailer_enable() {
 

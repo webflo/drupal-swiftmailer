@@ -1,4 +1,8 @@
 <?php
+/**
+ * @file
+ * This file contains general utility functions.
+ */
 
 /**
  * Validates whether the Swift Mailer library is available at the provided path.
@@ -13,25 +17,25 @@
 function swiftmailer_validate_library($path) {
 
     //Remove leading slashes.
-    while (substr($path, 0, 1) === '/') {
-        $path = substr($path, 1);
+    while (drupal_substr($path, 0, 1) === '/') {
+        $path = drupal_substr($path, 1);
     }
 
     //Remove trailing slashes.
-    while (substr($path, -1) === '/') {
-        $path = substr($path, 0, -1);
+    while (drupal_substr($path, -1) === '/') {
+        $path = drupal_substr($path, 0, -1);
     }
 
     //Get the real path of the 'swift_required.php' file.
-    $real_path = drupal_realpath($path .'/lib/swift_required.php');
+    $real_path = drupal_realpath($path . '/lib/swift_required.php');
 
     //Returns whether the 'swift_required.php' file could be found.
     if (file_exists($real_path)) {
         return $path;
     } else {
-        return false;
+        return FALSE;
     }
-
+    
 }
 
 /**

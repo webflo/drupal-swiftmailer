@@ -16,7 +16,7 @@ function swiftmailer_admin_messages_page() {
  */
 function swiftmailer_admin_messages_form($form, &$form_state) {
 
-    $form['#tree'] = true;
+    $form['#tree'] = TRUE;
 
     $form['description'] = array(
         '#markup' => t('<p>This page allows you to configure settings which applies to e-mail messages.</p>'),
@@ -60,8 +60,8 @@ function swiftmailer_admin_messages_form($form, &$form_state) {
 
         $form['message'] = array(
             '#markup' => t('<p>You need to configure the location of the Swift Mailer library. Please visit the !page
-                            and configure the library to enable the configuration options on this page.</p>',
-                           array('!page' => l('library configuration page', 'admin/config/swiftmailer'))),
+              and configure the library to enable the configuration options on this page.</p>',
+              array('!page' => l(t('library configuration page'), 'admin/config/swiftmailer'))),
             );
 
     }

@@ -17,24 +17,24 @@ function swiftmailer_admin_default_page() {
  */
 function swiftmailer_admin_default_form($form, &$form_state) {
 
-    $form['#tree'] = true;
+    $form['#tree'] = TRUE;
 
     $form['description'] = array(
         '#markup' => t('<p>The Swift Mailer module replaces the default mail system that is shipped
-                        with Drupal and installs itself as the primary mail system. This allows
-                        you to choose how e-mails should be sent. Furthermore, with the Swift
-                        Mailer module you can easily add attachments to e-mails. To read more
-                        about how this module works, please have a look at the !documentation.</p>'),
+          with Drupal and installs itself as the primary mail system. This allows
+          you to choose how e-mails should be sent. Furthermore, with the Swift
+          Mailer module you can easily add attachments to e-mails. To read more
+          about how this module works, please have a look at the !documentation.</p>'),
         );
 
     $form['library'] = array(
         '#type' => 'fieldset',
         '#title' => t('Library location'),
-        '#description' => t('<p>The Swift Mailer library is required for this module 
-                            to work. You are advised to keep your libraries in the
-                            <em>sites/all/libraries</em> directory. The Swift Mailer
-                            library can be downloaded from the !website.</p>',
-                            array('!website' => l('Swift Mailer website', 'http://swiftmailer.org/'))),
+        '#description' => t('<p>The Swift Mailer library is required for this module
+          to work. You are advised to keep your libraries in the
+          <em>sites/all/libraries</em> directory. The Swift Mailer
+          library can be downloaded from the !website.</p>',
+          array('!website' => l(t('Swift Mailer website'), 'http://swiftmailer.org/'))),
         );
 
     $class = '';
@@ -50,7 +50,7 @@ function swiftmailer_admin_default_form($form, &$form_state) {
         '#type' => 'textfield',
         '#title' => t('Library path'),
         '#description' => t('The path to the Swift Mailer directory (e.g. sites/all/libraries/swiftmailer)'),
-        '#required' => true,
+        '#required' => TRUE,
         '#default_value' => check_plain(variable_get(SWIFTMAILER_VARIABLE_PATH, SWIFTMAILER_VARIABLE_PATH_DEFAULT)),
         '#attributes' => array('class' => array($class)),
         );
