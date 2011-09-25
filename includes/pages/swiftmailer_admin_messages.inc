@@ -6,7 +6,13 @@
  */
 
 function swiftmailer_admin_messages_page() {
+
+    // Load dependencies.
+    module_load_include('inc', 'swiftmailer', '/includes/helpers/utilities');
+
+    // Return form.
     return drupal_get_form('swiftmailer_admin_messages_form');
+    
 }
 
 /**
@@ -59,7 +65,7 @@ function swiftmailer_admin_messages_form($form, &$form_state) {
     } else {
 
         $form['message'] = array(
-            '#markup' => t('<p>You need to configure the location of the Swift Mailer library. Please visit the !page
+            '#markup' => t('<p>You need to configure the location of the SwiftMailer library. Please visit the !page
               and configure the library to enable the configuration options on this page.</p>',
               array('!page' => l(t('library configuration page'), 'admin/config/swiftmailer'))),
             );

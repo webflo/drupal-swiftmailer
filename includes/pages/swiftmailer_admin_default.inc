@@ -1,12 +1,18 @@
 <?php
 /**
  * @file
- * An administration page which allows for configuration of the Swift Mailer
+ * An administration page which allows for configuration of the SwiftMailer
  * library location.
  */
 
 function swiftmailer_admin_default_page() {
+    
+    // Load dependencies.
+    module_load_include('inc', 'swiftmailer', '/includes/helpers/utilities');
+
+    // Return form.
     return drupal_get_form('swiftmailer_admin_default_form');
+
 }
 
 /**
@@ -20,7 +26,7 @@ function swiftmailer_admin_default_form($form, &$form_state) {
     $form['#tree'] = TRUE;
 
     $form['description'] = array(
-        '#markup' => t('<p>The Swift Mailer module replaces the default mail system that is shipped
+        '#markup' => t('<p>The SwiftMailer module replaces the default mail system that is shipped
           with Drupal and installs itself as the primary mail system. This allows
           you to choose how e-mails should be sent. Furthermore, with the Swift
           Mailer module you can easily add attachments to e-mails. To read more
@@ -30,11 +36,11 @@ function swiftmailer_admin_default_form($form, &$form_state) {
     $form['library'] = array(
         '#type' => 'fieldset',
         '#title' => t('Library location'),
-        '#description' => t('<p>The Swift Mailer library is required for this module
+        '#description' => t('<p>The SwiftMailer library is required for this module
           to work. You are advised to keep your libraries in the
-          <em>sites/all/libraries</em> directory. The Swift Mailer
+          <em>sites/all/libraries</em> directory. The SwiftMailer
           library can be downloaded from the !website.</p>',
-          array('!website' => l(t('Swift Mailer website'), 'http://swiftmailer.org/'))),
+          array('!website' => l(t('SwiftMailer website'), 'http://swiftmailer.org/'))),
         );
 
     $class = '';
@@ -42,14 +48,14 @@ function swiftmailer_admin_default_form($form, &$form_state) {
         $class = 'error';
 
         $form['library']['message'] = array(
-            '#markup' => t('<p>The Swift Mailer library could not be found in the path provided below.</p>'),
+            '#markup' => t('<p>The SwiftMailer library could not be found in the path provided below.</p>'),
             );
     }
 
     $form['library']['path'] = array(
         '#type' => 'textfield',
         '#title' => t('Library path'),
-        '#description' => t('The path to the Swift Mailer directory (e.g. sites/all/libraries/swiftmailer)'),
+        '#description' => t('The path to the SwiftMailer directory (e.g. sites/all/libraries/swiftmailer)'),
         '#required' => TRUE,
         '#default_value' => check_plain(variable_get(SWIFTMAILER_VARIABLE_PATH, SWIFTMAILER_VARIABLE_PATH_DEFAULT)),
         '#attributes' => array('class' => array($class)),
@@ -69,7 +75,7 @@ function swiftmailer_admin_default_form($form, &$form_state) {
 function swiftmailer_admin_default_form_validate($form, &$form_state) {
 
     if (!swiftmailer_validate_library($form_state['values']['library']['path'])) {
-        form_set_error('library][path', t('The provided path does not contain the Swift Mailer library.'));
+        form_set_error('library][path', t('The provided path does not contain the SwiftMailer library.'));
     }
 
 }

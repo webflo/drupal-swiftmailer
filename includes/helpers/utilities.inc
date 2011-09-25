@@ -5,13 +5,13 @@
  */
 
 /**
- * Validates whether the Swift Mailer library is available at the provided path.
+ * Validates whether the SwiftMailer library is available at the provided path.
  *
  * @param string $path
- *   The path to the base directory of the Swift Mailer library
+ *   The path to the base directory of the SwiftMailer library
  *
  * @return mixed
- *   The provided path exluding leading and trailing slashes if the Swift Mailer
+ *   The provided path exluding leading and trailing slashes if the SwiftMailer
  *   library is available at the provided path, and otherwise FALSE.
  */
 function swiftmailer_validate_library($path) {
@@ -101,7 +101,7 @@ function swiftmailer_get_character_set_options() {
 
 /**
  * Returns a list of e-mail headers which could be provided by Drupal, but which
- * should be ignored in order to make Swift Mailer work as smooth as possible.
+ * should be ignored in order to make SwiftMailer work as smooth as possible.
  *
  * @return array
  *   A list of e-mail headers which could be provided by Drupal, but which should

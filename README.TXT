@@ -1,9 +1,9 @@
 The default mail system in Drupal requires that PHP is configured to send e-mail.
 However, some servers are not set up to handle e-mail, and in some cases it may
 prove difficult to get e-mail support up and running. This module attempts to solve 
-this problem by delegating all e-mail handling to the Swift Mailer library which 
+this problem by delegating all e-mail handling to the SwiftMailer library which 
 is capable of sending e-mails directly through a SMTP server of your choice. The 
-module installs the Swift Mailer library as the default mail system in Drupal.
+module installs the SwiftMailer library as the default mail system in Drupal.
 Drupal can then be configured to send e-mails using an SMTP server of your choice,
 a local MTA such as sendmail or the mail functionality offered by PHP. 
 
@@ -12,15 +12,15 @@ images to e-mails.
 
 1.0 Configuration
 
-The module required you to download the Swift Mailer library separately to a
+The module required you to download the SwiftMailer library separately to a
 directory of your choice (relative to the Drupal installation). However, it is
 advised that libraries are kept in the 'sites/all/libraries' directory. If you keep
-the Swift Mailer library in 'sites/all/libraries/swiftmailer', then you need to
-configure the module to look for the Swift Mailer library in that directory. The
-location of the Swift Mailer library can be found on the page 'admin/config/swiftmailer'.
+the SwiftMailer library in 'sites/all/libraries/swiftmailer', then you need to
+configure the module to look for the SwiftMailer library in that directory. The
+location of the SwiftMailer library can be found on the page 'admin/config/swiftmailer'.
 
-After the module has been configured with the Swift Mailer library you are advised
-to make sure that the Swift Mailer library sends e-mails using the right transport
+After the module has been configured with the SwiftMailer library you are advised
+to make sure that the SwiftMailer library sends e-mails using the right transport
 option. You can choose between SMTP, sendmail (or any other locally installed MTA)
 and PHP's mail() functidocson. Please observe the various configuration options which
 are available for each of the transport options.
@@ -30,7 +30,7 @@ text or HTML by default. Furthermore, you can also set the character set which i
 to be used as default. You are advised not to change any of these options if you
 are uncertain about what they mean.
 
-You can test whether the Swift Mailer library sends e-mail messages correctly by
+You can test whether the SwiftMailer library sends e-mail messages correctly by
 going to 'admin/config/swiftmailer/test' when the module has been configured and
 you are ready to put it into action.
 

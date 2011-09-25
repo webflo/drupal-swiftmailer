@@ -41,15 +41,18 @@ class SWIFTMailSystem implements MailSystemInterface {
      */
     public function mail(array $message) {
 
-        //Validate whether the Swift Mailer module has been configured.
+        // Include required file.
+        module_load_include('inc', 'swiftmailer', '/includes/helpers/conversion');
+
+        //Validate whether the SwiftMailer module has been configured.
         $library_path = variable_get(SWIFTMAILER_VARIABLE_PATH, SWIFTMAILER_VARIABLE_PATH_DEFAULT);
         if (empty($library_path)) {
-            watchdog('swiftmailer', 'An attempt to send an e-mail failed. The Swift Mailer library could not be found by the Swift Mailer module.', array(), WATCHDOG_ERROR);
+            watchdog('swiftmailer', 'An attempt to send an e-mail failed. The SwiftMailer library could not be found by the SwiftMailer module.', array(), WATCHDOG_ERROR);
             drupal_set_message(t('An attempt to send the e-mail failed. The e-mail has not been sent.'), 'error');
             return;
         }
 
-        //Include the Swift Mailer library.
+        //Include the SwiftMailer library.
         require_once(drupal_realpath($library_path . '/lib/swift_required.php'));
 
         try {
@@ -58,7 +61,7 @@ class SWIFTMailSystem implements MailSystemInterface {
             $m = Swift_Message::newInstance();
 
             // Not all Drupal headers should be added to the e-mail message.
-            // Some headers must be supressed in order for Swift Mailer to
+            // Some headers must be supressed in order for SwiftMailer to
             // do its work properly.
             $suppressable_headers = swiftmailer_get_supressable_headers();
 
@@ -261,7 +264,7 @@ class SWIFTMailSystem implements MailSystemInterface {
                 $cid = $m->embed(Swift_Image::newInstance($content, $filename, $filemime));
                 
                 // The provided 'cid' needs to be replaced with the 'cid' returned
-                // by the Swift Mailer library.
+                // by the SwiftMailer library.
                 $body = $m->getBody();
                 $body = preg_replace('/cid.*' . $image->cid . '/', $cid, $body);
                 $m->setBody($body);
