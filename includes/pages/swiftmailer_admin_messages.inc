@@ -6,13 +6,7 @@
  */
 
 function swiftmailer_admin_messages_page() {
-
-    // Load dependencies.
-    module_load_include('inc', 'swiftmailer', '/includes/helpers/utilities');
-
-    // Return form.
     return drupal_get_form('swiftmailer_admin_messages_form');
-    
 }
 
 /**
@@ -25,7 +19,7 @@ function swiftmailer_admin_messages_form($form, &$form_state) {
     $form['#tree'] = TRUE;
 
     $form['description'] = array(
-        '#markup' => t('<p>This page allows you to configure settings which applies to e-mail messages.</p>'),
+        '#markup' => t('<p>This page allows you to configure settings which determines how e-mail messages are created.</p>'),
         );
 
     if (swiftmailer_validate_library(variable_get(SWIFTMAILER_VARIABLE_PATH, SWIFTMAILER_VARIABLE_PATH_DEFAULT))) {
@@ -65,7 +59,7 @@ function swiftmailer_admin_messages_form($form, &$form_state) {
     } else {
 
         $form['message'] = array(
-            '#markup' => t('<p>You need to configure the location of the SwiftMailer library. Please visit the !page
+            '#markup' => t('<p>You need to configure the location of the Swift Mailer library. Please visit the !page
               and configure the library to enable the configuration options on this page.</p>',
               array('!page' => l(t('library configuration page'), 'admin/config/swiftmailer'))),
             );

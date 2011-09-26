@@ -5,13 +5,7 @@
  */
 
 function swiftmailer_admin_transport_page() {
-
-// Load dependencies.
-    module_load_include('inc', 'swiftmailer', '/includes/helpers/utilities');
-
-    // Return form.
     return drupal_get_form('swiftmailer_admin_transport_form');
-    
 }
 
 /**
@@ -35,14 +29,10 @@ function swiftmailer_admin_transport_form($form, &$form_state) {
 
     // Display a page description.
     $form['description'] = array(
-        '#markup' => t('<p>The SwiftMailer module replaces the default mail system that is shipped
-          with Drupal and installs itself as the primary mail system. This allows
-          you to choose how e-mails should be sent. Furthermore, with the Swift
-          Mailer module you can easily add attachments to e-mails. To read more
-          about how this module works, please have a look at the !documentation.</p>'),
+        '#markup' => t('<p>This page allows you to configure settings which determines how e-mail messages are sent.</p>'),
         );
 
-    // Validate that the SwiftMailer library is available. Configuration options
+    // Validate that the Swift Mailer library is available. Configuration options
     // should only be displayed if the library is available.
     if (swiftmailer_validate_library(variable_get(SWIFTMAILER_VARIABLE_PATH, SWIFTMAILER_VARIABLE_PATH_DEFAULT))) {
 
@@ -69,7 +59,7 @@ function swiftmailer_admin_transport_form($form, &$form_state) {
                 'method' => 'replace',
                 'effect' => 'fade',
                 ),
-            '#description' => t('Not sure which transport type to choose? The !documentation gives you a good overview of the various transport types.', array('!documentation' => l(t('SwiftMailer documentation'), 'http://swiftmailer.org/docs/transport-types'))),
+            '#description' => t('Not sure which transport type to choose? The !documentation gives you a good overview of the various transport types.', array('!documentation' => l(t('Swift Mailer documentation'), 'http://swiftmailer.org/docs/transport-types'))),
             );
 
         $form['transport']['submit'] = array(
@@ -99,7 +89,7 @@ function swiftmailer_admin_transport_form($form, &$form_state) {
               server of your choice. You need to specify which SMTP server
               to use. Please refer to the !documentation for more details
               about this transport type.</p>',
-              array('!documentation' => l(t('SwiftMailer documentation'), 'http://swiftmailer.org/docs/smtp-transport'))),
+              array('!documentation' => l(t('Swift Mailer documentation'), 'http://swiftmailer.org/docs/smtp-transport'))),
             );
 
         $form['transport']['configuration'][SWIFTMAILER_TRANSPORT_SMTP]['server'] = array(
@@ -153,10 +143,10 @@ function swiftmailer_admin_transport_form($form, &$form_state) {
             '#markup' => t('<p>This transport type will send all e-mails using a locally
                             installed MTA such as Sendmail. You need to specify which
                             locally installed MTA to use by providing a path to the
-                            MTA. If you do not provide any path then SwiftMailer
+                            MTA. If you do not provide any path then Swift Mailer
                             defaults to /usr/sbin/sendmail. You can read more about
                             this transport type in the !documentation.</p>',
-                            array('!documentation' => l(t('SwiftMailer documentation'), 'http://swiftmailer.org/docs/sendmail-transport')))
+                            array('!documentation' => l(t('Swift Mailer documentation'), 'http://swiftmailer.org/docs/sendmail-transport')))
             );
 
         $form['transport']['configuration'][SWIFTMAILER_TRANSPORT_SENDMAIL]['path'] = array(
@@ -170,7 +160,7 @@ function swiftmailer_admin_transport_form($form, &$form_state) {
             '#type' => 'radios',
             '#title' => t('Mode'),
             '#options' => array('bs' => 'bs', 't' => 't '),
-            '#description' => t('Not sure which option to choose? Go with <em>bs</em>. You can read more about the above two modes in the !documentation.', array('!documentation' => l(t('SwiftMailer documentation'), 'http://swiftmailer.org/docs/sendmail-transport'))),
+            '#description' => t('Not sure which option to choose? Go with <em>bs</em>. You can read more about the above two modes in the !documentation.', array('!documentation' => l(t('Swift Mailer documentation'), 'http://swiftmailer.org/docs/sendmail-transport'))),
             '#default_value' => variable_get(SWIFTMAILER_VARIABLE_SENDMAIL_MODE, SWIFTMAILER_VARIABLE_SENDMAIL_MODE_DEFAULT),
             );
 
@@ -200,7 +190,7 @@ function swiftmailer_admin_transport_form($form, &$form_state) {
     } else {
 
         $form['message'] = array(
-            '#markup' => t('<p>You need to configure the location of the SwiftMailer library. Please visit the !page
+            '#markup' => t('<p>You need to configure the location of the Swift Mailer library. Please visit the !page
               and configure the library to enable the configuration options on this page.</p>',
               array('!page' => l(t('library configuration page'), 'admin/config/swiftmailer'))),
             );

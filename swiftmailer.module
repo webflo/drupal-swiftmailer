@@ -1,4 +1,7 @@
 <?php
+// Load dependencies.
+module_load_include('inc', 'swiftmailer', '/includes/helpers/utilities');
+
 //Define permissions
 DEFINE('SWIFTMAILER_ADMINISTER', 'swiftmailer_administer');
 
@@ -55,8 +58,8 @@ DEFINE('SWIFTMAILER_VARIABLE_CHARACTER_SET_DEFAULT', 'UTF-8');
 function swiftmailer_menu() {
   $items['admin/config/swiftmailer'] = array(
     'type'              => MENU_NORMAL_ITEM,
-    'title'             => 'SwiftMailer',
-    'description'       => 'Configure SwiftMailer',
+    'title'             => 'Swift Mailer',
+    'description'       => 'Configure Swift Mailer',
     'page callback'     => 'swiftmailer_admin_default_page',
     'file'              => 'includes/pages/swiftmailer_admin_default.inc',
     'access arguments'  => array(SWIFTMAILER_ADMINISTER),
@@ -66,7 +69,7 @@ function swiftmailer_menu() {
   $items['admin/config/swiftmailer/default'] = array(
     'type'              => MENU_DEFAULT_LOCAL_TASK,
     'title'             => 'Library',
-    'description'       => 'Configure where the SwiftMailer Library is located.',
+    'description'       => 'Configure where the Swift Mailer Library is located.',
     'page callback'     => 'swiftmailer_admin_default_page',
     'file'              => 'includes/pages/swiftmailer_admin_default.inc',
     'access arguments'  => array(SWIFTMAILER_ADMINISTER),
@@ -76,7 +79,7 @@ function swiftmailer_menu() {
   $items['admin/config/swiftmailer/transport'] = array(
     'type'              => MENU_LOCAL_TASK,
     'title'             => 'Transport',
-    'description'       => 'Configure how SwiftMailer will send e-mails.',
+    'description'       => 'Configure how Swift Mailer will send e-mails.',
     'page callback'     => 'swiftmailer_admin_transport_page',
     'file'              => 'includes/pages/swiftmailer_admin_transport.inc',
     'access arguments'  => array(SWIFTMAILER_ADMINISTER),
@@ -86,7 +89,7 @@ function swiftmailer_menu() {
   $items['admin/config/swiftmailer/messages'] = array(
     'type'              => MENU_LOCAL_TASK,
     'title'             => 'Messages',
-    'description'       => 'Configure how SwiftMailer will compose messages.',
+    'description'       => 'Configure how Swift Mailer will compose messages.',
     'page callback'     => 'swiftmailer_admin_messages_page',
     'file'              => 'includes/pages/swiftmailer_admin_messages.inc',
     'access arguments'  => array(SWIFTMAILER_ADMINISTER),
@@ -96,7 +99,7 @@ function swiftmailer_menu() {
   $items['admin/config/swiftmailer/test'] = array(
     'type'              => MENU_LOCAL_TASK,
     'title'             => 'Test',
-    'description'       => 'Configure how SwiftMailer will compose messages.',
+    'description'       => 'Configure how Swift Mailer will compose messages.',
     'page callback'     => 'swiftmailer_admin_test_page',
     'file'              => 'includes/pages/swiftmailer_admin_test.inc',
     'access arguments'  => array(SWIFTMAILER_ADMINISTER),
@@ -121,18 +124,36 @@ function swiftmailer_mail($key, &$message) {
             $image->filename = 'drupal.jpg';
             $image->cid = 'drupal-img';
 
-
             $message['params']['format'] = SWIFTMAILER_FORMAT_HTML;
             $message['params']['images'] = array($image);
 
             $text[] = '<img src="cid:drupal-img" />';
             $text[] = t('<strong>Dear !user,</strong>', array('!user' => $user->name));
-            $text[] = t('<p>This e-mail has been sent from !site by the SwiftMailer module. The module has been successfully configured if this message has arrived to your inbox.</p>', array('!site' => variable_get('site_name', 'a Drupal site')));
+            $text[] = t('<p>This e-mail has been sent from !site by the Swift Mailer module. The module has been successfully configured if this message has arrived to your inbox.</p>', array('!site' => variable_get('site_name', 'a Drupal site')));
             $text[] = t('Kind regards<br /><br />');
-            $text[] = t('The SwiftMailer module');
+            $text[] = t('The Swift Mailer module');
             
-            $message['subject'] = t('SwiftMailer Test');
+            $message['subject'] = t('Swift Mailer Test');
             $message['body'] = $text;
             break;
     }
+}
+
+/**
+ * Implements hook_theme().
+ */
+function swiftmailer_theme($existing, $type, $theme, $path) {
+
+    $config = array(
+        'swiftmailer' => array(
+            'template' => 'swiftmailer',
+            'arguments' => array(
+                'message' => '',
+                ),
+            'path' => drupal_get_path('module', 'swiftmailer') . '/includes/theme',
+            ),
+        );
+
+    return $config;
+
 }

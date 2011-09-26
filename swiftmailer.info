@@ -1,5 +1,5 @@
-name = SwiftMailer
-description = This module delegates handling of e-mails to the SwiftMailer library.
+name = Swift Mailer
+description = This module delegates handling of e-mails to the Swift Mailer library.
 core = 7.x
 version = alpha
 package = Mail

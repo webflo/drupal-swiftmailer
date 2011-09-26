@@ -5,13 +5,7 @@
  */
 
 function swiftmailer_admin_test_page() {
-
-    // Load dependencies.
-    module_load_include('inc', 'swiftmailer', '/includes/helpers/utilities');
-    
-    // Return form.    
     return drupal_get_form('swiftmailer_admin_test_form');
-    
 }
 
 function swiftmailer_admin_test_form($form, &$form_state) {
@@ -27,7 +21,7 @@ function swiftmailer_admin_test_form($form, &$form_state) {
         $form['test'] = array(
             '#type' => 'fieldset',
             '#title' => t('Recipient'),
-            '#description' => t('<p>You can send a test e-mail to a recipient of your choice. The e-mail will be sent using the default values as provided by the SwiftMailer module or as configured by you.</p>'),
+            '#description' => t('<p>You can send a test e-mail to a recipient of your choice. The e-mail will be sent using the default values as provided by the Swift Mailer module or as configured by you.</p>'),
             );
 
         global $user;
@@ -46,7 +40,7 @@ function swiftmailer_admin_test_form($form, &$form_state) {
     } else {
 
         $form['message'] = array(
-            '#markup' => t('<p>You need to configure the location of the SwiftMailer library. Please visit the !page
+            '#markup' => t('<p>You need to configure the location of the Swift Mailer library. Please visit the !page
               and configure the library to enable the configuration options on this page.</p>',
               array('!page' => l(t('library configuration page'), 'admin/config/swiftmailer'))),
             );

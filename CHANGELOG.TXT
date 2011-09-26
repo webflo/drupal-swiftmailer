@@ -25,3 +25,8 @@
  - Replaced 'prodived' with 'provided' in utilities.inc
  - Renamed files and functions for administration to follow naming conventions.
  - Changed module name from 'swift_mailer' to 'swiftmailer'.
+
+2011-25-09
+ - Finished first round of work based on initial feedback.
+ - Corrected issues identified by the Coder module.
+ - Updated documentation.

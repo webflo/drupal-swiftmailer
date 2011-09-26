@@ -2,7 +2,7 @@
 /**
  * @file
  * The implementation of MailSystemInterface which delegates handling of e-mails
- * to the SwiftMailer library.
+ * to the Swift Mailer library.
  */
 class SWIFTMailSystem implements MailSystemInterface {
 
@@ -23,8 +23,9 @@ class SWIFTMailSystem implements MailSystemInterface {
         if (!empty($message) && is_array($message)) {
             $line_endings = variable_get('mail_line_endings', MAIL_LINE_ENDINGS);
             $message['body'] = implode($line_endings, $message['body']);
+            $message['body'] = theme('swiftmailer', $message);
         }
-
+        
         return $message;
     }
 
@@ -44,15 +45,15 @@ class SWIFTMailSystem implements MailSystemInterface {
         // Include required file.
         module_load_include('inc', 'swiftmailer', '/includes/helpers/conversion');
 
-        //Validate whether the SwiftMailer module has been configured.
+        //Validate whether the Swift Mailer module has been configured.
         $library_path = variable_get(SWIFTMAILER_VARIABLE_PATH, SWIFTMAILER_VARIABLE_PATH_DEFAULT);
         if (empty($library_path)) {
-            watchdog('swiftmailer', 'An attempt to send an e-mail failed. The SwiftMailer library could not be found by the SwiftMailer module.', array(), WATCHDOG_ERROR);
+            watchdog('swiftmailer', 'An attempt to send an e-mail failed. The Swift Mailer library could not be found by the Swift Mailer module.', array(), WATCHDOG_ERROR);
             drupal_set_message(t('An attempt to send the e-mail failed. The e-mail has not been sent.'), 'error');
             return;
         }
 
-        //Include the SwiftMailer library.
+        //Include the Swift Mailer library.
         require_once(drupal_realpath($library_path . '/lib/swift_required.php'));
 
         try {
@@ -61,7 +62,7 @@ class SWIFTMailSystem implements MailSystemInterface {
             $m = Swift_Message::newInstance();
 
             // Not all Drupal headers should be added to the e-mail message.
-            // Some headers must be supressed in order for SwiftMailer to
+            // Some headers must be supressed in order for Swift Mailer to
             // do its work properly.
             $suppressable_headers = swiftmailer_get_supressable_headers();
 
@@ -72,19 +73,14 @@ class SWIFTMailSystem implements MailSystemInterface {
             if (!empty($message['headers']) && is_array($message['headers'])) {
                 foreach ($message['headers'] as $header_key => $header_value) {
 
-                    // Skip header if header key is empty.
-                    if (empty($header_key)) {
+                    // Check wether the current header key is empty or represents 
+                    // a header that should be supressed. If yes, then skip header.
+                    if (empty($header_key) || in_array($header_key, $suppressable_headers)) {
                         continue;
                     }
 
                     // Get header type.
                     $header_type = swiftmailer_get_headertype($header_key, $header_value);
-
-                    // Check wether the current header key represents a header that
-                    // should be supressed.
-                    if (in_array($header_key, $suppressable_headers)) {
-                        continue;
-                    }
 
                     // Add the current header to the e-mail message.
                     switch ($header_type) {
@@ -119,8 +115,8 @@ class SWIFTMailSystem implements MailSystemInterface {
             $m->setSubject($message['subject']);
             
             // Add content to the message. The default content type will be applied
-            // to the message (via setBody()) unless a charset is provided in
-            // $message['params']['charset'].
+            // to the message (via setBody()) unless a content type is provided in
+            // $message['params']['format'].
             $m->getHeaders()->removeAll('Content-Type');
             if (empty($message['params']['format'])) {
                 $m->setBody($message['body'], variable_get(SWIFTMAILER_VARIABLE_FORMAT, SWIFTMAILER_VARIABLE_FORMAT_DEFAULT));
@@ -137,22 +133,45 @@ class SWIFTMailSystem implements MailSystemInterface {
                 $m->setCharset($message['params']['charset']);
             }
 
-            // Process attachments.
-            if (!empty($message['params']['attachments']) && is_array($message['params']['attachments'])) {
-                $this->attach($m, $message['params']['attachments']);
+            // Validate that $message['params']['files'] is an array.
+            if (empty($message['params']['files']) || !is_array($message['params']['files'])) {
+                $message['params']['files'] = array();
             }
 
-            // Process images.
+            // Let other modules get the chance to add attachable files.
+            $files = module_invoke_all('swiftmailer_attach', $message['key']);
+            if (!empty($files) && is_array($files)) {
+                $message['params']['files'] = array_merge(array_values($message['params']['files']), array_values($files));
+            }
+
+            // Attach files.
+            if (empty($message['params']['files']) && !is_array($message['params']['files'])) {
+                $this->embed($m, $message['params']['files']);
+            }            
+
+            // Validate that $message['params']['images'] is an array.
+            if (empty($message['params']['images']) || !is_array($message['params']['images'])) {
+                $message['params']['images'] = array();
+            }
+
+            // Let other modules get the chance to add embeddable images.
+            $images = module_invoke_all('swiftmailer_embed', $message['key']);
+            if (!empty($images) && is_array($images)) {
+                $message['params']['images'] = array_merge(array_values($message['params']['images']), array_values($images));
+            }
+
+            // Embed images.
             if (!empty($message['params']['images']) && is_array($message['params']['images'])) {
                 $this->embed($m, $message['params']['images']);
             }
 
-            // Create a mailer which we will use to send the message.
+            // If required, create a mailer which will be used to send the message.
             if (empty(static::$mailer)) {
 
                 //Get the configured transport type.
                 $transport_type = variable_get(SWIFTMAILER_VARIABLE_TRANSPORT, SWIFTMAILER_VARIABLE_TRANSPORT_DEFAULT);
 
+                // Configure the mailer based on the configured transport type.
                 switch ($transport_type) {
                     case SWIFTMAILER_TRANSPORT_SMTP:
 
@@ -264,7 +283,7 @@ class SWIFTMailSystem implements MailSystemInterface {
                 $cid = $m->embed(Swift_Image::newInstance($content, $filename, $filemime));
                 
                 // The provided 'cid' needs to be replaced with the 'cid' returned
-                // by the SwiftMailer library.
+                // by the Swift Mailer library.
                 $body = $m->getBody();
                 $body = preg_replace('/cid.*' . $image->cid . '/', $cid, $body);
                 $m->setBody($body);
