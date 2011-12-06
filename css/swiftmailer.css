@@ -1,0 +1,10 @@
+.swiftmailer-image-preview {
+    width: 20%;
+    float: left;
+}
+
+.swiftmailer-image-cid {
+    width: 70%;
+    float: left;
+    padding: 0px 0px 10px 0px;
+}

@@ -20,13 +20,41 @@ class SWIFTMailSystem implements MailSystemInterface {
      *   The message as it should be sent.
      */
     public function format(array $message) {
-        if (!empty($message) && is_array($message)) {
-            $line_endings = variable_get('mail_line_endings', MAIL_LINE_ENDINGS);
-            $message['body'] = implode($line_endings, $message['body']);
-            $message['body'] = theme('swiftmailer', $message);
+      if (!empty($message) && is_array($message)) {
+
+        // Get default mail line endings and merge all lines in the e-mail body
+        // separated by the mail line endings.
+        $line_endings = variable_get('mail_line_endings', MAIL_LINE_ENDINGS);            
+        $message['body'] = implode($line_endings, $message['body']);
+
+        // theme message if the format is set to be HTML.
+        if (!empty($message['params']['format']) && $message['params']['format'] ==  SWIFTMAILER_FORMAT_HTML) {
+          $message['body'] = theme('swiftmailer', $message);
         }
-        
+
+        // Process any images specified by 'image:' which are to be added later
+        // in the process. All we do here is to alter the message so that image
+        // paths are replaced with cid's. Each image gets added to the array
+        // which keeps track of which images to embed in the e-mail.
+        $embeddable_images = array();
+        preg_match('/"image:.*"/', $message['body'], $embeddable_images);
+        foreach ($embeddable_images as $embeddable_image) {
+          $image_path = $embeddable_image;
+          $image_path = preg_replace('/"image:/', '', $image_path);
+          $image_path = preg_replace('/"/', '', $image_path);
+          $image_name = basename($image_path);
+
+          $image = new stdClass();
+          $image->uri = $image_path;
+          $image->filename = $image_name;
+          $image->filemime = file_get_mimetype($image_path);
+          $image->cid = swiftmailer_get_random(10);
+          $message['params']['images'][] = $image;
+          $message['body'] = preg_replace($embeddable_image, 'cid:' . $image->cid, $message['body']);
+        }
+
         return $message;
+      }
     }
 
     /**
@@ -149,17 +177,6 @@ class SWIFTMailSystem implements MailSystemInterface {
                 $this->embed($m, $message['params']['files']);
             }            
 
-            // Validate that $message['params']['images'] is an array.
-            if (empty($message['params']['images']) || !is_array($message['params']['images'])) {
-                $message['params']['images'] = array();
-            }
-
-            // Let other modules get the chance to add embeddable images.
-            $images = module_invoke_all('swiftmailer_embed', $message['key']);
-            if (!empty($images) && is_array($images)) {
-                $message['params']['images'] = array_merge(array_values($message['params']['images']), array_values($images));
-            }
-
             // Embed images.
             if (!empty($message['params']['images']) && is_array($message['params']['images'])) {
                 $this->embed($m, $message['params']['images']);
@@ -260,7 +277,7 @@ class SWIFTMailSystem implements MailSystemInterface {
     }
 
     private function embed(Swift_Message $m, $images) {
-        
+
         // Iterate through each array element.
         foreach ($images as $image) {
 

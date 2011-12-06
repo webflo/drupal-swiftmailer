@@ -30,3 +30,13 @@
  - Finished first round of work based on initial feedback.
  - Corrected issues identified by the Coder module.
  - Updated documentation.
+ 
+ 2011-06-12
+ - Finished worked on theming support. E-mails can now be themed through Drupal's
+ 	 theme system. Adding inline images should also be much easier for themers now.
+ - Renamed CHANGELOG.TXT to CHANGELOG.txt
+ - Renamed README.TXT to README.txt
+ - The 'swiftmailer.info' file now only contains classes in the files[] array.
+ - Hook documentation blocks have been improved.
+ - Indentation issues have been fixed.
+ 

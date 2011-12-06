@@ -1,4 +1,9 @@
 <?php
+/**
+ * @file
+ * This is the primary module file.
+ */
+
 // Load dependencies.
 module_load_include('inc', 'swiftmailer', '/includes/helpers/utilities');
 
@@ -36,6 +41,7 @@ DEFINE('SWIFTMAILER_VARIABLE_SENDMAIL_PATH', 'swiftmailer_sendmail_path');
 DEFINE('SWIFTMAILER_VARIABLE_SENDMAIL_MODE', 'swiftmailer_sendmail_mode');
 DEFINE('SWIFTMAILER_VARIABLE_CHARACTER_SET', 'swiftmailer_character_set');
 
+
 //Define system variables defaults.
 DEFINE('SWIFTMAILER_VARIABLE_MAIL_SYSTEM_OLD_DEFAULT', '');
 DEFINE('SWIFTMAILER_VARIABLE_PATH_DEFAULT', '');
@@ -46,14 +52,12 @@ DEFINE('SWIFTMAILER_VARIABLE_SMTP_PORT_DEFAULT', '25');
 DEFINE('SWIFTMAILER_VARIABLE_SMTP_ENCRYPTION_DEFAULT', '');
 DEFINE('SWIFTMAILER_VARIABLE_SMTP_USERNAME_DEFAULT', '');
 DEFINE('SWIFTMAILER_VARIABLE_SMTP_PASSWORD_DEFAULT', '');
-DEFINE('SWIFTMAILER_VARIABLE_SENDMAIL_PATH_DEFAULT', '/usr/bin/sendmail');
+DEFINE('SWIFTMAILER_VARIABLE_SENDMAIL_PATH_DEFAULT', '/usr/sbin/sendmail');
 DEFINE('SWIFTMAILER_VARIABLE_SENDMAIL_MODE_DEFAULT', 'bs');
 DEFINE('SWIFTMAILER_VARIABLE_CHARACTER_SET_DEFAULT', 'UTF-8');
 
 /**
- *
  * Implements hook_menu().
- *
  */
 function swiftmailer_menu() {
   $items['admin/config/swiftmailer'] = array(
@@ -113,29 +117,20 @@ function swiftmailer_menu() {
  * Implements hook_mail().
  */
 function swiftmailer_mail($key, &$message) {
-    switch ($key) {
-        default:
-            global $user;
+  switch ($key) {
+    default:
+      global $user;
 
-            $image = new stdClass();
-            $image->uri = 'sites/all/modules/swiftmailer/images/drupal.jpg';
-            $image->type = 'file';
-            $image->filemime = 'image/jpeg';
-            $image->filename = 'drupal.jpg';
-            $image->cid = 'drupal-img';
+      $message['params']['format'] = SWIFTMAILER_FORMAT_HTML;
 
-            $message['params']['format'] = SWIFTMAILER_FORMAT_HTML;
-            $message['params']['images'] = array($image);
-
-            $text[] = '<img src="cid:drupal-img" />';
-            $text[] = t('<strong>Dear !user,</strong>', array('!user' => $user->name));
-            $text[] = t('<p>This e-mail has been sent from !site by the Swift Mailer module. The module has been successfully configured if this message has arrived to your inbox.</p>', array('!site' => variable_get('site_name', 'a Drupal site')));
-            $text[] = t('Kind regards<br /><br />');
-            $text[] = t('The Swift Mailer module');
+      $text[] = t('<strong>Dear !user,</strong>', array('!user' => $user->name));
+      $text[] = t('<p>This e-mail has been sent from !site by the Swift Mailer module. The module has been successfully configurede.</p>', array('!site' => variable_get('site_name', 'a Drupal site')));
+      $text[] = t('Kind regards<br /><br />');
+      $text[] = t('The Swift Mailer module');
             
-            $message['subject'] = t('Swift Mailer Test');
-            $message['body'] = $text;
-            break;
+      $message['subject'] = t('Swift Mailer has been successfully configured!');
+      $message['body'] = $text;
+      break;
     }
 }
 
@@ -144,16 +139,16 @@ function swiftmailer_mail($key, &$message) {
  */
 function swiftmailer_theme($existing, $type, $theme, $path) {
 
-    $config = array(
-        'swiftmailer' => array(
-            'template' => 'swiftmailer',
-            'arguments' => array(
-                'message' => '',
-                ),
-            'path' => drupal_get_path('module', 'swiftmailer') . '/includes/theme',
-            ),
-        );
+  $config = array(
+    'swiftmailer' => array(
+      'template' => 'swiftmailer',
+      'arguments' => array(
+        'message' => '',
+        ),
+      'path' => drupal_get_path('module', 'swiftmailer') . '/includes/theme',
+      ),
+    );
 
-    return $config;
+  return $config;
 
 }

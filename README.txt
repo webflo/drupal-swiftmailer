@@ -7,12 +7,12 @@ module installs the Swift Mailer library as the default mail system in Drupal.
 Drupal can then be configured to send e-mails using an SMTP server of your choice,
 a local MTA such as sendmail or the mail functionality offered by PHP. 
 
-Furthermore, the module also lets module developers add attachments and inline 
-images to e-mails.
+Furthermore, the module also lets both theme and module developers add attachments
+and inline mages to e-mails.
 
 1.0 Configuration
 
-The module required you to download the Swift Mailer library separately to a
+The module requires you to download the Swift Mailer library separately to a
 directory of your choice (relative to the Drupal installation). However, it is
 advised that libraries are kept in the 'sites/all/libraries' directory. If you keep
 the Swift Mailer library in 'sites/all/libraries/swiftmailer', then you need to
@@ -22,7 +22,7 @@ location of the Swift Mailer library can be found on the page 'admin/config/swif
 After the module has been configured with the Swift Mailer library you are advised
 to make sure that the Swift Mailer library sends e-mails using the right transport
 option. You can choose between SMTP, sendmail (or any other locally installed MTA)
-and PHP's mail() functidocson. Please observe the various configuration options which
+and PHP's mail() function. Please observe the various configuration options which
 are available for each of the transport options.
 
 You also have the chance to decide whether e-mail messages should be sent as plain
@@ -34,12 +34,13 @@ You can test whether the Swift Mailer library sends e-mail messages correctly by
 going to 'admin/config/swiftmailer/test' when the module has been configured and
 you are ready to put it into action.
 
-2.0 Theming
+2.0 Theming E-mails
 
 All e-mails sent by the SwiftMailer module can be themed. This is useful when
 e-mails should reflect the look and feel of the website it was sent from. The
 SwiftMailer modules delegates theming to the Drupal theming system. This means
-that you can theme e-mails the same way you theme other content.
+that you can theme e-mails the same way you theme other content. The theme hook
+you need to use when interacting with the theming system is 'swiftmailer'.
 
 2.1 Theme File
 
@@ -59,7 +60,7 @@ what a 'swiftmailer.tpl.php' might look like.
 
 2.1.1 Theme File Variables
 
-This section is an overview of the basic variables that are available from the
+This section is an overview of the basic variables that are available within the
 theme file 'swiftmailer.tpl.php'. Additional variables might be added by Drupal
 or other modules.
 
@@ -79,58 +80,16 @@ $subject
 $body
   The actual content.
 
-2.2 Theme Functions
+Note!
 
-Just as you have the chance to control how e-mails are formatted with a theme file,
-you also have the chance to use a theme function to achieve the same result. The
-hook which you will be using to theme e-mails is called 'swiftmailer'. Thus, if you
-are developing a theme which is to theme e-mails with a function, you would need
-to call the function yourtheme_process_swiftmailer(&$variables). For a complete
-list of all available theme functions, please refer to the theme() documentation
-at http://api.drupal.org/api/drupal/includes--theme.inc/function/theme/7. The
-
-2.3 Theming Scenarios
-
-This section demonstrates how to solve different theming scenarios. The scenarios
-are intended to cover the most usual use cases.
-
-2.3.1 Theme Function/Theme File Need To Add An Inline Image.
-
-Some themes includes an image which need to be displayed in all e-mails. This might
-be a logo or artwork which need to be displayed in the header or footer of the e-mail.
-However, the hook_mail() function should not be responsible for adding the logo or
-artwork as this ideally is the responsibility of the theme.
-
-What you need to do in this case is a two step process. The first step will be
-to add the markup of the logo or artwork from the theme file or theme function.
-However, the image markup needs to reference the image by CID - and not by URL.
-The below line of code demonstrates this.
-
-<img src="cid:logo" />
-
-Now, the actual image (identified by "logo") needs to be added to the e-mail.
-This is done by having your theme implement the hook 'swiftmailer_embed'. Thus,
-your theme would have a function called mytheme_swiftmailer_embed($key) which
-returns an array holding one or more images to embed. The returned array needs
-to hold stdClass instances each representing an image. Please see section 3.3 for
-more details about this. The below block of code demonstrates this.
-
-function mytheme_swiftmailer_embed($key) {
-
-    $image = new stdClass();
-    $image->uri = 'sites/all/modules/swiftmailer/images/drupal.jpg';
-    $image->type = 'file';
-    $image->filemime = 'image/jpeg';
-    $image->filename = 'logo.jpg';
-    $image->cid = 'logo';
-
-    return $image;
-
-}
-
-Please observe how the image defined in the above block of code has the 'cid'
-field set to 'logo'. This establishes a link between the markup and the actual
-image file.
+You can make even more variables available in 'swiftmailer.tpl.php' if you implement
+your own preprocess function. If you would like to make more variables available from
+a module you control, then you simply just need to implement the preprocess function
+[yourmodule]_swiftmailer_preprocess(&$variables). Similarly, if you want to make more
+variables available from your theme, then all you need is to implement the preprocess
+function [yourtheme]_swiftmailer_preprocess(&$variables). You can read more about which
+preprocess and process functions that are available form the 'swiftmailer' hook in the
+Drupal 7 ocumentation for the function theme().
 
 3.0 Developers
 
@@ -176,6 +135,10 @@ are not managed by drupal, you then need to create an instance of stdClass and p
 that instance with the fields 'uri', 'filename' and 'filemime'. Drupal's drupal_realpath() 
 will be used to determine the actual location of the provided file as given in the 'uri' 
 field. Thus, files from both public and private file systems can be attached to e-mails.
+
+Note!
+The Swift Mailer module has not been tested with stream wrappers other than the default
+public and private. It might not work other stream wrappers.
 
 The below example demonstrates both how to attach a file managed by Drupal and a file
 which is not managed by Drupal.
@@ -251,26 +214,32 @@ function swiftmailer_swiftmailer_attach($key) {
 
 3.3 Inline Images
 
-Adding inline images to e-mails is just as easy as adding files as attachments. The
-procedure is more or less identical.
+Adding inline images to e-mails is just as easy as adding files as attachments. You can
+choose between two ways of adding images. The first one assumes that your module does all
+the work, and the second assumes that your theme takes care of specifying which images to
+display as inline images.
 
-All images which are to be attached to an e-mail need to be represented as instances of 
-stdClass. This makes it easy for you to add image files that are managed by Drupal, as 
-the file_load() function will return an stdClass instance which represents a given image
-file. However, in contrast to attachments, you will ALWAYS need to manually apply the field
-'cid' to an image file which is to be used as an inline image. The 'cid' field need to hold
-the id of the image file, and will be used to establish a link between the attached image 
-and its display location in the e-mail body.
+3.3.1   Let your module do the work!
 
-All stdClass instances returned by Drupal which represents image files are populated with 
-the fields 'uri', 'filename' and 'filemime'. Thus, if you would like to attach an image file 
-that are not managed by Drupal, you then need to create an instance of stdClass and populate
-that instance with the fields 'uri', 'filename' and 'filemime'. Drupal's drupal_realpath() 
-will be used to determine the actual location of the provided image file as given in the 'uri' 
-field. Thus, image files from both public and private file systems can be attached to e-mails.
+Images which are to be attached to an e-mail need to be represented as instances
+of stdClass. This makes it easy for you to add image files that are managed by
+Drupal, as the file_load() function will return an stdClass instance which
+represents a given image file. However, in contrast to attachments, you will
+need to manually apply the field 'cid' to an image file which is to be used as
+an inline image. The 'cid' field needs to hold the id of the image file, and
+will be used to establish a link between the attached image and its display
+location in the e-mail body.
 
-The below example demonstrates both how to attach an image file managed by Drupal and an image
-file which is not managed by Drupal.
+All stdClass instances returned by Drupal which represents (image) files are
+populated with the fields 'uri', 'filename' and 'filemime'. Thus, if you would
+like to attach an image file that are not managed by Drupal, you then need to
+create an instance of stdClass and populate that instance with the fields 'uri',
+'filename' and 'filemime'. Drupal's drupal_realpath() will be used to determine
+the actual location of the provided image file as given in the 'uri' field. Thus,
+image files from both public and private file systems can be attached to e-mails.
+
+The below example demonstrates both how to attach an image file that is managed
+by Drupal.
 
 /**
  * Implementation of hook_mail().
@@ -285,10 +254,10 @@ function modulename_mail($key, &$message, $params) {
       $text[] = '<img src="cid:' . $logo_id . '" />;
       $text[] = t('<p>This is an automatically generated test e-mail with an inline image..</p>');
 
-			//Inline image (managed by Drupal).
-			$inline_image = file_load(1);
-			$inline_image->cid = $logo_id;
-			$message['images'][] = inline_image;
+      //Inline image (managed by Drupal).
+      $inline_image = file_load(1);
+      $inline_image->cid = $logo_id;
+      $message['images'][] = inline_image;
 
       $message['subject'] = t('Test');
       $message['body'] = $text;
@@ -297,19 +266,19 @@ function modulename_mail($key, &$message, $params) {
 
 }
 
-3.3.1 The Embed Hook
+3.3.2   Let your theme do the work!
 
-The SwiftMailer module allows other modules to add embeddable images to e-mails. This
-is done through the hook 'swiftmailer_embed' which other themes or modules need to
-implement in order to add e-mails. The below block of code demonstrates how a theme or
-module can add attachments to an e-mail using the 'swiftmailer_embed' hook.
+Adding inline images from a theme might be even easier than adding inline images
+from a module. The first thing you need to do is to add markup to your the theme
+file which is responsible for showing the images. Now, the markup needs to be a
+little different than the markup required when adding inline images from a module.
+Instead of referencing images by CID, you simply reference images by their path.
+The below line of code demonstrates this.
 
-function swiftmailer_swiftmailer_embed($key) {
+<img src="image:/sites/all/themes/mytheme/images/logo.jpg">
+<img src="image:<?php print drupal_get_path('module', 'mymodule') . '/images/drupal.jpg'; ?>" />
 
-    // Load file which is managed by Drupal.
-    $image =  file_load(2);
-    $image->cid = "logo";
-
-    return $image;
-
-}
+The essential part in the above lines of code is to make sure that the path of the
+image is prefixed with 'image:'. This tells the Swift Mailer module to embed that
+image file. The Swift Mailer module will automatically take care of assigning the
+image a CID to establish a link between the image and the markup.
