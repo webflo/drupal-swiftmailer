@@ -116,16 +116,6 @@ function swiftmailer_get_supressable_headers() {
 }
 
 /**
- * Validates uploaded theme image on theme settings page.
- */
-function swiftmailer_validate_theme_image(&$form, &$form_state) {
-
-  // Get Drupal's default file scheme.
-  $default_scheme = file_default_scheme();
-
-}
-
-/**
  * Returns a random value
  * @param $length
  *  An integer determining the length of the returned random value.

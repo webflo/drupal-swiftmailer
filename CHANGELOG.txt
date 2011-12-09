@@ -39,4 +39,3 @@
  - The 'swiftmailer.info' file now only contains classes in the files[] array.
  - Hook documentation blocks have been improved.
  - Indentation issues have been fixed.
- 

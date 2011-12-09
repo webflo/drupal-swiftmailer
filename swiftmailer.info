@@ -3,6 +3,5 @@ description = This module delegates handling of e-mails to the Swift Mailer libr
 core = 7.x
 version = alpha
 package = Mail
-dependencies[] = file
 files[] = includes/classes/SWIFTMailSystem.inc
 configure = admin/config/swiftmailer
