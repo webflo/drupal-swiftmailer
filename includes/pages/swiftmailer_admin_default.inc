@@ -38,12 +38,28 @@ function swiftmailer_admin_default_form($form, &$form_state) {
         );
 
     $class = '';
-    if (!swiftmailer_validate_library(variable_get(SWIFTMAILER_VARIABLE_PATH, SWIFTMAILER_VARIABLE_PATH_DEFAULT))) {
+    $path = variable_get(SWIFTMAILER_VARIABLE_PATH, SWIFTMAILER_VARIABLE_PATH_DEFAULT);
+
+    if (!swiftmailer_validate_library($path)) {
+
+      // attempt to automatically locate the Swift Mailer library.
+      $alternatives = file_scan_directory('sites/all/libraries', '/Swift.php/');
+      
+      if (empty($alternatives)) {
+      
         $class = 'error';
 
         $form['library']['message'] = array(
             '#markup' => t('<p>The Swift Mailer library could not be found in the path provided below.</p>'),
             );
+
+      } else {
+
+        $path = reset($alternatives)->uri;
+        $path = preg_replace('/\/lib\/classes\/Swift.php/', '', $path);
+
+      }
+
     }
 
     $form['library']['path'] = array(
@@ -51,7 +67,7 @@ function swiftmailer_admin_default_form($form, &$form_state) {
         '#title' => t('Library path'),
         '#description' => t('The path to the Swift Mailer directory (e.g. sites/all/libraries/swiftmailer)'),
         '#required' => TRUE,
-        '#default_value' => check_plain(variable_get(SWIFTMAILER_VARIABLE_PATH, SWIFTMAILER_VARIABLE_PATH_DEFAULT)),
+        '#default_value' => check_plain($path),
         '#attributes' => array('class' => array($class)),
         );
 

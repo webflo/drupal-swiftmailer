@@ -196,8 +196,11 @@ class SWIFTMailSystem implements MailSystemInterface {
                 $this->embed($m, $message['params']['images']);
             }
 
+            static $mailer;
+
             // If required, create a mailer which will be used to send the message.
-            if (empty(static::$mailer)) {
+            //if (empty(static::$mailer)) {
+            if (empty($mailer)) {
 
                 //Get the configured transport type.
                 $transport_type = variable_get(SWIFTMAILER_VARIABLE_TRANSPORT, SWIFTMAILER_VARIABLE_TRANSPORT_DEFAULT);
@@ -231,7 +234,8 @@ class SWIFTMailSystem implements MailSystemInterface {
                             $transport->setPassword($password);
                         }
 
-                        static::$mailer = Swift_Mailer::newInstance($transport);
+                        //static::$mailer = Swift_Mailer::newInstance($transport);
+                        $mailer = Swift_Mailer::newInstance($transport);
                         break;
 
                     case SWIFTMAILER_TRANSPORT_SENDMAIL:
@@ -242,20 +246,23 @@ class SWIFTMailSystem implements MailSystemInterface {
 
                         //Instantiate transport.
                         $transport = Swift_SendmailTransport::newInstance($path . ' -' . $mode);
-                        static::$mailer = Swift_Mailer::newInstance($transport);
+                        //static::$mailer = Swift_Mailer::newInstance($transport);
+                        $mailer = Swift_Mailer::newInstance($transport);
                         break;
 
                     case SWIFTMAILER_TRANSPORT_NATIVE:
 
                         //Instantiate transport.
                         $transport = Swift_MailTransport::newInstance();
-                        static::$mailer = Swift_Mailer::newInstance($transport);
+                        //static::$mailer = Swift_Mailer::newInstance($transport);
+                        $mailer = Swift_Mailer::newInstance($transport);
                         break;
                 }
             }
 
             // Send the message.
-            return static::$mailer->send($m);
+            //return static::$mailer->send($m);
+            return $mailer->send($m);
 
         } catch (Exception $e) {
 

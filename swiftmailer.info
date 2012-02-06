@@ -1,7 +1,6 @@
 name = Swift Mailer
 description = This module delegates handling of e-mails to the Swift Mailer library.
 core = 7.x
-version = alpha
 package = Mail
 files[] = includes/classes/SWIFTMailSystem.inc
 configure = admin/config/swiftmailer

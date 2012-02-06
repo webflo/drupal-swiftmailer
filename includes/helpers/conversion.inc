@@ -171,7 +171,7 @@ function swiftmailer_is_date_header($key, $value) {
  * @param string $value
  *   The header value.
  */
-function swift_mailer_add_date_header(Swift_Message $message, $key, $value) {
+function swiftmailer_add_date_header(Swift_Message $message, $key, $value) {
 
     // Remove any already existing header identified by the provided key.
     swiftmailer_remove_header($message, $key);

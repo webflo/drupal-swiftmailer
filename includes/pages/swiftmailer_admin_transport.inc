@@ -124,7 +124,7 @@ function swiftmailer_admin_transport_form($form, &$form_state) {
             );
 
         $form['transport']['configuration'][SWIFTMAILER_TRANSPORT_SMTP]['password'] = array(
-            '#type' => 'textfield',
+            '#type' => 'password',
             '#title' => t('Password'),
             '#description' => t('A password required by the SMTP server (leave blank if not required)'),
             '#default_value' => check_plain(variable_get(SWIFTMAILER_VARIABLE_SMTP_PASSWORD, SWIFTMAILER_VARIABLE_SMTP_PASSWORD_DEFAULT)),
