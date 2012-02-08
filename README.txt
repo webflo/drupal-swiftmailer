@@ -282,3 +282,4 @@ The essential part in the above lines of code is to make sure that the path of t
 image is prefixed with 'image:'. This tells the Swift Mailer module to embed that
 image file. The Swift Mailer module will automatically take care of assigning the
 image a CID to establish a link between the image and the markup.
+
