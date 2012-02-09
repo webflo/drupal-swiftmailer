@@ -6,10 +6,11 @@
 - A trailing linefeed has been added to swift_mailer.info.
 - Changed variable 'mail_system_old' to 'swift_mailer_mail_system_old' in
   swift_mailer.install.
-- The format() function in SWIFTMailSystem.inc assumed that the provided $message
-  variable always would be an array. The function now checks that $message is
-  not empty and that it is an array before doing any work on it.
-- Replaced occurences of '\r\n' with variable_get('mail_line_endings', MAIL_LINE_ENDINGS)
+- The format() function in SWIFTMailSystem.inc assumed that the provided 
+  $message variable always would be an array. The function now checks that
+  $message is not empty and that it is an array before doing any work on it.
+- Replaced occurences of '\r\n' with variable_get('mail_line_endings',
+  MAIL_LINE_ENDINGS)
 - Renamed $supressable_headers to $suppressable_headers in SwiftMailSystem.inc.
 - Corrected the spelling mistake 'attachments needs to' to 'attachments need to'
   in SwiftMailSystem.inc.
@@ -18,7 +19,8 @@
   SwiftMailSystem.inc.
 
 2011-24-09
- - Replaced 'parametrized' with 'parameterized' in functions names in conversion.inc
+ - Replaced 'parametrized' with 'parameterized' in functions names in
+   conversion.inc
  - Removed blank lines between subsequent @param declarations in conversion.inc
  - Updated function signatures to reflect documentation in conversion.inc
  - Replaced 'excact' with 'exact' in documentation in conversion.inc
@@ -32,8 +34,9 @@
  - Updated documentation.
  
  2011-06-12
- - Finished worked on theming support. E-mails can now be themed through Drupal's
- 	 theme system. Adding inline images should also be much easier for themers now.
+ - Finished worked on theming support. E-mails can now be themed through 
+   Drupal's theme system. Adding inline images should also be much easier for
+   themers now.
  - Renamed CHANGELOG.TXT to CHANGELOG.txt
  - Renamed README.TXT to README.txt
  - The 'swiftmailer.info' file now only contains classes in the files[] array.
