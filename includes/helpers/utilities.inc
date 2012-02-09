@@ -32,7 +32,8 @@ function swiftmailer_validate_library($path) {
   // Returns whether the 'swift_required.php' file could be found.
   if (file_exists($real_path)) {
     return $path;
-  } else {
+  }
+  else {
     return FALSE;
   }
 
@@ -70,7 +71,7 @@ function swiftmailer_get_encryption_options() {
 /**
  * Returns available character sets.
  *
- * @return  array
+ * @return array
  *   A list of available character sets.
  */
 function swiftmailer_get_character_set_options() {
@@ -94,7 +95,7 @@ function swiftmailer_get_character_set_options() {
     'UHC (CP949)' => 'UHC (CP949)', 'ISO-2022-KR' => 'ISO-2022-KR', 'Windows-1251 (CP1251)' => 'Windows-1251 (CP1251)',
     'Windows-1252 (CP1252)' => 'Windows-1252 (CP1252)', 'CP866 (IBM866)' => 'CP866 (IBM866)',
     'KOI8-R' => 'KOI8-R',
-    );
+  );
 
   return $character_set_options;
 }
@@ -117,8 +118,9 @@ function swiftmailer_get_supressable_headers() {
 
 /**
  * Returns a random value
+ *
  * @param $length
- *  An integer determining the length of the returned random value.
+ *   An integer determining the length of the returned random value.
  */
 function swiftmailer_get_random($length = 10) {
 

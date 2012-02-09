@@ -7,19 +7,19 @@
 // Load dependencies.
 module_load_include('inc', 'swiftmailer', '/includes/helpers/utilities');
 
-//Define permissions
+// Define permissions
 DEFINE('SWIFTMAILER_ADMINISTER', 'swiftmailer_administer');
 
-//Define message formats.
+// Define message formats.
 DEFINE('SWIFTMAILER_FORMAT_PLAIN', 'text/plain');
 DEFINE('SWIFTMAILER_FORMAT_HTML', 'text/html');
 
-//Define transport types
+// Define transport types
 DEFINE('SWIFTMAILER_TRANSPORT_SMTP', 'smtp');
 DEFINE('SWIFTMAILER_TRANSPORT_SENDMAIL', 'sendmail');
 DEFINE('SWIFTMAILER_TRANSPORT_NATIVE', 'native');
 
-//Define header types.
+// Define header types.
 DEFINE('SWIFTMAILER_HEADER_TEXT', 'text');
 DEFINE('SWIFTMAILER_HEADER_PARAMETERIZED', 'parameterized');
 DEFINE('SWIFTMAILER_HEADER_MAILBOX', 'mailbox');
@@ -27,7 +27,7 @@ DEFINE('SWIFTMAILER_HEADER_DATE', 'date');
 DEFINE('SWIFTMAILER_HEADER_ID', 'ID');
 DEFINE('SWIFTMAILER_HEADER_PATH', 'path');
 
-//Define system variables.
+// Define system variables.
 DEFINE('SWIFTMAILER_VARIABLE_MAIL_SYSTEM_OLD', 'swiftmailer_mail_system_old');
 DEFINE('SWIFTMAILER_VARIABLE_PATH', 'swiftmailer_path');
 DEFINE('SWIFTMAILER_VARIABLE_FORMAT', 'swiftmailer_format');
@@ -42,7 +42,7 @@ DEFINE('SWIFTMAILER_VARIABLE_SENDMAIL_MODE', 'swiftmailer_sendmail_mode');
 DEFINE('SWIFTMAILER_VARIABLE_CHARACTER_SET', 'swiftmailer_character_set');
 
 
-//Define system variables defaults.
+// Define system variables defaults.
 DEFINE('SWIFTMAILER_VARIABLE_MAIL_SYSTEM_OLD_DEFAULT', '');
 DEFINE('SWIFTMAILER_VARIABLE_PATH_DEFAULT', '');
 DEFINE('SWIFTMAILER_VARIABLE_FORMAT_DEFAULT', 'text/plain');
@@ -87,7 +87,7 @@ function swiftmailer_menu() {
     'page callback'     => 'swiftmailer_admin_transport_page',
     'file'              => 'includes/pages/swiftmailer_admin_transport.inc',
     'access arguments'  => array(SWIFTMAILER_ADMINISTER),
-      'weight'            => 1,
+    'weight'            => 1,
   );
 
   $items['admin/config/swiftmailer/messages'] = array(
@@ -127,11 +127,11 @@ function swiftmailer_mail($key, &$message) {
       $text[] = t('<p>This e-mail has been sent from !site by the Swift Mailer module. The module has been successfully configured.</p>', array('!site' => variable_get('site_name', 'a Drupal site')));
       $text[] = t('Kind regards<br /><br />');
       $text[] = t('The Swift Mailer module');
-            
+
       $message['subject'] = t('Swift Mailer has been successfully configured!');
       $message['body'] = $text;
-      break;
-    }
+    break;
+  }
 }
 
 /**
@@ -144,10 +144,10 @@ function swiftmailer_theme($existing, $type, $theme, $path) {
       'template' => 'swiftmailer',
       'arguments' => array(
         'message' => '',
-        ),
-      'path' => drupal_get_path('module', 'swiftmailer') . '/includes/theme',
       ),
-    );
+      'path' => drupal_get_path('module', 'swiftmailer') . '/includes/theme',
+    ),
+  );
 
   return $config;
 

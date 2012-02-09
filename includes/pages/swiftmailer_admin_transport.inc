@@ -4,6 +4,9 @@
  * An administration page which allows for configuration of transport types.
  */
 
+/**
+ * Default page.
+ */
 function swiftmailer_admin_transport_page() {
   return drupal_get_form('swiftmailer_admin_transport_form');
 }
@@ -43,9 +46,9 @@ function swiftmailer_admin_transport_form($form, &$form_state) {
       '#description' => t('Which transport type should Drupal use to send e-mails?'),
     );
 
-    //Display the currently configured transport type, or alternatively the
-    //currently selected transport type if the user has chosen to configure
-    //another transport type.
+    // Display the currently configured transport type, or alternatively the
+    // currently selected transport type if the user has chosen to configure
+    // another transport type.
     $transport = variable_get(SWIFTMAILER_VARIABLE_TRANSPORT, SWIFTMAILER_TRANSPORT_NATIVE);
     $transport = (isset($form_state['values']['transport']['type'])) ? $form_state['values']['transport']['type'] : $transport;
 
@@ -187,13 +190,14 @@ function swiftmailer_admin_transport_form($form, &$form_state) {
       '#value' => t('Save'),
     );
 
-  } else {
+  }
+  else {
 
     $form['message'] = array(
       '#markup' => t('<p>You need to configure the location of the Swift Mailer library. Please visit the !page
         and configure the library to enable the configuration options on this page.</p>',
         array('!page' => l(t('library configuration page'), 'admin/config/swiftmailer'))),
-      );
+    );
 
   }
 

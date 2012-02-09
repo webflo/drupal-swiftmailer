@@ -73,6 +73,7 @@ function swiftmailer_add_text_header(Swift_Message $message, $key, $value) {
  *   The header key.
  * @param string $value
  *   The header value.
+ *
  * @return boolean
  *   TRUE if the provided header is a parameterized header,
  *   and otherwise FALSE.
@@ -80,7 +81,8 @@ function swiftmailer_add_text_header(Swift_Message $message, $key, $value) {
 function swiftmailer_is_parameterized_header($key, $value) {
   if (preg_match('/;/', $value)) {
     return TRUE;
-  } else {
+  }
+  else {
     return FALSE;
   }
 }
@@ -131,7 +133,8 @@ function swiftmailer_add_parameterized_header(Swift_Message $message, $key, $val
         $header_parameters[$parameter_pair[0]] = $parameter_pair[1];
       }
 
-    } else {
+    }
+    else {
       $header_value = $parameter_pair;
     }
   }
@@ -150,13 +153,15 @@ function swiftmailer_add_parameterized_header(Swift_Message $message, $key, $val
  *   The header key.
  * @param string $value
  *   The header value.
+ *
  * @return boolean
  *   TRUE if the provided header is a date header, and otherwise FALSE.
  */
 function swiftmailer_is_date_header($key, $value) {
   if (preg_match('/' . SWIFTMAILER_DATE_PATTERN . '/', $value)) {
     return TRUE;
-  } else {
+  }
+  else {
     return FALSE;
   }
 }
@@ -201,7 +206,8 @@ function swiftmailer_add_date_header(Swift_Message $message, $key, $value) {
 function swiftmailer_is_mailbox_header($key, $value) {
   if (preg_match('/' . SWIFTMAILER_MAILBOX_PATTERN . '/', $value)) {
     return TRUE;
-  } else {
+  }
+  else {
     return FALSE;
   }
 }
@@ -245,12 +251,13 @@ function swiftmailer_add_mailbox_header(Swift_Message $message, $key, $value) {
       $mailbox_address = preg_replace('/>.*/', '', $mailbox_components[1]);
       $header_mailboxes[$mailbox_address] = trim($mailbox_name);
 
-    } else {
+    }
+    else {
       $header_mailboxes[] = trim($mailbox);
     }
   }
 
-  //Add the header.
+  // Add the header.
   $message->getHeaders()->addMailboxHeader($key, $header_mailboxes);
 }
 
@@ -275,7 +282,8 @@ function swiftmailer_add_mailbox_header(Swift_Message $message, $key, $value) {
 function swiftmailer_is_id_header($key, $value) {
   if (valid_email_address($value) && $key == 'Message-ID') {
     return TRUE;
-  } else {
+  }
+  else {
     return FALSE;
   }
 }
@@ -313,13 +321,15 @@ function swiftmailer_add_id_header(Swift_Message $message, $key, $value) {
  *   The header key.
  * @param string $value
  *   The header value.
+ *
  * @return boolean
  *   TRUE if the provided header is a path header, and otherwise FALSE.
  */
 function swiftmailer_is_path_header($key, $value) {
   if (valid_email_address($value) && $key == 'Return-Path') {
     return TRUE;
-  } else {
+  }
+  else {
     return FALSE;
   }
 }

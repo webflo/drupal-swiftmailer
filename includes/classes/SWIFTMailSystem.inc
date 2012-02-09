@@ -31,9 +31,9 @@ class SWIFTMailSystem implements MailSystemInterface {
         $message['params']['format'] = variable_get(SWIFTMAILER_VARIABLE_FORMAT, SWIFTMAILER_VARIABLE_FORMAT_DEFAULT);
       }
 
-      // Validate message theming
+      // Validate message theming.
       if (!isset($message['params']['theme'])) {
-        $message['params']['theme'] = ($message['params']['format'] == SWIFTMAILER_FORMAT_HTML) ? true : false;
+        $message['params']['theme'] = ($message['params']['format'] == SWIFTMAILER_FORMAT_HTML) ? TRUE : FALSE;
       }
 
       // Theme message if theming is enabled and format is set to be HTML.
@@ -79,14 +79,14 @@ class SWIFTMailSystem implements MailSystemInterface {
    *   A message array holding all relevant details for the message.
    *
    * @return boolean
-   *  TRUE if the message was successfully sent, and otherwise FALSE.
+   *   TRUE if the message was successfully sent, and otherwise FALSE.
    */
   public function mail(array $message) {
 
     // Include required file.
     module_load_include('inc', 'swiftmailer', '/includes/helpers/conversion');
 
-    //Validate whether the Swift Mailer module has been configured.
+    // Validate whether the Swift Mailer module has been configured.
     $library_path = variable_get(SWIFTMAILER_VARIABLE_PATH, SWIFTMAILER_VARIABLE_PATH_DEFAULT);
     if (empty($library_path)) {
       watchdog('swiftmailer', 'An attempt to send an e-mail failed. The Swift Mailer library could not be found by the Swift Mailer module.', array(), WATCHDOG_ERROR);
@@ -94,7 +94,7 @@ class SWIFTMailSystem implements MailSystemInterface {
       return;
     }
 
-    //Include the Swift Mailer library.
+    // Include the Swift Mailer library.
     require_once(drupal_realpath($library_path . '/lib/swift_required.php'));
 
     try {
@@ -161,7 +161,8 @@ class SWIFTMailSystem implements MailSystemInterface {
       $m->getHeaders()->removeAll('Content-Type');
       if (empty($message['params']['format'])) {
         $m->setBody($message['body'], variable_get(SWIFTMAILER_VARIABLE_FORMAT, SWIFTMAILER_VARIABLE_FORMAT_DEFAULT));
-      } else {
+      }
+      else {
         $m->setBody($message['body'], $message['params']['format']);
       }
 
@@ -170,7 +171,8 @@ class SWIFTMailSystem implements MailSystemInterface {
       // $message['params']['charset'].
       if (empty($message['params']['charset'])) {
         $m->setCharset(variable_get(SWIFTMAILER_VARIABLE_CHARACTER_SET, SWIFTMAILER_VARIABLE_CHARACTER_SET_DEFAULT));
-      } else {
+      }
+      else {
         $m->setCharset($message['params']['charset']);
       }
 
@@ -198,69 +200,64 @@ class SWIFTMailSystem implements MailSystemInterface {
       static $mailer;
 
       // If required, create a mailer which will be used to send the message.
-      //if (empty(static::$mailer)) {
       if (empty($mailer)) {
 
-        //Get the configured transport type.
+        // Get the configured transport type.
         $transport_type = variable_get(SWIFTMAILER_VARIABLE_TRANSPORT, SWIFTMAILER_VARIABLE_TRANSPORT_DEFAULT);
 
         // Configure the mailer based on the configured transport type.
         switch ($transport_type) {
           case SWIFTMAILER_TRANSPORT_SMTP:
 
-          //Get transport configuration.
+            //Get transport configuration.
             $host = variable_get(SWIFTMAILER_VARIABLE_SMTP_HOST, SWIFTMAILER_VARIABLE_SMTP_HOST_DEFAULT);
             $port = variable_get(SWIFTMAILER_VARIABLE_SMTP_PORT, SWIFTMAILER_VARIABLE_SMTP_PORT_DEFAULT);
             $encryption = variable_get(SWIFTMAILER_VARIABLE_SMTP_ENCRYPTION, SWIFTMAILER_VARIABLE_SMTP_ENCRYPTION_DEFAULT);
             $username = variable_get(SWIFTMAILER_VARIABLE_SMTP_USERNAME, SWIFTMAILER_VARIABLE_SMTP_USERNAME_DEFAULT);
             $password = variable_get(SWIFTMAILER_VARIABLE_SMTP_PASSWORD, SWIFTMAILER_VARIABLE_SMTP_PASSWORD_DEFAULT);
 
-            //Instantiate transport.
+            // Instantiate transport.
             $transport = Swift_SmtpTransport::newInstance($host, $port);
 
-            //Set encryption (if any).
+            // Set encryption (if any).
             if (!empty($encryption)) {
               $transport->setEncryption($encryption);
             }
 
-            //Set username (if any).
+            // Set username (if any).
             if (!empty($username)) {
               $transport->setUsername($username);
             }
 
-            //Set password (if any).
+            // Set password (if any).
             if (!empty($password)) {
               $transport->setPassword($password);
             }
 
-            //static::$mailer = Swift_Mailer::newInstance($transport);
             $mailer = Swift_Mailer::newInstance($transport);
             break;
 
           case SWIFTMAILER_TRANSPORT_SENDMAIL:
 
-          //Get transport configuration.
+            // Get transport configuration.
             $path = variable_get(SWIFTMAILER_VARIABLE_SENDMAIL_PATH, SWIFTMAILER_VARIABLE_SENDMAIL_PATH_DEFAULT);
             $mode = variable_get(SWIFTMAILER_VARIABLE_SENDMAIL_MODE, SWIFTMAILER_VARIABLE_SENDMAIL_MODE_DEFAULT);
 
-            //Instantiate transport.
+            // Instantiate transport.
             $transport = Swift_SendmailTransport::newInstance($path . ' -' . $mode);
-            //static::$mailer = Swift_Mailer::newInstance($transport);
             $mailer = Swift_Mailer::newInstance($transport);
             break;
 
           case SWIFTMAILER_TRANSPORT_NATIVE:
 
-          //Instantiate transport.
+            // Instantiate transport.
             $transport = Swift_MailTransport::newInstance();
-            //static::$mailer = Swift_Mailer::newInstance($transport);
             $mailer = Swift_Mailer::newInstance($transport);
             break;
         }
       }
 
       // Send the message.
-      //return static::$mailer->send($m);
       return $mailer->send($m);
 
     } catch (Exception $e) {
@@ -272,6 +269,14 @@ class SWIFTMailSystem implements MailSystemInterface {
     }
   }
 
+  /**
+   * Process attachments.
+   *
+   * @param Swift_Message $m
+   *   The message which attachments are to be added to.
+   * @param $files
+   *   The files which are to be added as attachments to the provided message.
+   */
   private function attach(Swift_Message $m, $files) {
 
     // Iterate through each array element.
@@ -296,6 +301,15 @@ class SWIFTMailSystem implements MailSystemInterface {
 
   }
 
+  /**
+   * Process inline images..
+   *
+   * @param Swift_Message $m
+   *   The message which inline images are to be added to.
+   * @param $files
+   *   The images which are to be added as inline images to the provided
+   *   message.
+   */
   private function embed(Swift_Message $m, $images) {
 
     // Iterate through each array element.

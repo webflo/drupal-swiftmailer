@@ -25,7 +25,7 @@ function swiftmailer_admin_default_form($form, &$form_state) {
       you to choose how e-mails should be sent. Furthermore, with the Swift
       Mailer module you can easily add attachments to e-mails. To read more
       about how this module works, please have a look at the !documentation.</p>'),
-    );
+  );
 
   $form['library'] = array(
     '#type' => 'fieldset',
@@ -35,7 +35,7 @@ function swiftmailer_admin_default_form($form, &$form_state) {
       <em>sites/all/libraries</em> directory. The Swift Mailer
       library can be downloaded from the !website.</p>',
       array('!website' => l(t('Swift Mailer website'), 'http://swiftmailer.org/'))),
-    );
+  );
 
   $class = '';
   $path = variable_get(SWIFTMAILER_VARIABLE_PATH, SWIFTMAILER_VARIABLE_PATH_DEFAULT);
@@ -51,7 +51,7 @@ function swiftmailer_admin_default_form($form, &$form_state) {
 
       $form['library']['message'] = array(
         '#markup' => t('<p>The Swift Mailer library could not be found in the path provided below.</p>'),
-        );
+      );
 
     } else {
 
@@ -69,12 +69,12 @@ function swiftmailer_admin_default_form($form, &$form_state) {
     '#required' => TRUE,
     '#default_value' => check_plain($path),
     '#attributes' => array('class' => array($class)),
-    );
+  );
 
   $form['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Save'),
-    );
+  );
 
   return $form;
 }
