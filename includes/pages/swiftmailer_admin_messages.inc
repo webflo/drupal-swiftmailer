@@ -5,6 +5,9 @@
  * to be formatted.
  */
 
+/**
+ * Page builder.
+ */
 function swiftmailer_admin_messages_page() {
   return drupal_get_form('swiftmailer_admin_messages_form');
 }

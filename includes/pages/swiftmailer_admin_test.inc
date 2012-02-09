@@ -4,10 +4,18 @@
  * An administration page which allows for sending a test e-mail.
  */
 
+/**
+ * Page builder.
+ */
 function swiftmailer_admin_test_page() {
   return drupal_get_form('swiftmailer_admin_test_form');
 }
 
+/**
+ * Form builder; the messages form.
+ *
+ * @see swiftmailer_admin_test_form_submit()
+ */
 function swiftmailer_admin_test_form($form, &$form_state) {
 
   $form['#tree'] = TRUE;
@@ -37,7 +45,8 @@ function swiftmailer_admin_test_form($form, &$form_state) {
       '#value' => t('Send'),
     );
 
-  } else {
+  }
+  else {
 
     $form['message'] = array(
       '#markup' => t('<p>You need to configure the location of the Swift Mailer library. Please visit the !page
@@ -50,6 +59,9 @@ function swiftmailer_admin_test_form($form, &$form_state) {
   return $form;
 }
 
+/**
+ * Submit handler for swiftmailer_admin_test_form.
+ */
 function swiftmailer_admin_test_form_submit($form, &$form_state) {
 
   if (isset($form_state['values']['test']['recipient'])) {

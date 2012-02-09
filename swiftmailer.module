@@ -7,14 +7,14 @@
 // Load dependencies.
 module_load_include('inc', 'swiftmailer', '/includes/helpers/utilities');
 
-// Define permissions
+// Define permissions.
 DEFINE('SWIFTMAILER_ADMINISTER', 'swiftmailer_administer');
 
 // Define message formats.
 DEFINE('SWIFTMAILER_FORMAT_PLAIN', 'text/plain');
 DEFINE('SWIFTMAILER_FORMAT_HTML', 'text/html');
 
-// Define transport types
+// Define transport types.
 DEFINE('SWIFTMAILER_TRANSPORT_SMTP', 'smtp');
 DEFINE('SWIFTMAILER_TRANSPORT_SENDMAIL', 'sendmail');
 DEFINE('SWIFTMAILER_TRANSPORT_NATIVE', 'native');
@@ -130,7 +130,7 @@ function swiftmailer_mail($key, &$message) {
 
       $message['subject'] = t('Swift Mailer has been successfully configured!');
       $message['body'] = $text;
-    break;
+      break;
   }
 }
 

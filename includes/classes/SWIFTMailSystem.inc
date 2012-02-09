@@ -10,7 +10,8 @@ class SWIFTMailSystem implements MailSystemInterface {
   /**
    * Formats a message composed by drupal_mail().
    *
-   * @see http://api.drupal.org/api/drupal/includes--mail.inc/interface/MailSystemInterface/7
+   * @see http://api.drupal.org/api/drupal/includes--mail.inc/interface/
+   *      MailSystemInterface/7
    *
    * @param array $message
    *   A message array holding all relevant details for the message.
@@ -73,7 +74,8 @@ class SWIFTMailSystem implements MailSystemInterface {
   /**
    * Sends a message composed by drupal_mail().
    *
-   * @see http://api.drupal.org/api/drupal/includes--mail.inc/interface/MailSystemInterface/7
+   * @see http://api.drupal.org/api/drupal/includes--mail.inc/interface/
+   *      MailSystemInterface/7
    *
    * @param array $message
    *   A message array holding all relevant details for the message.
@@ -209,7 +211,7 @@ class SWIFTMailSystem implements MailSystemInterface {
         switch ($transport_type) {
           case SWIFTMAILER_TRANSPORT_SMTP:
 
-            //Get transport configuration.
+            // Get transport configuration.
             $host = variable_get(SWIFTMAILER_VARIABLE_SMTP_HOST, SWIFTMAILER_VARIABLE_SMTP_HOST_DEFAULT);
             $port = variable_get(SWIFTMAILER_VARIABLE_SMTP_PORT, SWIFTMAILER_VARIABLE_SMTP_PORT_DEFAULT);
             $encryption = variable_get(SWIFTMAILER_VARIABLE_SMTP_ENCRYPTION, SWIFTMAILER_VARIABLE_SMTP_ENCRYPTION_DEFAULT);
@@ -284,7 +286,7 @@ class SWIFTMailSystem implements MailSystemInterface {
 
       if ($file instanceof stdClass) {
 
-        //Validate required fields.
+        // Validate required fields.
         if (empty($file->uri) || empty($file->filename) || empty($file->filemime)) {
           continue;
         }
@@ -306,7 +308,7 @@ class SWIFTMailSystem implements MailSystemInterface {
    *
    * @param Swift_Message $m
    *   The message which inline images are to be added to.
-   * @param $files
+   * @param $images
    *   The images which are to be added as inline images to the provided
    *   message.
    */

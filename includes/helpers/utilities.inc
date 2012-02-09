@@ -105,13 +105,13 @@ function swiftmailer_get_character_set_options() {
  * should be ignored in order to make Swift Mailer work as smooth as possible.
  *
  * @return array
- *   A list of e-mail headers which could be provided by Drupal, but which should
- *   be ignored.
+ *   A list of e-mail headers which could be provided by Drupal, but which
+ *   should be ignored.
  */
 function swiftmailer_get_supressable_headers() {
 
   return array(
-          'Content-Transfer-Encoding',
+    'Content-Transfer-Encoding',
   );
 
 }

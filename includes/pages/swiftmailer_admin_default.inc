@@ -5,6 +5,9 @@
  * library location.
  */
 
+/**
+ * Page builder.
+ */
 function swiftmailer_admin_default_page() {
   return drupal_get_form('swiftmailer_admin_default_form');
 }
@@ -53,7 +56,8 @@ function swiftmailer_admin_default_form($form, &$form_state) {
         '#markup' => t('<p>The Swift Mailer library could not be found in the path provided below.</p>'),
       );
 
-    } else {
+    }
+    else {
 
       $path = reset($alternatives)->uri;
       $path = preg_replace('/\/lib\/classes\/Swift.php/', '', $path);
