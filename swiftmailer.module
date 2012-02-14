@@ -123,9 +123,9 @@ function swiftmailer_mail($key, &$message) {
 
       $message['params']['format'] = SWIFTMAILER_FORMAT_HTML;
 
-      $text[] = t('<strong>Dear !user,</strong>', array('!user' => $user->name));
-      $text[] = t('<p>This e-mail has been sent from !site by the Swift Mailer module. The module has been successfully configured.</p>', array('!site' => variable_get('site_name', 'a Drupal site')));
-      $text[] = t('Kind regards<br /><br />');
+      $text[] = '<strong>' . t('Dear !user,', array('!user' => $user->name)) . '</strong>';
+      $text[] = '<p>' . t('This e-mail has been sent from !site by the Swift Mailer module. The module has been successfully configured.', array('!site' => variable_get('site_name', 'a Drupal site'))) . '</p>';
+      $text[] = t('Kind regards') . '<br /><br />';
       $text[] = t('The Swift Mailer module');
 
       $message['subject'] = t('Swift Mailer has been successfully configured!');

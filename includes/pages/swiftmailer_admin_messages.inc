@@ -22,7 +22,7 @@ function swiftmailer_admin_messages_form($form, &$form_state) {
   $form['#tree'] = TRUE;
 
   $form['description'] = array(
-    '#markup' => t('<p>This page allows you to configure settings which determines how e-mail messages are created.</p>'),
+    '#markup' => '<p>' . t('This page allows you to configure settings which determines how e-mail messages are created.') . '</p>',
   );
 
   if (swiftmailer_validate_library(variable_get(SWIFTMAILER_VARIABLE_PATH, SWIFTMAILER_VARIABLE_PATH_DEFAULT))) {
@@ -43,9 +43,9 @@ function swiftmailer_admin_messages_form($form, &$form_state) {
     $form['character_set'] = array(
       '#type' => 'fieldset',
       '#title' => t('Character Set'),
-      '#description' => t('<p>E-mails need to carry details about the character set which the
+      '#description' => '<p>' . t('E-mails need to carry details about the character set which the
         receiving client should use to understand the content of the e-mail.
-        The default character set is UTF-8.</p>'),
+        The default character set is UTF-8.') . '</p>',
     );
 
     $form['character_set']['type'] = array(
@@ -63,9 +63,9 @@ function swiftmailer_admin_messages_form($form, &$form_state) {
   else {
 
     $form['message'] = array(
-      '#markup' => t('<p>You need to configure the location of the Swift Mailer library. Please visit the !page
-        and configure the library to enable the configuration options on this page.</p>',
-        array('!page' => l(t('library configuration page'), 'admin/config/swiftmailer'))),
+      '#markup' => '<p>' . t('You need to configure the location of the Swift Mailer library. Please visit the !page
+        and configure the library to enable the configuration options on this page.',
+        array('!page' => l(t('library configuration page'), 'admin/config/swiftmailer'))) . '</p>',
     );
 
   }

@@ -32,7 +32,7 @@ function swiftmailer_admin_transport_form($form, &$form_state) {
 
   // Display a page description.
   $form['description'] = array(
-    '#markup' => t('<p>This page allows you to configure settings which determines how e-mail messages are sent.</p>'),
+    '#markup' => '<p>' . t('This page allows you to configure settings which determines how e-mail messages are sent.') . '</p>',
   );
 
   // Validate that the Swift Mailer library is available. Configuration options
@@ -84,15 +84,15 @@ function swiftmailer_admin_transport_form($form, &$form_state) {
     );
 
     $form['transport']['configuration'][SWIFTMAILER_TRANSPORT_SMTP]['title'] = array(
-      '#markup' => t('<h3>SMTP transport options</h3>'),
+      '#markup' => '<h3>' . t('SMTP transport options') . '</h3>',
     );
 
     $form['transport']['configuration'][SWIFTMAILER_TRANSPORT_SMTP]['description'] = array(
-      '#markup' => t('<p>This transport type will send all e-mails using a SMTP
+      '#markup' => '<p>' . t('This transport type will send all e-mails using a SMTP
         server of your choice. You need to specify which SMTP server
         to use. Please refer to the !documentation for more details
-        about this transport type.</p>',
-      array('!documentation' => l(t('Swift Mailer documentation'), 'http://swiftmailer.org/docs/smtp-transport'))),
+        about this transport type.',
+      array('!documentation' => l(t('Swift Mailer documentation'), 'http://swiftmailer.org/docs/smtp-transport'))) . '</p>',
     );
 
     $form['transport']['configuration'][SWIFTMAILER_TRANSPORT_SMTP]['server'] = array(
@@ -139,17 +139,17 @@ function swiftmailer_admin_transport_form($form, &$form_state) {
     );
 
     $form['transport']['configuration'][SWIFTMAILER_TRANSPORT_SENDMAIL]['title'] = array(
-      '#markup' => t('<h3>Sendmail transport options</h3>'),
+      '#markup' => '<h3>' . t('Sendmail transport options') . '</h3>',
     );
 
     $form['transport']['configuration'][SWIFTMAILER_TRANSPORT_SENDMAIL]['description'] = array(
-      '#markup' => t('<p>This transport type will send all e-mails using a locally
+      '#markup' => '<p>' . t('This transport type will send all e-mails using a locally
         installed MTA such as Sendmail. You need to specify which
         locally installed MTA to use by providing a path to the
         MTA. If you do not provide any path then Swift Mailer
         defaults to /usr/sbin/sendmail. You can read more about
-        this transport type in the !documentation.</p>',
-        array('!documentation' => l(t('Swift Mailer documentation'), 'http://swiftmailer.org/docs/sendmail-transport')))
+        this transport type in the !documentation.',
+        array('!documentation' => l(t('Swift Mailer documentation'), 'http://swiftmailer.org/docs/sendmail-transport'))) . '</p>'
       );
 
     $form['transport']['configuration'][SWIFTMAILER_TRANSPORT_SENDMAIL]['path'] = array(
@@ -173,16 +173,16 @@ function swiftmailer_admin_transport_form($form, &$form_state) {
     );
 
     $form['transport']['configuration'][SWIFTMAILER_TRANSPORT_NATIVE]['title'] = array(
-      '#markup' => t('<h3>PHP transport options</h3>'),
+      '#markup' => '<h3>' . t('PHP transport options') . '</h3>',
     );
 
     $form['transport']['configuration'][SWIFTMAILER_TRANSPORT_NATIVE]['description'] = array(
-      '#markup' => t('<p>This transport type will send all e-mails using the built-in
+      '#markup' => '<p>' . t('This transport type will send all e-mails using the built-in
         mail functionality of PHP. This transport type can not be
         configured here. Please refer to the !documentation if you
         would like to read more about how the built-in mail functionality
-        in PHP can be configured.</p>',
-        array('!documentation' => l(t('PHP documentation'), 'http://www.php.net/manual/en/mail.configuration.php'))),
+        in PHP can be configured.',
+        array('!documentation' => l(t('PHP documentation'), 'http://www.php.net/manual/en/mail.configuration.php'))) . '</p>',
     );
 
     $form['submit'] = array(
