@@ -27,7 +27,8 @@ function swiftmailer_admin_default_form($form, &$form_state) {
       with Drupal and installs itself as the primary mail system. This allows
       you to choose how e-mails should be sent. Furthermore, with the Swift
       Mailer module you can easily add attachments to e-mails. To read more
-      about how this module works, please have a look at the !documentation.') . '</p>',
+      about how this module works, please have a look at the !documentation.',
+      array('!documentation' => l(t('Swift Mailer documentation'), 'http://swiftmailer.org/docs/introduction.html'))) . '</p>',
   );
 
   $form['library'] = array(

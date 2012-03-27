@@ -62,7 +62,7 @@ function swiftmailer_admin_transport_form($form, &$form_state) {
         'method' => 'replace',
         'effect' => 'fade',
       ),
-      '#description' => t('Not sure which transport type to choose? The !documentation gives you a good overview of the various transport types.', array('!documentation' => l(t('Swift Mailer documentation'), 'http://swiftmailer.org/docs/transport-types'))),
+      '#description' => t('Not sure which transport type to choose? The !documentation gives you a good overview of the various transport types.', array('!documentation' => l(t('Swift Mailer documentation'), 'http://swiftmailer.org/docs/sending.html#transport-types'))),
     );
 
     $form['transport']['submit'] = array(
@@ -92,7 +92,7 @@ function swiftmailer_admin_transport_form($form, &$form_state) {
         server of your choice. You need to specify which SMTP server
         to use. Please refer to the !documentation for more details
         about this transport type.',
-      array('!documentation' => l(t('Swift Mailer documentation'), 'http://swiftmailer.org/docs/smtp-transport'))) . '</p>',
+      array('!documentation' => l(t('Swift Mailer documentation'), 'http://swiftmailer.org/docs/sending.html#the-smtp-transport'))) . '</p>',
     );
 
     $form['transport']['configuration'][SWIFTMAILER_TRANSPORT_SMTP]['server'] = array(
@@ -149,7 +149,7 @@ function swiftmailer_admin_transport_form($form, &$form_state) {
         MTA. If you do not provide any path then Swift Mailer
         defaults to /usr/sbin/sendmail. You can read more about
         this transport type in the !documentation.',
-        array('!documentation' => l(t('Swift Mailer documentation'), 'http://swiftmailer.org/docs/sendmail-transport'))) . '</p>'
+        array('!documentation' => l(t('Swift Mailer documentation'), 'http://swiftmailer.org/docs/sending.html#the-sendmail-transport'))) . '</p>'
       );
 
     $form['transport']['configuration'][SWIFTMAILER_TRANSPORT_SENDMAIL]['path'] = array(
@@ -233,15 +233,15 @@ function swiftmailer_admin_transport_form_submit($form, &$form_state) {
         variable_set(SWIFTMAILER_VARIABLE_SMTP_ENCRYPTION, $form_state['values']['transport']['configuration'][SWIFTMAILER_TRANSPORT_SMTP]['encryption']);
         variable_set(SWIFTMAILER_VARIABLE_SMTP_USERNAME, $form_state['values']['transport']['configuration'][SWIFTMAILER_TRANSPORT_SMTP]['username']);
         variable_set(SWIFTMAILER_VARIABLE_SMTP_PASSWORD, $form_state['values']['transport']['configuration'][SWIFTMAILER_TRANSPORT_SMTP]['password']);
-        drupal_set_message(t('Drupal have been configured to send all e-mails using the SMTP transport type.'), 'status');
+        drupal_set_message(t('Drupal has been configured to send all e-mails using the SMTP transport type.'), 'status');
         break;
       case SWIFTMAILER_TRANSPORT_SENDMAIL:
         variable_set(SWIFTMAILER_VARIABLE_SENDMAIL_PATH, $form_state['values']['transport']['configuration'][SWIFTMAILER_TRANSPORT_SENDMAIL]['path']);
         variable_set(SWIFTMAILER_VARIABLE_SENDMAIL_MODE, $form_state['values']['transport']['configuration'][SWIFTMAILER_TRANSPORT_SENDMAIL]['mode']);
-        drupal_set_message(t('Drupal have been configured to send all e-mails using the Sendmail transport type.'), 'status');
+        drupal_set_message(t('Drupal has been configured to send all e-mails using the Sendmail transport type.'), 'status');
         break;
       case SWIFTMAILER_TRANSPORT_NATIVE:
-        drupal_set_message(t('Drupal have been configured to send all e-mails using the PHP transport type.'), 'status');
+        drupal_set_message(t('Drupal has been configured to send all e-mails using the PHP transport type.'), 'status');
         break;
     }
   }
