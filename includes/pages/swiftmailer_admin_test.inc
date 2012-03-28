@@ -51,7 +51,7 @@ function swiftmailer_admin_test_form($form, &$form_state) {
     $form['message'] = array(
       '#markup' => '<p>' . t('You need to configure the location of the Swift Mailer library. Please visit the !page
         and configure the library to enable the configuration options on this page.',
-      array('!page' => l(t('library configuration page'), 'admin/config/swiftmailer'))) . '</p>',
+      array('!page' => l(t('library configuration page'), 'admin/config/people/swiftmailer'))) . '</p>',
     );
 
   }

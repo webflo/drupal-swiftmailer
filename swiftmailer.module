@@ -60,17 +60,17 @@ DEFINE('SWIFTMAILER_VARIABLE_CHARACTER_SET_DEFAULT', 'UTF-8');
  * Implements hook_menu().
  */
 function swiftmailer_menu() {
-  $items['admin/config/swiftmailer'] = array(
+  $items['admin/config/people/swiftmailer'] = array(
     'type'              => MENU_NORMAL_ITEM,
-    'title'             => 'Swift Mailer',
-    'description'       => 'Configure Swift Mailer',
+    'title'             => 'Email delivery',
+    'description'       => 'Configure settings for e-mail delivery.',
     'page callback'     => 'swiftmailer_admin_default_page',
     'file'              => 'includes/pages/swiftmailer_admin_default.inc',
     'access arguments'  => array(SWIFTMAILER_ADMINISTER),
   );
 
 
-  $items['admin/config/swiftmailer/default'] = array(
+  $items['admin/config/people/swiftmailer/default'] = array(
     'type'              => MENU_DEFAULT_LOCAL_TASK,
     'title'             => 'Library',
     'description'       => 'Configure where the Swift Mailer Library is located.',
@@ -80,7 +80,7 @@ function swiftmailer_menu() {
     'weight'            => 0,
   );
 
-  $items['admin/config/swiftmailer/transport'] = array(
+  $items['admin/config/people/swiftmailer/transport'] = array(
     'type'              => MENU_LOCAL_TASK,
     'title'             => 'Transport',
     'description'       => 'Configure how Swift Mailer will send e-mails.',
@@ -90,7 +90,7 @@ function swiftmailer_menu() {
     'weight'            => 1,
   );
 
-  $items['admin/config/swiftmailer/messages'] = array(
+  $items['admin/config/people/swiftmailer/messages'] = array(
     'type'              => MENU_LOCAL_TASK,
     'title'             => 'Messages',
     'description'       => 'Configure how Swift Mailer will compose messages.',
@@ -100,7 +100,7 @@ function swiftmailer_menu() {
     'weight'            => 2,
   );
 
-  $items['admin/config/swiftmailer/test'] = array(
+  $items['admin/config/people/swiftmailer/test'] = array(
     'type'              => MENU_LOCAL_TASK,
     'title'             => 'Test',
     'description'       => 'Configure how Swift Mailer will compose messages.',

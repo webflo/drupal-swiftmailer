@@ -19,7 +19,7 @@ advised that libraries are kept in the 'sites/all/libraries' directory. If you
 keep the Swift Mailer library in 'sites/all/libraries/swiftmailer', then you
 need to configure the module to look for the Swift Mailer library in that
 directory. The location of the Swift Mailer library can be found on the page
-'admin/config/swiftmailer'.
+'admin/config/people/swiftmailer'.
 
 After the module has been configured with the Swift Mailer library you are
 advised to make sure that the Swift Mailer library sends e-mails using the
@@ -33,7 +33,7 @@ which is to be used as default. You are advised not to change any of these
 options if you are uncertain about what they mean.
 
 You can test whether the Swift Mailer library sends e-mail messages correctly
-by going to 'admin/config/swiftmailer/test' when the module has been configured
+by going to 'admin/config/people/swiftmailer/test' when the module has been configured
 and you are ready to put it into action.
 
 2.0 Theming E-mails
