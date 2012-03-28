@@ -13,7 +13,7 @@ function swiftmailer_enable() {
   $configuration = variable_get('mail_system', array('default-system' => 'DefaultMailSystem'));
 
   // Save a copy of the existing mail configuration.
-  variable_set(SWIFTMAILER_VARIABLE_MAIL_SYSTEM_OLD, $configuration);
+  variable_set('swiftmailer_mail_system_old', $configuration);
 
   // Apply the new mail configuration.
   variable_set('mail_system', array('default-system' => 'SWIFTMailSystem'));
@@ -26,13 +26,13 @@ function swiftmailer_enable() {
 function swiftmailer_disable() {
 
   // Get the old mail configuration.
-  $configuration = variable_get(SWIFTMAILER_VARIABLE_MAIL_SYSTEM_OLD, SWIFTMAILER_VARIABLE_MAIL_SYSTEM_OLD_DEFAULT);
+  $configuration = variable_get('swiftmailer_mail_system_old', array('default-system' => 'DefaultMailSystem'));
 
   // Apply the old mail configuration.
   variable_set('mail_system', $configuration);
 
   // Delete the old mail configuration.
-  variable_del('mail_system_old');
+  variable_del('swiftmailer_mail_system_old');
 
 }
 

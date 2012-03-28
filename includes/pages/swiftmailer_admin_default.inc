@@ -73,7 +73,7 @@ function swiftmailer_admin_default_form($form, &$form_state) {
     '#type' => 'textfield',
     '#title' => t('Library path'),
     '#description' => t('The path to the Swift Mailer directory (e.g. sites/all/libraries/swiftmailer)'),
-    //'#required' => TRUE,
+    '#required' => TRUE,
     '#default_value' => check_plain($path),
     '#attributes' => array('class' => array($class)),
   );
@@ -91,9 +91,9 @@ function swiftmailer_admin_default_form($form, &$form_state) {
  */
 function swiftmailer_admin_default_form_validate($form, &$form_state) {
 
-  /*if (!swiftmailer_validate_library($form_state['values']['library']['path'])) {
+  if (!swiftmailer_validate_library($form_state['values']['library']['path'])) {
     form_set_error('library][path', t('The provided path does not contain the Swift Mailer library.'));
-  }*/
+  }
 
 }
 

@@ -133,6 +133,12 @@ function swiftmailer_admin_transport_form($form, &$form_state) {
       '#default_value' => check_plain(variable_get(SWIFTMAILER_VARIABLE_SMTP_PASSWORD, SWIFTMAILER_VARIABLE_SMTP_PASSWORD_DEFAULT)),
     );
 
+    $current_password = variable_get(SWIFTMAILER_VARIABLE_SMTP_PASSWORD);
+    if (!empty($current_password)) {
+      $form['transport']['configuration'][SWIFTMAILER_TRANSPORT_SMTP]['password']['#description'] = t('A password
+        required by the SMTP server. <em>The currently set password is hidden for security reasons</em>.');
+    }
+
     $form['transport']['configuration'][SWIFTMAILER_TRANSPORT_SENDMAIL] = array(
       '#type' => 'item',
       '#access' => $form['transport']['type']['#default_value'] == SWIFTMAILER_TRANSPORT_SENDMAIL,
