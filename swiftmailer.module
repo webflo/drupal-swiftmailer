@@ -62,7 +62,7 @@ DEFINE('SWIFTMAILER_VARIABLE_CHARACTER_SET_DEFAULT', 'UTF-8');
 function swiftmailer_menu() {
   $items['admin/config/people/swiftmailer'] = array(
     'type'              => MENU_NORMAL_ITEM,
-    'title'             => 'Email delivery',
+    'title'             => 'E-mail delivery',
     'description'       => 'Configure settings for e-mail delivery.',
     'page callback'     => 'swiftmailer_admin_default_page',
     'file'              => 'includes/pages/swiftmailer_admin_default.inc',
