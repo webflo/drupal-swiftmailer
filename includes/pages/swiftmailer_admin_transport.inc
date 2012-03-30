@@ -20,6 +20,9 @@ function swiftmailer_admin_transport_page() {
  */
 function swiftmailer_admin_transport_form($form, &$form_state) {
 
+    // Include helper functions.
+  module_load_include('inc', 'swiftmailer', '/includes/helpers/utilities');
+
   // The configuration options for the selected transport type should be
   // displayed using AJAX if JavaScript is enabled. However, we need to
   // disable the 'Configure' button if JavaScript is enabled as the button
@@ -54,7 +57,9 @@ function swiftmailer_admin_transport_form($form, &$form_state) {
 
     $form['transport']['type'] = array(
       '#type' => 'radios',
-      '#options' => array(SWIFTMAILER_TRANSPORT_SMTP => t('SMTP'), SWIFTMAILER_TRANSPORT_SENDMAIL => t('Sendmail'), SWIFTMAILER_TRANSPORT_NATIVE => t('PHP')),
+      '#options' => array(SWIFTMAILER_TRANSPORT_SMTP => t('SMTP'), 
+        SWIFTMAILER_TRANSPORT_SENDMAIL => t('Sendmail'),
+        SWIFTMAILER_TRANSPORT_NATIVE => t('PHP')),
       '#default_value' => $transport,
       '#ajax' => array(
         'callback' => 'swiftmailer_admin_transport_form_ajax',
@@ -155,7 +160,7 @@ function swiftmailer_admin_transport_form($form, &$form_state) {
         MTA. If you do not provide any path then Swift Mailer
         defaults to /usr/sbin/sendmail. You can read more about
         this transport type in the !documentation.',
-        array('!documentation' => l(t('Swift Mailer documentation'), 'http://swiftmailer.org/docs/sending.html#the-sendmail-transport'))) . '</p>'
+        array('!documentation' => l(t('Swift Mailer documentation'), 'http://swiftmailer.org/docs/sending.html#the-sendmail-transport'))) . '</p>',
       );
 
     $form['transport']['configuration'][SWIFTMAILER_TRANSPORT_SENDMAIL]['path'] = array(
@@ -241,14 +246,17 @@ function swiftmailer_admin_transport_form_submit($form, &$form_state) {
         variable_set(SWIFTMAILER_VARIABLE_SMTP_PASSWORD, $form_state['values']['transport']['configuration'][SWIFTMAILER_TRANSPORT_SMTP]['password']);
         drupal_set_message(t('Drupal has been configured to send all e-mails using the SMTP transport type.'), 'status');
         break;
+
       case SWIFTMAILER_TRANSPORT_SENDMAIL:
         variable_set(SWIFTMAILER_VARIABLE_SENDMAIL_PATH, $form_state['values']['transport']['configuration'][SWIFTMAILER_TRANSPORT_SENDMAIL]['path']);
         variable_set(SWIFTMAILER_VARIABLE_SENDMAIL_MODE, $form_state['values']['transport']['configuration'][SWIFTMAILER_TRANSPORT_SENDMAIL]['mode']);
         drupal_set_message(t('Drupal has been configured to send all e-mails using the Sendmail transport type.'), 'status');
         break;
+
       case SWIFTMAILER_TRANSPORT_NATIVE:
         drupal_set_message(t('Drupal has been configured to send all e-mails using the PHP transport type.'), 'status');
         break;
+      
     }
   }
 

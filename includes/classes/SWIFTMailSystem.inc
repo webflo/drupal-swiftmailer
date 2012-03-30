@@ -10,8 +10,7 @@ class SWIFTMailSystem implements MailSystemInterface {
   /**
    * Formats a message composed by drupal_mail().
    *
-   * @see http://api.drupal.org/api/drupal/includes--mail.inc/interface/
-   *      MailSystemInterface/7
+   * @see http://api.drupal.org/api/drupal/includes--mail.inc/interface/MailSystemInterface/7
    *
    * @param array $message
    *   A message array holding all relevant details for the message.
@@ -62,7 +61,7 @@ class SWIFTMailSystem implements MailSystemInterface {
         $image->uri = $image_path;
         $image->filename = $image_name;
         $image->filemime = file_get_mimetype($image_path);
-        $image->cid = swiftmailer_get_random(10);
+        $image->cid = rand(0, 9999999999);
         $message['params']['images'][] = $image;
         $message['body'] = preg_replace($image_id, 'cid:' . $image->cid, $message['body']);
       }
@@ -74,8 +73,7 @@ class SWIFTMailSystem implements MailSystemInterface {
   /**
    * Sends a message composed by drupal_mail().
    *
-   * @see http://api.drupal.org/api/drupal/includes--mail.inc/interface/
-   *      MailSystemInterface/7
+   * @see http://api.drupal.org/api/drupal/includes--mail.inc/interface/MailSystemInterface/7
    *
    * @param array $message
    *   A message array holding all relevant details for the message.
@@ -85,8 +83,9 @@ class SWIFTMailSystem implements MailSystemInterface {
    */
   public function mail(array $message) {
 
-    // Include required file.
+    // Include required files.
     module_load_include('inc', 'swiftmailer', '/includes/helpers/conversion');
+    module_load_include('inc', 'swiftmailer', '/includes/helpers/utilities');
 
     // Validate whether the Swift Mailer module has been configured.
     $library_path = variable_get(SWIFTMAILER_VARIABLE_PATH, SWIFTMAILER_VARIABLE_PATH_DEFAULT);
@@ -97,7 +96,7 @@ class SWIFTMailSystem implements MailSystemInterface {
     }
 
     // Include the Swift Mailer library.
-    require_once(drupal_realpath($library_path . '/lib/swift_required.php'));
+    require_once drupal_realpath($library_path . '/lib/swift_required.php');
 
     try {
 
@@ -130,21 +129,27 @@ class SWIFTMailSystem implements MailSystemInterface {
             case SWIFTMAILER_HEADER_ID:
               swiftmailer_add_id_header($m, $header_key, $header_value);
               break;
+
             case SWIFTMAILER_HEADER_PATH:
               swiftmailer_add_path_header($m, $header_key, $header_value);
               break;
+
             case SWIFTMAILER_HEADER_MAILBOX:
               swiftmailer_add_mailbox_header($m, $header_key, $header_value);
               break;
+
             case SWIFTMAILER_HEADER_DATE:
               swiftmailer_add_date_header($m, $header_key, $header_value);
               break;
+
             case SWIFTMAILER_HEADER_PARAMETERIZED:
               swiftmailer_add_parameterized_header($m, $header_key, $header_value);
               break;
+
             default:
               swiftmailer_add_text_header($m, $header_key, $header_value);
               break;
+
           }
         }
       }
@@ -210,7 +215,6 @@ class SWIFTMailSystem implements MailSystemInterface {
         // Configure the mailer based on the configured transport type.
         switch ($transport_type) {
           case SWIFTMAILER_TRANSPORT_SMTP:
-
             // Get transport configuration.
             $host = variable_get(SWIFTMAILER_VARIABLE_SMTP_HOST, SWIFTMAILER_VARIABLE_SMTP_HOST_DEFAULT);
             $port = variable_get(SWIFTMAILER_VARIABLE_SMTP_PORT, SWIFTMAILER_VARIABLE_SMTP_PORT_DEFAULT);
@@ -240,7 +244,6 @@ class SWIFTMailSystem implements MailSystemInterface {
             break;
 
           case SWIFTMAILER_TRANSPORT_SENDMAIL:
-
             // Get transport configuration.
             $path = variable_get(SWIFTMAILER_VARIABLE_SENDMAIL_PATH, SWIFTMAILER_VARIABLE_SENDMAIL_PATH_DEFAULT);
             $mode = variable_get(SWIFTMAILER_VARIABLE_SENDMAIL_MODE, SWIFTMAILER_VARIABLE_SENDMAIL_MODE_DEFAULT);
@@ -251,7 +254,6 @@ class SWIFTMailSystem implements MailSystemInterface {
             break;
 
           case SWIFTMAILER_TRANSPORT_NATIVE:
-
             // Instantiate transport.
             $transport = Swift_MailTransport::newInstance();
             $mailer = Swift_Mailer::newInstance($transport);
@@ -265,7 +267,7 @@ class SWIFTMailSystem implements MailSystemInterface {
     } catch (Exception $e) {
 
       // Log error and notify user.
-      watchdog('swiftmailer', 'An attempt to send an e-mail message failed: !exception_message', array('!exception_message' => (drupal_substr(trim($e->getMessage()), -1) == '.') ? trim($e->getMessage()) : trim($e->getMessage()) . '.'), WATCHDOG_ERROR);
+      watchdog('swiftmailer', 'An attempt to send an e-mail message failed: @exception_message', array('@exception_message' => (drupal_substr(trim($e->getMessage()), -1) == '.') ? trim($e->getMessage()) : trim($e->getMessage()) . '.'), WATCHDOG_ERROR);
       drupal_set_message(t('An attempt to send an e-mail message failed.'), 'error');
 
     }

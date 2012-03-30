@@ -20,6 +20,9 @@ function swiftmailer_admin_default_page() {
  */
 function swiftmailer_admin_default_form($form, &$form_state) {
 
+  // Include helper functions.
+  module_load_include('inc', 'swiftmailer', '/includes/helpers/utilities');
+
   $form['#tree'] = TRUE;
 
   $form['description'] = array(
@@ -62,7 +65,7 @@ function swiftmailer_admin_default_form($form, &$form_state) {
 
       $path = reset($alternatives)->uri;
       $path = preg_replace('/\/lib\/classes\/Swift.php/', '', $path);
-      drupal_set_message(t('The SwiftMailer library was found in \'!path\'.', array('!path' => $path)), 'status');
+      drupal_set_message(t("The SwiftMailer library was found in '!path'.", array('!path' => $path)), 'status');
       variable_set(SWIFTMAILER_VARIABLE_PATH, $path);
 
     }
@@ -74,7 +77,7 @@ function swiftmailer_admin_default_form($form, &$form_state) {
     '#title' => t('Library path'),
     '#description' => t('The path to the Swift Mailer directory (e.g. sites/all/libraries/swiftmailer)'),
     '#required' => TRUE,
-    '#default_value' => check_plain($path),
+    '#default_value' => $path,
     '#attributes' => array('class' => array($class)),
   );
 
@@ -91,6 +94,9 @@ function swiftmailer_admin_default_form($form, &$form_state) {
  */
 function swiftmailer_admin_default_form_validate($form, &$form_state) {
 
+  // Include helper functions.
+  module_load_include('inc', 'swiftmailer', '/includes/helpers/utilities');
+
   if (!swiftmailer_validate_library($form_state['values']['library']['path'])) {
     form_set_error('library][path', t('The provided path does not contain the Swift Mailer library.'));
   }
@@ -101,6 +107,9 @@ function swiftmailer_admin_default_form_validate($form, &$form_state) {
  * Form submission handler for swiftmailer_admin_default_form().
  */
 function swiftmailer_admin_default_form_submit($form, &$form_state) {
+
+  // Include helper functions.
+  module_load_include('inc', 'swiftmailer', '/includes/helpers/utilities');
 
   if (isset($form_state['values']['library']['path'])) {
     variable_set(SWIFTMAILER_VARIABLE_PATH, swiftmailer_validate_library($form_state['values']['library']['path']));

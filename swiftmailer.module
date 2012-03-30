@@ -8,53 +8,53 @@
 module_load_include('inc', 'swiftmailer', '/includes/helpers/utilities');
 
 // Define permissions.
-DEFINE('SWIFTMAILER_ADMINISTER', 'swiftmailer_administer');
+define('SWIFTMAILER_ADMINISTER', 'swiftmailer_administer');
 
 // Define message formats.
-DEFINE('SWIFTMAILER_FORMAT_PLAIN', 'text/plain');
-DEFINE('SWIFTMAILER_FORMAT_HTML', 'text/html');
+define('SWIFTMAILER_FORMAT_PLAIN', 'text/plain');
+define('SWIFTMAILER_FORMAT_HTML', 'text/html');
 
 // Define transport types.
-DEFINE('SWIFTMAILER_TRANSPORT_SMTP', 'smtp');
-DEFINE('SWIFTMAILER_TRANSPORT_SENDMAIL', 'sendmail');
-DEFINE('SWIFTMAILER_TRANSPORT_NATIVE', 'native');
+define('SWIFTMAILER_TRANSPORT_SMTP', 'smtp');
+define('SWIFTMAILER_TRANSPORT_SENDMAIL', 'sendmail');
+define('SWIFTMAILER_TRANSPORT_NATIVE', 'native');
 
 // Define header types.
-DEFINE('SWIFTMAILER_HEADER_TEXT', 'text');
-DEFINE('SWIFTMAILER_HEADER_PARAMETERIZED', 'parameterized');
-DEFINE('SWIFTMAILER_HEADER_MAILBOX', 'mailbox');
-DEFINE('SWIFTMAILER_HEADER_DATE', 'date');
-DEFINE('SWIFTMAILER_HEADER_ID', 'ID');
-DEFINE('SWIFTMAILER_HEADER_PATH', 'path');
+define('SWIFTMAILER_HEADER_TEXT', 'text');
+define('SWIFTMAILER_HEADER_PARAMETERIZED', 'parameterized');
+define('SWIFTMAILER_HEADER_MAILBOX', 'mailbox');
+define('SWIFTMAILER_HEADER_DATE', 'date');
+define('SWIFTMAILER_HEADER_ID', 'ID');
+define('SWIFTMAILER_HEADER_PATH', 'path');
 
 // Define system variables.
-DEFINE('SWIFTMAILER_VARIABLE_MAIL_SYSTEM_OLD', 'swiftmailer_mail_system_old');
-DEFINE('SWIFTMAILER_VARIABLE_PATH', 'swiftmailer_path');
-DEFINE('SWIFTMAILER_VARIABLE_FORMAT', 'swiftmailer_format');
-DEFINE('SWIFTMAILER_VARIABLE_TRANSPORT', 'swiftmailer_transport');
-DEFINE('SWIFTMAILER_VARIABLE_SMTP_HOST', 'swiftmailer_smtp_host');
-DEFINE('SWIFTMAILER_VARIABLE_SMTP_PORT', 'swiftmailer_smtp_port');
-DEFINE('SWIFTMAILER_VARIABLE_SMTP_ENCRYPTION', 'swiftmailer_smtp_encryption');
-DEFINE('SWIFTMAILER_VARIABLE_SMTP_USERNAME', 'swiftmailer_smtp_username');
-DEFINE('SWIFTMAILER_VARIABLE_SMTP_PASSWORD', 'swiftmailer_smtp_password');
-DEFINE('SWIFTMAILER_VARIABLE_SENDMAIL_PATH', 'swiftmailer_sendmail_path');
-DEFINE('SWIFTMAILER_VARIABLE_SENDMAIL_MODE', 'swiftmailer_sendmail_mode');
-DEFINE('SWIFTMAILER_VARIABLE_CHARACTER_SET', 'swiftmailer_character_set');
+define('SWIFTMAILER_VARIABLE_MAIL_SYSTEM_OLD', 'swiftmailer_mail_system_old');
+define('SWIFTMAILER_VARIABLE_PATH', 'swiftmailer_path');
+define('SWIFTMAILER_VARIABLE_FORMAT', 'swiftmailer_format');
+define('SWIFTMAILER_VARIABLE_TRANSPORT', 'swiftmailer_transport');
+define('SWIFTMAILER_VARIABLE_SMTP_HOST', 'swiftmailer_smtp_host');
+define('SWIFTMAILER_VARIABLE_SMTP_PORT', 'swiftmailer_smtp_port');
+define('SWIFTMAILER_VARIABLE_SMTP_ENCRYPTION', 'swiftmailer_smtp_encryption');
+define('SWIFTMAILER_VARIABLE_SMTP_USERNAME', 'swiftmailer_smtp_username');
+define('SWIFTMAILER_VARIABLE_SMTP_PASSWORD', 'swiftmailer_smtp_password');
+define('SWIFTMAILER_VARIABLE_SENDMAIL_PATH', 'swiftmailer_sendmail_path');
+define('SWIFTMAILER_VARIABLE_SENDMAIL_MODE', 'swiftmailer_sendmail_mode');
+define('SWIFTMAILER_VARIABLE_CHARACTER_SET', 'swiftmailer_character_set');
 
 
 // Define system variables defaults.
-DEFINE('SWIFTMAILER_VARIABLE_MAIL_SYSTEM_OLD_DEFAULT', '');
-DEFINE('SWIFTMAILER_VARIABLE_PATH_DEFAULT', '');
-DEFINE('SWIFTMAILER_VARIABLE_FORMAT_DEFAULT', 'text/plain');
-DEFINE('SWIFTMAILER_VARIABLE_TRANSPORT_DEFAULT', 'native');
-DEFINE('SWIFTMAILER_VARIABLE_SMTP_HOST_DEFAULT', '');
-DEFINE('SWIFTMAILER_VARIABLE_SMTP_PORT_DEFAULT', '25');
-DEFINE('SWIFTMAILER_VARIABLE_SMTP_ENCRYPTION_DEFAULT', '');
-DEFINE('SWIFTMAILER_VARIABLE_SMTP_USERNAME_DEFAULT', '');
-DEFINE('SWIFTMAILER_VARIABLE_SMTP_PASSWORD_DEFAULT', '');
-DEFINE('SWIFTMAILER_VARIABLE_SENDMAIL_PATH_DEFAULT', '/usr/sbin/sendmail');
-DEFINE('SWIFTMAILER_VARIABLE_SENDMAIL_MODE_DEFAULT', 'bs');
-DEFINE('SWIFTMAILER_VARIABLE_CHARACTER_SET_DEFAULT', 'UTF-8');
+define('SWIFTMAILER_VARIABLE_MAIL_SYSTEM_OLD_DEFAULT', '');
+define('SWIFTMAILER_VARIABLE_PATH_DEFAULT', '');
+define('SWIFTMAILER_VARIABLE_FORMAT_DEFAULT', 'text/plain');
+define('SWIFTMAILER_VARIABLE_TRANSPORT_DEFAULT', 'native');
+define('SWIFTMAILER_VARIABLE_SMTP_HOST_DEFAULT', '');
+define('SWIFTMAILER_VARIABLE_SMTP_PORT_DEFAULT', '25');
+define('SWIFTMAILER_VARIABLE_SMTP_ENCRYPTION_DEFAULT', '');
+define('SWIFTMAILER_VARIABLE_SMTP_USERNAME_DEFAULT', '');
+define('SWIFTMAILER_VARIABLE_SMTP_PASSWORD_DEFAULT', '');
+define('SWIFTMAILER_VARIABLE_SENDMAIL_PATH_DEFAULT', '/usr/sbin/sendmail');
+define('SWIFTMAILER_VARIABLE_SENDMAIL_MODE_DEFAULT', 'bs');
+define('SWIFTMAILER_VARIABLE_CHARACTER_SET_DEFAULT', 'UTF-8');
 
 /**
  * Implements hook_menu().
@@ -103,7 +103,7 @@ function swiftmailer_menu() {
   $items['admin/config/people/swiftmailer/test'] = array(
     'type'              => MENU_LOCAL_TASK,
     'title'             => 'Test',
-    'description'       => 'Configure how Swift Mailer will compose messages.',
+    'description'       => 'Send a test e-mail to verify that the configuration works.',
     'page callback'     => 'swiftmailer_admin_test_page',
     'file'              => 'includes/pages/swiftmailer_admin_test.inc',
     'access arguments'  => array(SWIFTMAILER_ADMINISTER),
@@ -117,21 +117,20 @@ function swiftmailer_menu() {
  * Implements hook_mail().
  */
 function swiftmailer_mail($key, &$message) {
-  switch ($key) {
-    default:
-      global $user;
 
-      $message['params']['format'] = SWIFTMAILER_FORMAT_HTML;
+  global $user;
 
-      $text[] = '<strong>' . t('Dear !user,', array('!user' => $user->name)) . '</strong>';
-      $text[] = '<p>' . t('This e-mail has been sent from !site by the Swift Mailer module. The module has been successfully configured.', array('!site' => variable_get('site_name', 'a Drupal site'))) . '</p>';
-      $text[] = t('Kind regards') . '<br /><br />';
-      $text[] = t('The Swift Mailer module');
+  $message['params']['format'] = SWIFTMAILER_FORMAT_HTML;
 
-      $message['subject'] = t('Swift Mailer has been successfully configured!');
-      $message['body'] = $text;
-      break;
-  }
+  $text[] = '<strong>' . t('Dear !user,', array('!user' => $user->name)) . '</strong>';
+  $text[] = '<p>' . t('This e-mail has been sent from !site by the Swift Mailer module. The module has been successfully configured.', array('!site' => variable_get('site_name', 'a Drupal site'))) . '</p>';
+  $text[] = t('Kind regards') . '<br /><br />';
+  $text[] = t('The Swift Mailer module');
+
+  $message['subject'] = t('Swift Mailer has been successfully configured!');
+  $message['body'] = $text;
+  break;
+  
 }
 
 /**

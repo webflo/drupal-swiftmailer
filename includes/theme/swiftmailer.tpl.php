@@ -1,3 +1,10 @@
+<?php
+/**
+ * @file
+ * The default template file for e-mails.
+ */
+?>
+
 <div>
     <table width="100%" cellpadding="0" cellspacing="0">
         <tr style="background: rgb(255,255,255);">

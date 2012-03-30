@@ -18,6 +18,9 @@ function swiftmailer_admin_test_page() {
  */
 function swiftmailer_admin_test_form($form, &$form_state) {
 
+  // Include helper functions.
+  module_load_include('inc', 'swiftmailer', '/includes/helpers/utilities');
+
   $form['#tree'] = TRUE;
 
   $form['description'] = array(
@@ -66,7 +69,7 @@ function swiftmailer_admin_test_form_submit($form, &$form_state) {
 
   if (isset($form_state['values']['test']['recipient'])) {
     drupal_mail('swiftmailer', 'test', $form_state['values']['test']['recipient'], language_default());
-    drupal_set_message(t('An e-mail has been sent to @email.', array('@email' =>  $form_state['values']['test']['recipient'])));
+    drupal_set_message(t('An e-mail has been sent to @email.', array('@email' => $form_state['values']['test']['recipient'])));
   }
 
 }

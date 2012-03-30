@@ -46,3 +46,6 @@
 2012-08-02
   - Cleaned up code.
   - Worked on moving from 'master' branch to version branch.
+
+2012-03-30
+  - Cleaned up code according to module review.

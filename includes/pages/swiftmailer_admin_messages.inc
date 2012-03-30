@@ -19,6 +19,9 @@ function swiftmailer_admin_messages_page() {
  */
 function swiftmailer_admin_messages_form($form, &$form_state) {
 
+  // Include helper functions.
+  module_load_include('inc', 'swiftmailer', '/includes/helpers/utilities');
+
   $form['#tree'] = TRUE;
 
   $form['description'] = array(

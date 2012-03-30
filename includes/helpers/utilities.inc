@@ -15,7 +15,7 @@
  *   library is available at the provided path, and otherwise FALSE.
  */
 function swiftmailer_validate_library($path) {
-
+  
   // Remove leading slashes.
   while (drupal_substr($path, 0, 1) === '/') {
     $path = drupal_substr($path, 1);
@@ -113,25 +113,5 @@ function swiftmailer_get_supressable_headers() {
   return array(
     'Content-Transfer-Encoding',
   );
-
-}
-
-/**
- * Returns a random value
- *
- * @param $length
- *   An integer determining the length of the returned random value.
- */
-function swiftmailer_get_random($length = 10) {
-
-  $chars = array('1','2','3','4','5','6','7','8','9','0');
-
-  $random_value = '';
-  for ($i = 0; $i < $length; $i++) {
-    $char_pos = rand(0, count($chars) - 1);
-    $random_value .= $chars[$char_pos];
-  }
-
-  return $random_value;
 
 }
