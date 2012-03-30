@@ -126,7 +126,7 @@ function swiftmailer_mail($key, &$message) {
 
   $message['subject'] = t('Swift Mailer has been successfully configured!');
   $message['body'] = $text;
-  
+
 }
 
 /**

@@ -65,7 +65,7 @@ function swiftmailer_admin_default_form($form, &$form_state) {
 
       $path = reset($alternatives)->uri;
       $path = preg_replace('/\/lib\/classes\/Swift.php/', '', $path);
-      drupal_set_message(t("The SwiftMailer library was found in '!path'.", array('!path' => $path)), 'status');
+      drupal_set_message(t("The SwiftMailer library was found in '@path'.", array('@path' => $path)), 'status');
       variable_set(SWIFTMAILER_VARIABLE_PATH, $path);
 
     }

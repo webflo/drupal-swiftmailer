@@ -57,7 +57,8 @@ function swiftmailer_admin_transport_form($form, &$form_state) {
 
     $form['transport']['type'] = array(
       '#type' => 'radios',
-      '#options' => array(SWIFTMAILER_TRANSPORT_SMTP => t('SMTP'), 
+      '#options' => array(
+        SWIFTMAILER_TRANSPORT_SMTP => t('SMTP'),
         SWIFTMAILER_TRANSPORT_SENDMAIL => t('Sendmail'),
         SWIFTMAILER_TRANSPORT_NATIVE => t('PHP')),
       '#default_value' => $transport,
@@ -256,8 +257,7 @@ function swiftmailer_admin_transport_form_submit($form, &$form_state) {
       case SWIFTMAILER_TRANSPORT_NATIVE:
         drupal_set_message(t('Drupal has been configured to send all e-mails using the PHP transport type.'), 'status');
         break;
-      
+
     }
   }
-
 }

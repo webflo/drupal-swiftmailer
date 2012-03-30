@@ -33,8 +33,8 @@ which is to be used as default. You are advised not to change any of these
 options if you are uncertain about what they mean.
 
 You can test whether the Swift Mailer library sends e-mail messages correctly
-by going to 'admin/config/people/swiftmailer/test' when the module has been configured
-and you are ready to put it into action.
+by going to 'admin/config/people/swiftmailer/test' when the module has been
+configured and you are ready to put it into action.
 
 2.0 Theming E-mails
 
