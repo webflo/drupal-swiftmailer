@@ -4,9 +4,6 @@
  * This is the primary module file.
  */
 
-// Load dependencies.
-module_load_include('inc', 'swiftmailer', '/includes/helpers/utilities');
-
 // Define permissions.
 define('SWIFTMAILER_ADMINISTER', 'swiftmailer_administer');
 
@@ -129,7 +126,6 @@ function swiftmailer_mail($key, &$message) {
 
   $message['subject'] = t('Swift Mailer has been successfully configured!');
   $message['body'] = $text;
-  break;
   
 }
 
