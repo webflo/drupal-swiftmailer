@@ -49,3 +49,8 @@
 
 2012-03-30
   - Cleaned up code according to module review.
+
+2012-05-14
+  - Changed package name from 'Mail' to 'Other' in 'swiftmailer.info'
+  - Changed 'DEFINE' to 'define' in 'conversion.inc'
+  - 

@@ -264,7 +264,8 @@ class SWIFTMailSystem implements MailSystemInterface {
       // Send the message.
       return $mailer->send($m);
 
-    } catch (Exception $e) {
+    }
+    catch (Exception $e) {
 
       // Log error and notify user.
       watchdog('swiftmailer', 'An attempt to send an e-mail message failed: @exception_message', array('@exception_message' => (drupal_substr(trim($e->getMessage()), -1) == '.') ? trim($e->getMessage()) : trim($e->getMessage()) . '.'), WATCHDOG_ERROR);

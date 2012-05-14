@@ -1,6 +1,7 @@
 name = Swift Mailer
-description = Delegates handling of e-mails to the Swift Mailer library.
+description = Installs Swift Mailer as a mail system.
 core = 7.x
 package = Mail
 files[] = includes/classes/SWIFTMailSystem.inc
 configure = admin/config/people/swiftmailer
+dependencies[] = mailsystem

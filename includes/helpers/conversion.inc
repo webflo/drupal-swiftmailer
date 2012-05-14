@@ -4,8 +4,8 @@
  * This file contains conversion functions.
  */
 
-DEFINE('SWIFTMAILER_DATE_PATTERN', '(Mon|Tue|Wed|Thu|Fri|Sat|Sun), [0-9]{2} (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) [0-9]{4} (2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9]) (\+|\-)([01][0-2])([0-5][0-9])');
-DEFINE('SWIFTMAILER_MAILBOX_PATTERN', '(.*\<.*@.*\>|.*@.*,)');
+define('SWIFTMAILER_DATE_PATTERN', '(Mon|Tue|Wed|Thu|Fri|Sat|Sun), [0-9]{2} (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) [0-9]{4} (2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9]) (\+|\-)([01][0-2])([0-5][0-9])');
+define('SWIFTMAILER_MAILBOX_PATTERN', '(.*\<.*@.*\>|.*@.*,)');
 
 /**
  * Determines the header type based on the a header key and value.

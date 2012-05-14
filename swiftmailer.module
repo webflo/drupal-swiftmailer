@@ -25,7 +25,6 @@ define('SWIFTMAILER_HEADER_ID', 'ID');
 define('SWIFTMAILER_HEADER_PATH', 'path');
 
 // Define system variables.
-define('SWIFTMAILER_VARIABLE_MAIL_SYSTEM_OLD', 'swiftmailer_mail_system_old');
 define('SWIFTMAILER_VARIABLE_PATH', 'swiftmailer_path');
 define('SWIFTMAILER_VARIABLE_FORMAT', 'swiftmailer_format');
 define('SWIFTMAILER_VARIABLE_TRANSPORT', 'swiftmailer_transport');
@@ -38,9 +37,7 @@ define('SWIFTMAILER_VARIABLE_SENDMAIL_PATH', 'swiftmailer_sendmail_path');
 define('SWIFTMAILER_VARIABLE_SENDMAIL_MODE', 'swiftmailer_sendmail_mode');
 define('SWIFTMAILER_VARIABLE_CHARACTER_SET', 'swiftmailer_character_set');
 
-
 // Define system variables defaults.
-define('SWIFTMAILER_VARIABLE_MAIL_SYSTEM_OLD_DEFAULT', '');
 define('SWIFTMAILER_VARIABLE_PATH_DEFAULT', '');
 define('SWIFTMAILER_VARIABLE_FORMAT_DEFAULT', 'text/plain');
 define('SWIFTMAILER_VARIABLE_TRANSPORT_DEFAULT', 'native');
