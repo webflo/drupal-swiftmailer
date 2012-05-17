@@ -20,7 +20,7 @@ function swiftmailer_admin_messages_page() {
 function swiftmailer_admin_messages_form($form, &$form_state) {
 
   // Include helper functions.
-  module_load_include('inc', 'swiftmailer', '/includes/helpers/utilities');
+  require_once(dirname(__DIR__) . '/helpers/utilities.inc');
 
   $form['#tree'] = TRUE;
 
@@ -28,7 +28,7 @@ function swiftmailer_admin_messages_form($form, &$form_state) {
     '#markup' => '<p>' . t('This page allows you to configure settings which determines how e-mail messages are created.') . '</p>',
   );
 
-  if (swiftmailer_validate_library(variable_get(SWIFTMAILER_VARIABLE_PATH, SWIFTMAILER_VARIABLE_PATH_DEFAULT))) {
+  if (swiftmailer_validate_library(variable_get('swiftmailer_path', SWIFTMAILER_VARIABLE_PATH_DEFAULT))) {
 
     $form['format'] = array(
       '#type' => 'fieldset',
@@ -40,7 +40,14 @@ function swiftmailer_admin_messages_form($form, &$form_state) {
     $form['format']['type'] = array(
       '#type' => 'radios',
       '#options' => array(SWIFTMAILER_FORMAT_PLAIN => t('Plain Text'), SWIFTMAILER_FORMAT_HTML => t('HTML')),
-      '#default_value' => variable_get(SWIFTMAILER_VARIABLE_FORMAT, SWIFTMAILER_VARIABLE_FORMAT_DEFAULT),
+      '#default_value' => variable_get('swiftmailer_format', SWIFTMAILER_VARIABLE_FORMAT_DEFAULT),
+    );
+
+    $form['format']['respect'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Respect provided e-mail format.'),
+      '#default_value' => variable_get('swiftmailer_respect_format', SWIFTMAILER_VARIABLE_RESPECT_FORMAT_DEFAULT),
+      '#description' => t('The e-mail format provided in the e-mail, if any, will be respected if you enable this setting.'),
     );
 
     $form['character_set'] = array(
@@ -54,7 +61,7 @@ function swiftmailer_admin_messages_form($form, &$form_state) {
     $form['character_set']['type'] = array(
       '#type' => 'select',
       '#options' => swiftmailer_get_character_set_options(),
-      '#default_value' => variable_get(SWIFTMAILER_VARIABLE_CHARACTER_SET, SWIFTMAILER_VARIABLE_CHARACTER_SET_DEFAULT),
+      '#default_value' => variable_get('swiftmailer_character_set', SWIFTMAILER_VARIABLE_CHARACTER_SET_DEFAULT),
     );
 
     $form['submit'] = array(
@@ -82,11 +89,15 @@ function swiftmailer_admin_messages_form($form, &$form_state) {
 function swiftmailer_admin_messages_form_submit($form, &$form_state) {
 
   if (isset($form_state['values']['format']['type'])) {
-    variable_set(SWIFTMAILER_VARIABLE_FORMAT, $form_state['values']['format']['type']);
+    variable_set('swiftmailer_format', $form_state['values']['format']['type']);
+  }
+
+  if (isset($form_state['values']['format']['respect'])) {
+    variable_set('swiftmailer_respect_format', $form_state['values']['format']['respect']);
   }
 
   if (isset($form_state['values']['character_set']['type'])) {
-    variable_set(SWIFTMAILER_VARIABLE_CHARACTER_SET, $form_state['values']['character_set']['type']);
+    variable_set('swiftmailer_character_set', $form_state['values']['character_set']['type']);
   }
 
 }

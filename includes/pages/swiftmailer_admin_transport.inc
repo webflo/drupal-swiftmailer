@@ -20,8 +20,8 @@ function swiftmailer_admin_transport_page() {
  */
 function swiftmailer_admin_transport_form($form, &$form_state) {
 
-    // Include helper functions.
-  module_load_include('inc', 'swiftmailer', '/includes/helpers/utilities');
+  // Include helper functions.
+  require_once(dirname(__DIR__) . '/helpers/utilities.inc');
 
   // The configuration options for the selected transport type should be
   // displayed using AJAX if JavaScript is enabled. However, we need to
@@ -40,7 +40,7 @@ function swiftmailer_admin_transport_form($form, &$form_state) {
 
   // Validate that the Swift Mailer library is available. Configuration options
   // should only be displayed if the library is available.
-  if (swiftmailer_validate_library(variable_get(SWIFTMAILER_VARIABLE_PATH, SWIFTMAILER_VARIABLE_PATH_DEFAULT))) {
+  if (swiftmailer_validate_library(variable_get('swiftmailer_path', SWIFTMAILER_VARIABLE_PATH_DEFAULT))) {
 
     $form['transport'] = array(
       '#id' => 'transport',
@@ -52,7 +52,7 @@ function swiftmailer_admin_transport_form($form, &$form_state) {
     // Display the currently configured transport type, or alternatively the
     // currently selected transport type if the user has chosen to configure
     // another transport type.
-    $transport = variable_get(SWIFTMAILER_VARIABLE_TRANSPORT, SWIFTMAILER_TRANSPORT_NATIVE);
+    $transport = variable_get('swiftmailer_transport', SWIFTMAILER_TRANSPORT_NATIVE);
     $transport = (isset($form_state['values']['transport']['type'])) ? $form_state['values']['transport']['type'] : $transport;
 
     $form['transport']['type'] = array(
@@ -106,14 +106,14 @@ function swiftmailer_admin_transport_form($form, &$form_state) {
       '#title' => t('SMTP server'),
       '#description' => t('The hostname or IP address at which the SMTP server can be reached.'),
       '#required' => TRUE,
-      '#default_value' => check_plain(variable_get(SWIFTMAILER_VARIABLE_SMTP_HOST, SWIFTMAILER_VARIABLE_SMTP_HOST_DEFAULT)),
+      '#default_value' => variable_get('swiftmailer_smtp_host', SWIFTMAILER_VARIABLE_SMTP_HOST_DEFAULT),
     );
 
     $form['transport']['configuration'][SWIFTMAILER_TRANSPORT_SMTP]['port'] = array(
       '#type' => 'textfield',
       '#title' => t('Port'),
       '#description' => t('The port at which the SMTP server can be reached (defaults to 25)'),
-      '#default_value' => check_plain(variable_get(SWIFTMAILER_VARIABLE_SMTP_PORT, SWIFTMAILER_VARIABLE_SMTP_PORT_DEFAULT)),
+      '#default_value' => variable_get('swiftmailer_smtp_port', SWIFTMAILER_VARIABLE_SMTP_PORT_DEFAULT),
       '#size' => 10,
     );
 
@@ -122,24 +122,24 @@ function swiftmailer_admin_transport_form($form, &$form_state) {
       '#title' => t('Encryption'),
       '#options' => swiftmailer_get_encryption_options(),
       '#description' => t('The type of encryption which should be used (if any)'),
-      '#default_value' => variable_get(SWIFTMAILER_VARIABLE_SMTP_ENCRYPTION, SWIFTMAILER_VARIABLE_SMTP_ENCRYPTION_DEFAULT),
+      '#default_value' => variable_get('swiftmailer_smtp_encryption', SWIFTMAILER_VARIABLE_SMTP_ENCRYPTION_DEFAULT),
     );
 
     $form['transport']['configuration'][SWIFTMAILER_TRANSPORT_SMTP]['username'] = array(
       '#type' => 'textfield',
       '#title' => t('Username'),
       '#description' => t('A username required by the SMTP server (leave blank if not required)'),
-      '#default_value' => check_plain(variable_get(SWIFTMAILER_VARIABLE_SMTP_USERNAME, SWIFTMAILER_VARIABLE_SMTP_USERNAME_DEFAULT)),
+      '#default_value' => variable_get('swiftmailer_smtp_username', SWIFTMAILER_VARIABLE_SMTP_USERNAME_DEFAULT),
     );
 
     $form['transport']['configuration'][SWIFTMAILER_TRANSPORT_SMTP]['password'] = array(
       '#type' => 'password',
       '#title' => t('Password'),
       '#description' => t('A password required by the SMTP server (leave blank if not required)'),
-      '#default_value' => check_plain(variable_get(SWIFTMAILER_VARIABLE_SMTP_PASSWORD, SWIFTMAILER_VARIABLE_SMTP_PASSWORD_DEFAULT)),
+      '#default_value' => variable_get('swiftmailer_smtp_password', SWIFTMAILER_VARIABLE_SMTP_PASSWORD_DEFAULT),
     );
 
-    $current_password = variable_get(SWIFTMAILER_VARIABLE_SMTP_PASSWORD);
+    $current_password = variable_get('swiftmailer_smtp_password');
     if (!empty($current_password)) {
       $form['transport']['configuration'][SWIFTMAILER_TRANSPORT_SMTP]['password']['#description'] = t('A password
         required by the SMTP server. <em>The currently set password is hidden for security reasons</em>.');
@@ -162,13 +162,13 @@ function swiftmailer_admin_transport_form($form, &$form_state) {
         defaults to /usr/sbin/sendmail. You can read more about
         this transport type in the !documentation.',
         array('!documentation' => l(t('Swift Mailer documentation'), 'http://swiftmailer.org/docs/sending.html#the-sendmail-transport'))) . '</p>',
-      );
+    );
 
     $form['transport']['configuration'][SWIFTMAILER_TRANSPORT_SENDMAIL]['path'] = array(
       '#type' => 'textfield',
       '#title' => t('MTA path'),
       '#description' => t('The absolute path to the locally installed MTA.'),
-      '#default_value' => check_plain(variable_get(SWIFTMAILER_VARIABLE_SENDMAIL_PATH, SWIFTMAILER_VARIABLE_SENDMAIL_PATH_DEFAULT)),
+      '#default_value' => variable_get('swiftmailer_sendmail_path', SWIFTMAILER_VARIABLE_SENDMAIL_PATH_DEFAULT),
     );
 
     $form['transport']['configuration'][SWIFTMAILER_TRANSPORT_SENDMAIL]['mode'] = array(
@@ -176,7 +176,7 @@ function swiftmailer_admin_transport_form($form, &$form_state) {
       '#title' => t('Mode'),
       '#options' => array('bs' => 'bs', 't' => 't '),
       '#description' => t('Not sure which option to choose? Go with <em>bs</em>. You can read more about the above two modes in the !documentation.', array('!documentation' => l(t('Swift Mailer documentation'), 'http://swiftmailer.org/docs/sendmail-transport'))),
-      '#default_value' => variable_get(SWIFTMAILER_VARIABLE_SENDMAIL_MODE, SWIFTMAILER_VARIABLE_SENDMAIL_MODE_DEFAULT),
+      '#default_value' => variable_get('swiftmailer_sendmail_mode', SWIFTMAILER_VARIABLE_SENDMAIL_MODE_DEFAULT),
     );
 
     $form['transport']['configuration'][SWIFTMAILER_TRANSPORT_NATIVE] = array(
@@ -236,21 +236,21 @@ function swiftmailer_admin_transport_form_update($form, &$form_state) {
 function swiftmailer_admin_transport_form_submit($form, &$form_state) {
 
   if (isset($form_state['values']['transport']['type'])) {
-    variable_set(SWIFTMAILER_VARIABLE_TRANSPORT, $form_state['values']['transport']['type']);
+    variable_set('swiftmailer_transport', $form_state['values']['transport']['type']);
 
     switch ($form_state['values']['transport']['type']) {
       case SWIFTMAILER_TRANSPORT_SMTP:
-        variable_set(SWIFTMAILER_VARIABLE_SMTP_HOST, $form_state['values']['transport']['configuration'][SWIFTMAILER_TRANSPORT_SMTP]['server']);
-        variable_set(SWIFTMAILER_VARIABLE_SMTP_PORT, $form_state['values']['transport']['configuration'][SWIFTMAILER_TRANSPORT_SMTP]['port']);
-        variable_set(SWIFTMAILER_VARIABLE_SMTP_ENCRYPTION, $form_state['values']['transport']['configuration'][SWIFTMAILER_TRANSPORT_SMTP]['encryption']);
-        variable_set(SWIFTMAILER_VARIABLE_SMTP_USERNAME, $form_state['values']['transport']['configuration'][SWIFTMAILER_TRANSPORT_SMTP]['username']);
-        variable_set(SWIFTMAILER_VARIABLE_SMTP_PASSWORD, $form_state['values']['transport']['configuration'][SWIFTMAILER_TRANSPORT_SMTP]['password']);
+        variable_set('swiftmailer_smtp_host', $form_state['values']['transport']['configuration'][SWIFTMAILER_TRANSPORT_SMTP]['server']);
+        variable_set('swiftmailer_smtp_port', $form_state['values']['transport']['configuration'][SWIFTMAILER_TRANSPORT_SMTP]['port']);
+        variable_set('swiftmailer_smtp_encryption', $form_state['values']['transport']['configuration'][SWIFTMAILER_TRANSPORT_SMTP]['encryption']);
+        variable_set('swiftmailer_smtp_username', $form_state['values']['transport']['configuration'][SWIFTMAILER_TRANSPORT_SMTP]['username']);
+        variable_set('swiftmailer_smtp_password', $form_state['values']['transport']['configuration'][SWIFTMAILER_TRANSPORT_SMTP]['password']);
         drupal_set_message(t('Drupal has been configured to send all e-mails using the SMTP transport type.'), 'status');
         break;
 
       case SWIFTMAILER_TRANSPORT_SENDMAIL:
-        variable_set(SWIFTMAILER_VARIABLE_SENDMAIL_PATH, $form_state['values']['transport']['configuration'][SWIFTMAILER_TRANSPORT_SENDMAIL]['path']);
-        variable_set(SWIFTMAILER_VARIABLE_SENDMAIL_MODE, $form_state['values']['transport']['configuration'][SWIFTMAILER_TRANSPORT_SENDMAIL]['mode']);
+        variable_set('swiftmailer_sendmail_path', $form_state['values']['transport']['configuration'][SWIFTMAILER_TRANSPORT_SENDMAIL]['path']);
+        variable_set('swiftmailer_sendmail_mode', $form_state['values']['transport']['configuration'][SWIFTMAILER_TRANSPORT_SENDMAIL]['mode']);
         drupal_set_message(t('Drupal has been configured to send all e-mails using the Sendmail transport type.'), 'status');
         break;
 

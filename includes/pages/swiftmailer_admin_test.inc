@@ -19,7 +19,7 @@ function swiftmailer_admin_test_page() {
 function swiftmailer_admin_test_form($form, &$form_state) {
 
   // Include helper functions.
-  module_load_include('inc', 'swiftmailer', '/includes/helpers/utilities');
+  require_once(dirname(__DIR__) . '/helpers/utilities.inc');
 
   $form['#tree'] = TRUE;
 
@@ -27,7 +27,7 @@ function swiftmailer_admin_test_form($form, &$form_state) {
     '#markup' => '<p>' . t('This page allows you to send a test e-mail to a recipient of your choice.') . '</p>',
   );
 
-  if (swiftmailer_validate_library(variable_get(SWIFTMAILER_VARIABLE_PATH, SWIFTMAILER_VARIABLE_PATH_DEFAULT))) {
+  if (swiftmailer_validate_library(variable_get('swiftmailer_path', SWIFTMAILER_VARIABLE_PATH_DEFAULT))) {
 
     $form['test'] = array(
       '#type' => 'fieldset',
@@ -40,7 +40,7 @@ function swiftmailer_admin_test_form($form, &$form_state) {
     $form['test']['recipient'] = array(
       '#title' => t('E-mail'),
       '#type' => 'textfield',
-      '#default_value' => check_plain($user->mail),
+      '#default_value' => $user->mail,
     );
 
     $form['submit'] = array(

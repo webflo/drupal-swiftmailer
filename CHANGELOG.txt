@@ -53,4 +53,6 @@
 2012-05-14
   - Changed package name from 'Mail' to 'Other' in 'swiftmailer.info'
   - Changed 'DEFINE' to 'define' in 'conversion.inc'
-  - 
+
+2012-17-05
+  - Cleaned up code.

@@ -8,43 +8,20 @@
  * Implements hook_enable().
  */
 function swiftmailer_enable() {
-
-  // Get the existing mail configuration.
-  //$configuration = variable_get('mail_system', array('default-system' => 'DefaultMailSystem'));
-
-  // Save a copy of the existing mail configuration.
-  //variable_set('swiftmailer_mail_system_old', $configuration);
-
-  // Apply the new mail configuration.
-  //variable_set('mail_system', array('default-system' => 'SWIFTMailSystem'));
-
   mailsystem_set(array(mailsystem_default_id() => 'SWIFTMailSystem'));
-
 }
 
 /**
  * Implements hook_disable().
  */
 function swiftmailer_disable() {
-
-  // Get the old mail configuration.
-  //$configuration = variable_get('swiftmailer_mail_system_old', array('default-system' => 'DefaultMailSystem'));
-
-  // Apply the old mail configuration.
-  //variable_set('mail_system', $configuration);
-
-  // Delete the old mail configuration.
-  //variable_del('swiftmailer_mail_system_old');
-
   mailsystem_clear(array(mailsystem_default_id() => 'SWIFTMailSystem'));
-
 }
 
 /**
  * Implements hook_uninstall().
  */
 function swiftmailer_uninstall() {
-  //variable_del('swiftmailer_mail_system_old');
   variable_del('swiftmailer_path');
   variable_del('swiftmailer_format');
   variable_del('swiftmailer_transport');

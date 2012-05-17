@@ -101,8 +101,10 @@ function swiftmailer_get_character_set_options() {
 }
 
 /**
- * Returns a list of e-mail headers which could be provided by Drupal, but which
- * should be ignored in order to make Swift Mailer work as smooth as possible.
+ * Returns a list of supressable e-mail headers.
+ *
+ * The returned e-mail headers could be provided by Drupal, but should be
+ * ignored in order to make Swift Mailer work as smooth as possible.
  *
  * @return array
  *   A list of e-mail headers which could be provided by Drupal, but which
