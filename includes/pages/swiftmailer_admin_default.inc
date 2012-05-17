@@ -26,11 +26,10 @@ function swiftmailer_admin_default_form($form, &$form_state) {
   $form['#tree'] = TRUE;
 
   $form['description'] = array(
-    '#markup' => '<p>' . t('The Swift Mailer module replaces the default mail system that is shipped
-      with Drupal and installs itself as the primary mail system. This allows
-      you to choose how e-mails should be sent. Furthermore, with the Swift
-      Mailer module you can easily add attachments to e-mails. To read more
-      about how this module works, please have a look at the !documentation.',
+    '#markup' => '<p>' . t('The Swift Mailer module is designed to replace the default mail system that is shipped
+      with Drupal. The initial configuration of this is done through the mailsystem module. Swift Mailer allows you
+      to choose how e-mails should be sent. To read more about how this module works, please have a look at the
+      !documentation.',
       array('!documentation' => l(t('Swift Mailer documentation'), 'http://swiftmailer.org/docs/introduction.html'))) . '</p>',
   );
 
