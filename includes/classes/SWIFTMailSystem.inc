@@ -84,8 +84,8 @@ class SWIFTMailSystem implements MailSystemInterface {
   public function mail(array $message) {
 
     // Include required files.
-    require_once(dirname(__DIR__) . '/helpers/conversion.inc');
-    require_once(dirname(__DIR__) . '/helpers/utilities.inc');
+    require_once(dirname(dirname(__FILE__)) . '/helpers/conversion.inc');
+    require_once(dirname(dirname(__FILE__)) . '/helpers/utilities.inc');
 
     // Validate whether the Swift Mailer module has been configured.
     $library_path = variable_get('swiftmailer_path', SWIFTMAILER_VARIABLE_PATH_DEFAULT);
@@ -96,7 +96,7 @@ class SWIFTMailSystem implements MailSystemInterface {
     }
 
     // Include the Swift Mailer library.
-    require_once drupal_realpath($library_path . '/lib/swift_required.php');
+    require_once(drupal_realpath($library_path . '/lib/swift_required.php'));
 
     try {
 

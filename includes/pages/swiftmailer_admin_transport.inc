@@ -21,7 +21,7 @@ function swiftmailer_admin_transport_page() {
 function swiftmailer_admin_transport_form($form, &$form_state) {
 
   // Include helper functions.
-  require_once(dirname(__DIR__) . '/helpers/utilities.inc');
+  require_once(dirname(dirname(__FILE__)) . '/helpers/utilities.inc');
 
   // The configuration options for the selected transport type should be
   // displayed using AJAX if JavaScript is enabled. However, we need to

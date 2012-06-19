@@ -21,8 +21,8 @@ function swiftmailer_admin_default_page() {
 function swiftmailer_admin_default_form($form, &$form_state) {
 
   // Include helper functions.
-  require_once(dirname(__DIR__) . '/helpers/utilities.inc');
-
+  require_once(dirname(dirname(__FILE__)) . '/helpers/utilities.inc');
+  
   $form['#tree'] = TRUE;
 
   $form['description'] = array(
@@ -94,7 +94,7 @@ function swiftmailer_admin_default_form($form, &$form_state) {
 function swiftmailer_admin_default_form_validate($form, &$form_state) {
 
   // Include helper functions.
-  require_once(dirname(__DIR__) . '/helpers/utilities.inc');
+  require_once(dirname(dirname(__FILE__)) . '/helpers/utilities.inc');
 
   if (!swiftmailer_validate_library($form_state['values']['library']['path'])) {
     form_set_error('library][path', t('The provided path does not contain the Swift Mailer library.'));
@@ -108,7 +108,7 @@ function swiftmailer_admin_default_form_validate($form, &$form_state) {
 function swiftmailer_admin_default_form_submit($form, &$form_state) {
 
   // Include helper functions.
-  require_once(dirname(__DIR__) . '/helpers/utilities.inc');
+  require_once(dirname(dirname(__FILE__)) . '/helpers/utilities.inc');
 
   if (isset($form_state['values']['library']['path'])) {
     variable_set('swiftmailer_path', swiftmailer_validate_library($form_state['values']['library']['path']));

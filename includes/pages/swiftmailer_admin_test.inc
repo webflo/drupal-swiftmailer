@@ -19,7 +19,7 @@ function swiftmailer_admin_test_page() {
 function swiftmailer_admin_test_form($form, &$form_state) {
 
   // Include helper functions.
-  require_once(dirname(__DIR__) . '/helpers/utilities.inc');
+  require_once(dirname(dirname(__FILE__)) . '/helpers/utilities.inc');
 
   $form['#tree'] = TRUE;
 
