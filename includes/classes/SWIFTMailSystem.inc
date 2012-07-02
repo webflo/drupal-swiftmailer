@@ -158,8 +158,14 @@ class SWIFTMailSystem implements MailSystemInterface {
       swiftmailer_remove_header($m, 'From');
       swiftmailer_remove_header($m, 'To');
       swiftmailer_remove_header($m, 'Subject');
-      $m->setFrom($message['from']);
-      $m->setTo($message['to']);
+
+      // Parse 'from' and 'to' mailboxes.
+      $from = swiftmailer_parse_mailboxes($message['from']);
+      $to = swiftmailer_parse_mailboxes($message['to']);
+
+      // Set 'from', 'to' and 'subject' headers.
+      $m->setFrom($from);
+      $m->setTo($to);
       $m->setSubject($message['subject']);
 
       // Add content to the message. If the provided format is to be respected,

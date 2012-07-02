@@ -5,7 +5,7 @@
  */
 
 define('SWIFTMAILER_DATE_PATTERN', '(Mon|Tue|Wed|Thu|Fri|Sat|Sun), [0-9]{2} (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) [0-9]{4} (2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9]) (\+|\-)([01][0-2])([0-5][0-9])');
-define('SWIFTMAILER_MAILBOX_PATTERN', '(.*\<.*@.*\>|.*@.*,)');
+define('SWIFTMAILER_MAILBOX_PATTERN', '(^.*\<.*@.*\>$|^.*@.*$)');
 
 /**
  * Determines the header type based on the a header key and value.
@@ -223,42 +223,15 @@ function swiftmailer_is_mailbox_header($key, $value) {
  *   The header value.
  */
 function swiftmailer_add_mailbox_header(Swift_Message $message, $key, $value) {
-
+  
   // Remove any already existing header identified by the provided key.
   swiftmailer_remove_header($message, $key);
 
-  // Initialise an array which will hold the mailboxes which are to be
-  // added to the mailbox header.
-  $header_mailboxes = array();
-
-  // Split the provided value by ',' (comma), which we assume is the
-  // character is used to separate the mailboxes.
-  $mailboxes = explode(',', $value);
-
-  // Iterate through the extracted mailboxes, and prepare each of them to be
-  // added as a mailbox message header. There should one or more mailboxes
-  // either represented as a single address or a pair of name and address.
-  // Mailboxes represented as  a single address should be in the format
-  // '[address]', while pairs of name and address should be in the format
-  // '[name] <[address]>'.
-  foreach ($mailboxes as $mailbox) {
-
-    // Find out whether the current mailbox is a pair of name and address,
-    // or just an address.
-    if (preg_match('/<.*>/', $mailbox)) {
-      $mailbox_components = explode('<', $mailbox);
-      $mailbox_name = trim($mailbox_components[0]);
-      $mailbox_address = preg_replace('/>.*/', '', $mailbox_components[1]);
-      $header_mailboxes[$mailbox_address] = trim($mailbox_name);
-
-    }
-    else {
-      $header_mailboxes[] = trim($mailbox);
-    }
-  }
+  // Parse mailboxes.
+  $mailboxes = swiftmailer_parse_mailboxes($value);
 
   // Add the header.
-  $message->getHeaders()->addMailboxHeader($key, $header_mailboxes);
+  $message->getHeaders()->addMailboxHeader($key, $mailboxes);
 }
 
 /**
@@ -369,5 +342,41 @@ function swiftmailer_remove_header(Swift_Message $message, $key) {
 
   // Remove the header if it already exists.
   $headers->removeAll($key);
+
+}
+
+/**
+ * Converts a string holding one or more mailboxes to an array.
+ *
+ *  @param $value
+ *    A string holding one or more mailboxes.
+ */
+function swiftmailer_parse_mailboxes($value) {
+
+  // Split mailboxes by ',' (comma) and ';' (semicolon).
+  $mailboxes_raw = preg_split('/(,|;)/', $value);
+
+  // Define an array which will keep track of mailboxes.
+  $mailboxes = array();
+
+  // Iterate through each of the raw mailboxes and process them.
+  foreach ($mailboxes_raw as $mailbox_raw) {
+
+    // Remove leading and trailing whitespace.
+    $mailbox_raw = trim($mailbox_raw);
+
+    if (preg_match('/^.*<.*>$/', $mailbox_raw)) {
+      $mailbox_components = explode('<', $mailbox_raw);
+      $mailbox_name = trim($mailbox_components[0]);
+      $mailbox_address = preg_replace('/>.*/', '', $mailbox_components[1]);
+      $mailboxes[$mailbox_address] = $mailbox_name;
+    }
+    else {
+      $mailboxes[] = $mailbox_raw;
+    }
+
+  }
+
+  return $mailboxes;
 
 }
