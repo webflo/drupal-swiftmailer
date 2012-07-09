@@ -117,3 +117,35 @@ function swiftmailer_get_supressable_headers() {
   );
 
 }
+
+/**
+ * Validates whether a message is multipart or not.
+ *
+ * @param array $message
+ *   The message which is to be validatet.
+ *
+ * @return boolean
+ *   A boolean indicating whether the message is multipart or not.
+ */
+function swiftmailer_is_multipart(&$message) {
+
+  $parts = 0;
+
+  if (!empty($message['body'])) {
+    $parts++;
+  }
+
+  if (!empty($message['plain'])) {
+    $parts++;
+  }
+
+  if (!empty($message['params']['files'])) {
+    $parts++;
+  }
+
+  if (!empty($message['params']['images'])) {
+    $parts++;
+  }
+
+  return ($parts > 1) ? TRUE : FALSE;
+}

@@ -26,19 +26,18 @@ class SWIFTMailSystem implements MailSystemInterface {
       $line_endings = variable_get('mail_line_endings', MAIL_LINE_ENDINGS);
       $message['body'] = implode($line_endings, $message['body']);
 
-      // Validate message format.
-      if (empty($message['params']['format'])) {
-        $message['params']['format'] = variable_get('swiftmailer_format', SWIFTMAILER_VARIABLE_FORMAT_DEFAULT);
-      }
-
-      // Validate message theming.
-      if (!isset($message['params']['theme'])) {
-        $message['params']['theme'] = ($message['params']['format'] == SWIFTMAILER_FORMAT_HTML) ? TRUE : FALSE;
-      }
-
-      // Theme message if theming is enabled and format is set to be HTML.
-      if (!empty($message['params']['theme']) && $message['params']['format'] == SWIFTMAILER_FORMAT_HTML) {
+      // Get applicable format.
+      $applicable_format = $this->getApplicableFormat($message);
+      
+      // Theme message if format is set to be HTML.
+      if ($applicable_format == SWIFTMAILER_FORMAT_HTML) {
         $message['body'] = theme('swiftmailer', $message);
+
+        if (variable_get('swiftmailer_convert_mode', SWIFTMAILER_VARIABLE_CONVERT_MODE_DEFAULT) ||
+            !empty($message['params']['convert'])) {
+          $converter = new html2text($message['body']);
+          $message['plain'] = $converter->get_text();
+        }
       }
 
       // Process any images specified by 'image:' which are to be added later
@@ -108,6 +107,10 @@ class SWIFTMailSystem implements MailSystemInterface {
       // do its work properly.
       $suppressable_headers = swiftmailer_get_supressable_headers();
 
+      // Keep track of whether we need to respect the provided e-mail
+      // format or not
+      $respect_format = variable_get('swiftmailer_respect_format', SWIFTMAILER_VARIABLE_RESPECT_FORMAT_DEFAULT);
+
       // Process headers provided by Drupal. We want to add all headers which
       // are provided by Drupal to be added to the message. For each header we
       // first have to find out what type of header it is, and then add it to
@@ -118,6 +121,12 @@ class SWIFTMailSystem implements MailSystemInterface {
           // Check wether the current header key is empty or represents
           // a header that should be supressed. If yes, then skip header.
           if (empty($header_key) || in_array($header_key, $suppressable_headers)) {
+            continue;
+          }
+
+          // Skip 'Content-Type' header if the message to be sent will be a
+          // multipart message or the provided format is not to be respected.
+          if ($header_key == 'Content-Type' && (!$respect_format || swiftmailer_is_multipart($message))) {
             continue;
           }
 
@@ -168,32 +177,21 @@ class SWIFTMailSystem implements MailSystemInterface {
       $m->setTo($to);
       $m->setSubject($message['subject']);
 
-      // Add content to the message. If the provided format is to be respected,
-      // and a format is provided, then use that format. Otherwise, use the
-      // configured format unless a format is provided in 
-      // $message['params']['format'].
-      $default_format = variable_get('swiftmailer_format', SWIFTMAILER_VARIABLE_FORMAT_DEFAULT);
-      $respect_format = variable_get('swiftmailer_respect_format', SWIFTMAILER_VARIABLE_RESPECT_FORMAT_DEFAULT);
-      $applicable_format = !empty($message['params']['format']) ? $message['params']['format'] : $default_format;
-
-      if ($respect_format && $m->getHeaders()->has('Content-Type')) {
-        $format = $m->getHeaders()->get('Content-Type');
-        $format = preg_match('/:.*\;/U', $format, $matches);
-        $applicable_format = (($format > 0) && ($matches[0] > 2)) ? trim(substr($matches[0], 2)) : $default_format;
-      }
-
-      $m->setBody($message['body'], $applicable_format);
+      // Get applicable format.
+      $applicable_format = $this->getApplicableFormat($message);
       
-      // Apply character set to the message. The default character set will
-      // be applied to the message unless a charset is provided in
-      // $message['params']['charset'].
-      if (empty($message['params']['charset'])) {
-        $m->setCharset(variable_get('swiftmailer_character_set', SWIFTMAILER_VARIABLE_CHARACTER_SET_DEFAULT));
-      }
-      else {
-        $m->setCharset($message['params']['charset']);
-      }
+      // Get applicable character set.
+      $applicable_charset = $this->getApplicableCharset($message);
 
+      // Set body.
+      $m->setBody($message['body'], $applicable_format, $applicable_charset);
+
+      // Add alternative plain text version if format is HTML and plain text
+      // version is available.
+      if ($applicable_format == SWIFTMAILER_FORMAT_HTML && !empty($message['plain'])) {
+        $m->addPart($message['plain'], SWIFTMAILER_FORMAT_PLAIN, $applicable_charset);
+      }
+      
       // Validate that $message['params']['files'] is an array.
       if (empty($message['params']['files']) || !is_array($message['params']['files'])) {
         $message['params']['files'] = array();
@@ -357,4 +355,90 @@ class SWIFTMailSystem implements MailSystemInterface {
       }
     }
   }
+
+  /**
+   * Returns the applicable format.
+   *
+   * @param array $message
+   *   The message for which the applicable format is to be determined.
+   *
+   * @return string
+   *   A string being the applicable format.
+   *
+   */
+  private function getApplicableFormat($message) {
+
+    // Get the configured default format.
+    $default_format = variable_get('swiftmailer_format', SWIFTMAILER_VARIABLE_FORMAT_DEFAULT);
+
+    // Get whether the provided format is to be respected.
+    $respect_format = variable_get('swiftmailer_respect_format', SWIFTMAILER_VARIABLE_RESPECT_FORMAT_DEFAULT);
+
+    // Check if a format has been provided particularly for this message. If
+    // that is the case, then apply that format instead of the default format.
+    $applicable_format = !empty($message['params']['format']) ? $message['params']['format'] : $default_format;
+
+    // Check if the provided format is to be respected, and if a format has been
+    // set through the header "Content-Type". If that is the case, the apply the
+    // format provided. This will override any format which may have been set
+    // through $message['params']['format'].
+    if ($respect_format && !empty($message['headers']['Content-Type'])) {
+      $format = $message['headers']['Content-Type'];
+      $format = preg_match('/.*\;/U', $format, $matches);
+      
+      if ($format > 0) {
+        $applicable_format = trim(substr($matches[0], 0, -1));
+      } else {
+        $applicable_format = $default_format;
+      }
+
+    }
+
+    return $applicable_format;
+
+  }
+
+  /**
+   * Returns the applicable charset.
+   *
+   * @param array $message
+   *   The message for which the applicable charset is to be determined.
+   *
+   * @return string
+   *   A string being the applicable charset.
+   *
+   */
+  private function getApplicableCharset($message) {
+
+    // Get the configured default format.
+    $default_charset = variable_get('swiftmailer_character_set', SWIFTMAILER_VARIABLE_CHARACTER_SET_DEFAULT);
+
+    // Get whether the provided format is to be respected.
+    $respect_charset = variable_get('swiftmailer_respect_format', SWIFTMAILER_VARIABLE_RESPECT_FORMAT_DEFAULT);
+
+    // Check if a format has been provided particularly for this message. If
+    // that is the case, then apply that format instead of the default format.
+    $applicable_charset = !empty($message['params']['charset']) ? $message['params']['charset'] : $default_charset;
+
+    // Check if the provided format is to be respected, and if a format has been
+    // set through the header "Content-Type". If that is the case, the apply the
+    // format provided. This will override any format which may have been set
+    // through $message['params']['format'].
+    if ($respect_charset && !empty($message['headers']['Content-Type'])) {
+      $format = $message['headers']['Content-Type'];
+      $format = preg_match('/charset.*=.*\;/U', $format, $matches);
+
+      if ($format > 0) {
+        $applicable_charset = trim(substr($matches[0], 0, -1));
+        $applicable_charset = preg_replace('/charset=/', '', $applicable_charset);
+      } else {
+        $applicable_charset = $default_format;
+      }
+      
+    }
+
+    return $applicable_charset;
+
+  }
+  
 }

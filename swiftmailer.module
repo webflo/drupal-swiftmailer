@@ -26,6 +26,7 @@ define('SWIFTMAILER_HEADER_PATH', 'path');
 
 // Define system variables defaults.
 define('SWIFTMAILER_VARIABLE_RESPECT_FORMAT_DEFAULT', FALSE);
+define('SWIFTMAILER_VARIABLE_CONVERT_MODE_DEFAULT', FALSE);
 define('SWIFTMAILER_VARIABLE_PATH_DEFAULT', '');
 define('SWIFTMAILER_VARIABLE_FORMAT_DEFAULT', 'text/plain');
 define('SWIFTMAILER_VARIABLE_TRANSPORT_DEFAULT', 'native');
@@ -102,9 +103,9 @@ function swiftmailer_mail($key, &$message) {
 
   global $user;
 
-  $message['params']['format'] = SWIFTMAILER_FORMAT_HTML;
+  //$message['params']['format'] = SWIFTMAILER_FORMAT_HTML;
 
-  $text[] = '<strong>' . t('Dear !user,', array('!user' => $user->name)) . '</strong>';
+  $text[] = '<h3>' . t('Dear !user,', array('!user' => $user->name)) . '</h3>';
   $text[] = '<p>' . t('This e-mail has been sent from !site by the Swift Mailer module. The module has been successfully configured.', array('!site' => variable_get('site_name', 'a Drupal site'))) . '</p>';
   $text[] = t('Kind regards') . '<br /><br />';
   $text[] = t('The Swift Mailer module');

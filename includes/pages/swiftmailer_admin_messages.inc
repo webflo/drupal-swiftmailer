@@ -47,7 +47,28 @@ function swiftmailer_admin_messages_form($form, &$form_state) {
       '#type' => 'checkbox',
       '#title' => t('Respect provided e-mail format.'),
       '#default_value' => variable_get('swiftmailer_respect_format', SWIFTMAILER_VARIABLE_RESPECT_FORMAT_DEFAULT),
-      '#description' => t('The e-mail format provided in the e-mail, if any, will be respected if you enable this setting.'),
+      '#description' => t('The header "Content-Type", if available, will be respected if you enable this setting.
+        Settings such as e-mail format ("text/plain" or "text/html") and character set may be provided through this
+        header.'),
+    );
+
+    $form['convert'] = array(
+      '#type' => 'fieldset',
+      '#title' => t('Plain Text Version'),
+      '#description' => t('An alternative plain text version can be generated based on the HTML version if no plain text version
+        has been explicitly set. The plain text version will be used by e-mail clients not capable of displaying HTML content.'),
+      '#states' => array(
+        'visible' => array(
+          'input[type=radio][name=format[type]]' => array('value' => SWIFTMAILER_FORMAT_HTML),
+        ),
+      ),
+    );
+
+    $form['convert']['mode'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Generate alternative plain text version.'),
+      '#default_value' => variable_get('swiftmailer_convert_mode', SWIFTMAILER_VARIABLE_CONVERT_MODE_DEFAULT),
+      '#description' => t('Please refer to !link for more details about how the alternative plain text version will be generated.', array('!link' => l('html2text', 'http://www.chuggnutt.com/html2text'))),
     );
 
     $form['character_set'] = array(
@@ -94,6 +115,10 @@ function swiftmailer_admin_messages_form_submit($form, &$form_state) {
 
   if (isset($form_state['values']['format']['respect'])) {
     variable_set('swiftmailer_respect_format', $form_state['values']['format']['respect']);
+  }
+
+  if (isset($form_state['values']['convert']['mode'])) {
+    variable_set('swiftmailer_convert_mode', $form_state['values']['convert']['mode']);
   }
 
   if (isset($form_state['values']['character_set']['type'])) {

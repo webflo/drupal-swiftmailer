@@ -313,3 +313,27 @@ function test() {
 }
 
 The above example will send an e-mail message as plain text.
+
+4.0 HTML vs. plain Text
+
+You can configure Swift Mailer to send messages as HTML and/or plain text.
+E-mails which are configured to be sent as HTML messages will be themed, whereas
+e-mails configured to be sent as plain text will not be themed.
+
+You can configure Swift Mailer to automatically generate a plain text version
+of HTML e-mails. Plain text versions not be themed and will be displayed by
+e-mail clients not capable of showing HTML. This automatic conversion from HTML
+to plain text is carried out using html2text. Please refer to
+http://www.chuggnutt.com/html2text for more details.
+
+To configure Swift Mailer to carry out automatic conversion for HTML e-mails,
+go to admin/config/people/swiftmailer/messages and select the option 'Generate
+alternative plain text version' (Note! This requires the default message format
+to be set to HTML, or the variable $message['params']['convert'] to be set to
+'TRUE'.
+
+If you would like to provide both HTML and plain text versions yourself, then
+simply provide the HTML version in $message['body'] and the plain text version
+in $message['plain']. Please make sure you set $message['params']['format'] to
+'text/html'. The Swift Mailer module will not attempt to generate a plain text
+version if one is already available.

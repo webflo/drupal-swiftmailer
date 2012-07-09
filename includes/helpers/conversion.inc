@@ -130,12 +130,12 @@ function swiftmailer_add_parameterized_header(Swift_Message $message, $key, $val
       // then add the current parameter's key and value to the array which
       // holds all parameters to be added to the current header.
       if (!empty($parameter_pair[0]) && !empty($parameter_pair[1])) {
-        $header_parameters[$parameter_pair[0]] = $parameter_pair[1];
+        $header_parameters[trim($parameter_pair[0])] = trim($parameter_pair[1]);
       }
 
     }
     else {
-      $header_value = $parameter_pair;
+      $header_value = trim($parameter_pair);
     }
   }
 
