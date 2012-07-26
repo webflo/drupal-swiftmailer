@@ -233,6 +233,7 @@ class SWIFTMailSystem implements MailSystemInterface {
 
             // Instantiate transport.
             $transport = Swift_SmtpTransport::newInstance($host, $port);
+            $transport->setLocalDomain('[127.0.0.1]');
 
             // Set encryption (if any).
             if (!empty($encryption)) {
