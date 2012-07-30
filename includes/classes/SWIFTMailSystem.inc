@@ -271,16 +271,24 @@ class SWIFTMailSystem implements MailSystemInterface {
         }
       }
 
+      throw new Exception('test');
+
       // Send the message.
       return $mailer->send($m);
+
 
     }
     catch (Exception $e) {
 
-      // Log error and notify user.
-      watchdog('swiftmailer', 'An attempt to send an e-mail message failed: @exception_message', array('@exception_message' => (drupal_substr(trim($e->getMessage()), -1) == '.') ? trim($e->getMessage()) : trim($e->getMessage()) . '.'), WATCHDOG_ERROR);
+      $headers = !empty($m) ? $m->getHeaders() : '';
+      $headers = !empty($headers) ? nl2br($headers->toString()) : 'No headers were found.';
+      watchdog('swiftmailer',
+        'An attempt to send an e-mail message failed, and the following error
+        message was returned : @exception_message<br /><br />The e-mail carried
+        the following headers:<br /><br />!headers',
+        array('@exception_message' => $e->getMessage(), '!headers' => $headers),
+        WATCHDOG_ERROR);
       drupal_set_message(t('An attempt to send an e-mail message failed.'), 'error');
-
     }
   }
 
