@@ -21,24 +21,24 @@ define('SWIFTMAILER_MAILBOX_PATTERN', '(^.*\<.*@.*\>$|^.*@.*$)');
  */
 function swiftmailer_get_headertype($key, $value) {
 
-  if (swiftmailer_is_parameterized_header($key, $value)) {
-    return SWIFTMAILER_HEADER_PARAMETERIZED;
-  }
-
-  if (swiftmailer_is_date_header($key, $value)) {
-    return SWIFTMAILER_HEADER_DATE;
-  }
-
-  if (swiftmailer_is_mailbox_header($key, $value)) {
-    return SWIFTMAILER_HEADER_MAILBOX;
-  }
-
   if (swiftmailer_is_id_header($key, $value)) {
     return SWIFTMAILER_HEADER_ID;
   }
 
   if (swiftmailer_is_path_header($key, $value)) {
     return SWIFTMAILER_HEADER_PATH;
+  }
+
+  if (swiftmailer_is_mailbox_header($key, $value)) {
+    return SWIFTMAILER_HEADER_MAILBOX;
+  }
+
+  if (swiftmailer_is_date_header($key, $value)) {
+    return SWIFTMAILER_HEADER_DATE;
+  }
+
+  if (swiftmailer_is_parameterized_header($key, $value)) {
+    return SWIFTMAILER_HEADER_PARAMETERIZED;
   }
 
   return SWIFTMAILER_HEADER_TEXT;

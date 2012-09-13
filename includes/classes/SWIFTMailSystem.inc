@@ -270,11 +270,10 @@ class SWIFTMailSystem implements MailSystemInterface {
             break;
         }
       }
-
-      throw new Exception('test');
-
+      
       // Send the message.
       return $mailer->send($m);
+
 
 
     }
