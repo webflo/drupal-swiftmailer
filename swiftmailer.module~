@@ -133,16 +133,3 @@ function swiftmailer_theme($existing, $type, $theme, $path) {
   return $config;
 
 }
-
-/**
- * Implements hook_permission()
- */
-function swiftmailer_permission() {
-
-	return array(
-		SWIFTMAILER_ADMINISTER => array(
-			'title' => t('Administer Swift Mailer'),
-    ),
-  );
-
-}
