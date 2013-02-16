@@ -123,7 +123,7 @@ function swiftmailer_theme($existing, $type, $theme, $path) {
   $config = array(
     'swiftmailer' => array(
       'template' => 'swiftmailer',
-      'arguments' => array(
+      'variables' => array(
         'message' => '',
       ),
       'path' => drupal_get_path('module', 'swiftmailer') . '/includes/theme',
