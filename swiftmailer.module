@@ -139,9 +139,9 @@ function swiftmailer_theme($existing, $type, $theme, $path) {
  */
 function swiftmailer_permission() {
 
-	return array(
-		SWIFTMAILER_ADMINISTER => array(
-			'title' => t('Administer Swift Mailer'),
+  return array(
+    SWIFTMAILER_ADMINISTER => array(
+      'title' => t('Administer Swift Mailer'),
     ),
   );
 

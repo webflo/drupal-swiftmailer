@@ -31,7 +31,12 @@ class SWIFTMailSystem implements MailSystemInterface {
       
       // Theme message if format is set to be HTML.
       if ($applicable_format == SWIFTMAILER_FORMAT_HTML) {
-        $message['body'] = theme('swiftmailer', $message);
+        if (isset($message['params']['theme'])) {
+          $message['body'] = theme($message['params']['theme'], $message);
+        }
+        else {
+          $message['body'] = theme('swiftmailer', $message);
+        }
 
         if (variable_get('swiftmailer_convert_mode', SWIFTMAILER_VARIABLE_CONVERT_MODE_DEFAULT) ||
             !empty($message['params']['convert'])) {
