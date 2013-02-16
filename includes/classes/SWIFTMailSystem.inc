@@ -317,7 +317,13 @@ class SWIFTMailSystem implements MailSystemInterface {
         }
 
         // Get file data.
-        $content = file_get_contents(drupal_realpath($file->uri));
+        if (valid_url($image->uri, TRUE)) {
+          $content = file_get_contents($image->uri);
+        }
+        else {
+          $content = file_get_contents(drupal_realpath($image->uri));
+        }
+        
         $filename = $file->filename;
         $filemime = $file->filemime;
 
@@ -353,7 +359,13 @@ class SWIFTMailSystem implements MailSystemInterface {
         $cid = NULL;
 
         // Get image data.
-        $content = file_get_contents(drupal_realpath($image->uri));
+        if (valid_url($image->uri, TRUE)) {
+          $content = file_get_contents($image->uri);
+        }
+        else {
+          $content = file_get_contents(drupal_realpath($image->uri));
+        }
+        
         $filename = $image->filename;
         $filemime = $image->filemime;
 
