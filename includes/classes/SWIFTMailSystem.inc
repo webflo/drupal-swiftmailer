@@ -317,11 +317,11 @@ class SWIFTMailSystem implements MailSystemInterface {
         }
 
         // Get file data.
-        if (valid_url($image->uri, TRUE)) {
-          $content = file_get_contents($image->uri);
+        if (valid_url($file->uri, TRUE)) {
+          $content = file_get_contents($file->uri);
         }
         else {
-          $content = file_get_contents(drupal_realpath($image->uri));
+          $content = file_get_contents(drupal_realpath($file->uri));
         }
         
         $filename = $file->filename;
