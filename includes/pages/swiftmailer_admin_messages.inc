@@ -50,7 +50,7 @@ function swiftmailer_admin_messages_form($form, &$form_state) {
       '#description' => t('The header "Content-Type", if available, will be respected if you enable this setting.
         Settings such as e-mail format ("text/plain" or "text/html") and character set may be provided through this
         header. Unless your site somehow alters e-mails, enabling this setting will result in all e-mails to be sent
-        as plain text as this is content type Drupal by default will apply to all e-mails.'),
+        as plain text as this is the content type Drupal by default will apply to all e-mails.'),
     );
 
     $form['convert'] = array(
