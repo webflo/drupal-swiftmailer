@@ -60,7 +60,9 @@ function swiftmailer_admin_transport_form($form, &$form_state) {
       '#options' => array(
         SWIFTMAILER_TRANSPORT_SMTP => t('SMTP'),
         SWIFTMAILER_TRANSPORT_SENDMAIL => t('Sendmail'),
-        SWIFTMAILER_TRANSPORT_NATIVE => t('PHP')),
+        SWIFTMAILER_TRANSPORT_NATIVE => t('PHP'),
+        SWIFTMAILER_TRANSPORT_SPOOL => t('Spool')
+      ),
       '#default_value' => $transport,
       '#ajax' => array(
         'callback' => 'swiftmailer_admin_transport_form_ajax',
@@ -197,6 +199,28 @@ function swiftmailer_admin_transport_form($form, &$form_state) {
         array('!documentation' => l(t('PHP documentation'), 'http://www.php.net/manual/en/mail.configuration.php'))) . '</p>',
     );
 
+    $form['transport']['configuration'][SWIFTMAILER_TRANSPORT_SPOOL] = array(
+      '#type' => 'item',
+      '#access' => $form['transport']['type']['#default_value'] == SWIFTMAILER_TRANSPORT_SPOOL,
+    );
+
+    $form['transport']['configuration'][SWIFTMAILER_TRANSPORT_SPOOL]['title'] = array(
+      '#markup' => '<h3>' . t('Spool transport options') . '</h3>',
+    );
+
+    $form['transport']['configuration'][SWIFTMAILER_TRANSPORT_SPOOL]['description'] = array(
+      '#markup' => '<p>' . t('This transport does not attempt to send the email
+      but instead saves the message to a spool file. Another process can then
+      read from the spool and take care of sending the emails.') . '</p>',
+    );
+
+    $form['transport']['configuration'][SWIFTMAILER_TRANSPORT_SPOOL]['directory'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Spool directory'),
+      '#description' => t('The absolute path to the spool directory.'),
+      '#default_value' => variable_get('swiftmailer_spool_directory', SWIFTMAILER_VARIABLE_SPOOL_DIRECTORY_DEFAULT),
+    );
+
     $form['submit'] = array(
       '#type' => 'submit',
       '#value' => t('Save'),
@@ -258,6 +282,10 @@ function swiftmailer_admin_transport_form_submit($form, &$form_state) {
         drupal_set_message(t('Drupal has been configured to send all e-mails using the PHP transport type.'), 'status');
         break;
 
+      case SWIFTMAILER_TRANSPORT_SPOOL:
+        variable_set('swiftmailer_spool_directory', $form_state['values']['transport']['configuration'][SWIFTMAILER_TRANSPORT_SPOOL]['directory']);
+        drupal_set_message(t('Drupal has been configured to send all e-mails using the Spool transport type.'), 'status');
+        break;
     }
   }
 }

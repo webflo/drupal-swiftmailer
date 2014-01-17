@@ -15,6 +15,7 @@ define('SWIFTMAILER_FORMAT_HTML', 'text/html');
 define('SWIFTMAILER_TRANSPORT_SMTP', 'smtp');
 define('SWIFTMAILER_TRANSPORT_SENDMAIL', 'sendmail');
 define('SWIFTMAILER_TRANSPORT_NATIVE', 'native');
+define('SWIFTMAILER_TRANSPORT_SPOOL', 'spool');
 
 // Define header types.
 define('SWIFTMAILER_HEADER_TEXT', 'text');
@@ -38,6 +39,7 @@ define('SWIFTMAILER_VARIABLE_SMTP_PASSWORD_DEFAULT', '');
 define('SWIFTMAILER_VARIABLE_SENDMAIL_PATH_DEFAULT', '/usr/sbin/sendmail');
 define('SWIFTMAILER_VARIABLE_SENDMAIL_MODE_DEFAULT', 'bs');
 define('SWIFTMAILER_VARIABLE_CHARACTER_SET_DEFAULT', 'UTF-8');
+define('SWIFTMAILER_VARIABLE_SPOOL_DIRECTORY_DEFAULT', sys_get_temp_dir() . '/swiftmailer-spool');
 
 /**
  * Implements hook_menu().

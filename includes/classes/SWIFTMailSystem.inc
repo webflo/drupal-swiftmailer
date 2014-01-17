@@ -273,6 +273,14 @@ class SWIFTMailSystem implements MailSystemInterface {
             $transport = Swift_MailTransport::newInstance();
             $mailer = Swift_Mailer::newInstance($transport);
             break;
+
+          case SWIFTMAILER_TRANSPORT_SPOOL:
+            // Instantiate transport.
+            $spooldir = variable_get('swiftmailer_spool_directory', SWIFTMAILER_VARIABLE_SPOOL_DIRECTORY_DEFAULT);
+            $spool = new Swift_FileSpool($spooldir);
+            $transport = Swift_SpoolTransport::newInstance($spool);
+            $mailer = Swift_Mailer::newInstance($transport);
+            break;
         }
       }
       
