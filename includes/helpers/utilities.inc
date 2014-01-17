@@ -27,7 +27,7 @@ function swiftmailer_validate_library($path) {
   }
 
   // Get the real path of the 'swift_required.php' file.
-  $real_path = drupal_realpath($path . '/lib/swift_required.php');
+  $real_path = DRUPAL_ROOT . '/' . $path . '/lib/swift_required.php';
 
   // Returns whether the 'swift_required.php' file could be found.
   if (file_exists($real_path)) {

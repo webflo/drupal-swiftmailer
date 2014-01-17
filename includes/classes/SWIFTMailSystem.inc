@@ -100,7 +100,7 @@ class SWIFTMailSystem implements MailSystemInterface {
     }
 
     // Include the Swift Mailer library.
-    require_once(drupal_realpath($library_path . '/lib/swift_required.php'));
+    require_once(DRUPAL_ROOT . '/' . $library_path . '/lib/swift_required.php');
 
     try {
 
