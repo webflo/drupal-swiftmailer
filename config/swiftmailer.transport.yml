@@ -1,4 +1,4 @@
-transport: smtp
+transport: native
 smtp_host: 127.0.0.1
 smtp_port: ''
 smtp_encryption: '0'
