@@ -9,6 +9,7 @@ namespace Drupal\swiftmailer\Plugin\Mail;
 
 use Drupal\Core\Mail\MailInterface;
 use Exception;
+use Html2Text\Html2Text;
 use Swift_Attachment;
 use Swift_FileSpool;
 use Swift_Mailer;
@@ -70,7 +71,7 @@ class SwiftMailer implements MailInterface {
         }
 
         if ($this->config['message']['convert_mode'] || !empty($message['params']['convert'])) {
-          $converter = new html2text($message['body']);
+          $converter = new Html2Text($message['body']);
           $message['plain'] = $converter->get_text();
         }
       }

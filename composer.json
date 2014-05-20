@@ -1,5 +1,6 @@
 {
     "require": {
-      "swiftmailer/swiftmailer": "5.2.*@stable"
+      "swiftmailer/swiftmailer": "5.2.*@stable",
+      "html2text/html2text": "*"
     }
 }
