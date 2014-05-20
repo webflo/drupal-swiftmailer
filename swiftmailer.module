@@ -4,6 +4,8 @@
  * This is the primary module file.
  */
 
+include_once __DIR__ . '/includes/helpers/utilities.inc';
+
 // Define permissions.
 define('SWIFTMAILER_ADMINISTER', 'swiftmailer_administer');
 
@@ -45,6 +47,8 @@ define('SWIFTMAILER_VARIABLE_SPOOL_DIRECTORY_DEFAULT', sys_get_temp_dir() . '/sw
  * Implements hook_menu().
  */
 function swiftmailer_menu() {
+  return;
+
   $items['admin/config/people/swiftmailer'] = array(
     'type'              => MENU_NORMAL_ITEM,
     'title'             => 'E-mail delivery',
@@ -121,7 +125,6 @@ function swiftmailer_mail($key, &$message) {
  * Implements hook_theme().
  */
 function swiftmailer_theme($existing, $type, $theme, $path) {
-
   $config = array(
     'swiftmailer' => array(
       'template' => 'swiftmailer',
@@ -141,11 +144,9 @@ function swiftmailer_theme($existing, $type, $theme, $path) {
  * Implements hook_permission()
  */
 function swiftmailer_permission() {
-
   return array(
-    SWIFTMAILER_ADMINISTER => array(
+    'administer swiftmailer' => array(
       'title' => t('Administer Swift Mailer'),
     ),
   );
-
 }

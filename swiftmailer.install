@@ -8,20 +8,25 @@
  * Implements hook_enable().
  */
 function swiftmailer_enable() {
+  /*
   mailsystem_set(array(mailsystem_default_id() => 'SWIFTMailSystem'));
+  */
 }
 
 /**
  * Implements hook_disable().
  */
 function swiftmailer_disable() {
+  /*
   mailsystem_clear(array(mailsystem_default_id() => 'SWIFTMailSystem'));
+  */
 }
 
 /**
  * Implements hook_uninstall().
  */
 function swiftmailer_uninstall() {
+  /*
   variable_del('swiftmailer_path');
   variable_del('swiftmailer_format');
   variable_del('swiftmailer_transport');
@@ -33,4 +38,5 @@ function swiftmailer_uninstall() {
   variable_del('swiftmailer_sendmail_path');
   variable_del('swiftmailer_sendmail_mode');
   variable_del('swiftmailer_character_set');
+  */
 }

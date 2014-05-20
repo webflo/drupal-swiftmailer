@@ -15,6 +15,7 @@
  *   library is available at the provided path, and otherwise FALSE.
  */
 function swiftmailer_validate_library($path) {
+  return TRUE;
 
   // Remove leading slashes.
   while (drupal_substr($path, 0, 1) === '/') {

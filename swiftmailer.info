@@ -1,8 +1,0 @@
-name = Swift Mailer
-description = Installs Swift Mailer as a mail system.
-core = 7.x
-package = Mail
-files[] = includes/classes/SWIFTMailSystem.inc
-files[] = includes/classes/html2text.inc
-configure = admin/config/people/swiftmailer
-dependencies[] = mailsystem

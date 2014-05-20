@@ -1,11 +1,41 @@
 <?php
+
 /**
  * @file
- * The implementation of MailSystemInterface which delegates handling of e-mails
- * to the Swift Mailer library.
+ * Contains \Drupal\swiftmailer\Plugin\Mail\SwiftMailer.
  */
 
-class SWIFTMailSystem implements MailSystemInterface {
+namespace Drupal\swiftmailer\Plugin\Mail;
+
+use Drupal\Core\Mail\MailInterface;
+use Exception;
+use Swift_Attachment;
+use Swift_FileSpool;
+use Swift_Mailer;
+use Swift_MailTransport;
+use Swift_Message;
+use Drupal\swiftmailer\Utility\Conversion;
+use Swift_SendmailTransport;
+use Swift_SmtpTransport;
+use Swift_SpoolTransport;
+
+/**
+ * Provides a 'Swift Mailer' plugin to send emails.
+ *
+ * @Mail(
+ *   id = "swiftmailer",
+ *   label = @Translation("Swift Mailer"),
+ *   description = @Translation("Swift Mailer Plugin.")
+ * )
+ */
+class SwiftMailer implements MailInterface {
+
+  protected $config;
+
+  function __construct() {
+    $this->config['transport'] = \Drupal::config('swiftmailer.transport')->getRawData();
+    $this->config['message'] = \Drupal::config('swiftmailer.message')->getRawData();
+  }
 
   /**
    * Formats a message composed by drupal_mail().
@@ -19,27 +49,27 @@ class SWIFTMailSystem implements MailSystemInterface {
    *   The message as it should be sent.
    */
   public function format(array $message) {
+
     if (!empty($message) && is_array($message)) {
 
       // Get default mail line endings and merge all lines in the e-mail body
       // separated by the mail line endings.
-      $line_endings = variable_get('mail_line_endings', MAIL_LINE_ENDINGS);
+      $line_endings = $this->config['message']['mail_line_endings'];
       $message['body'] = implode($line_endings, $message['body']);
 
       // Get applicable format.
       $applicable_format = $this->getApplicableFormat($message);
-      
+
       // Theme message if format is set to be HTML.
       if ($applicable_format == SWIFTMAILER_FORMAT_HTML) {
         if (isset($message['params']['theme'])) {
-          $message['body'] = theme($message['params']['theme'], $message);
+          $message['body'] = _theme($message['params']['theme'], $message);
         }
         else {
-          $message['body'] = theme('swiftmailer', $message);
+          $message['body'] = _theme('swiftmailer', $message);
         }
 
-        if (variable_get('swiftmailer_convert_mode', SWIFTMAILER_VARIABLE_CONVERT_MODE_DEFAULT) ||
-            !empty($message['params']['convert'])) {
+        if ($this->config['message']['convert_mode'] || !empty($message['params']['convert'])) {
           $converter = new html2text($message['body']);
           $message['plain'] = $converter->get_text();
         }
@@ -86,12 +116,8 @@ class SWIFTMailSystem implements MailSystemInterface {
    *   TRUE if the message was successfully sent, and otherwise FALSE.
    */
   public function mail(array $message) {
-
-    // Include required files.
-    require_once(dirname(dirname(__FILE__)) . '/helpers/conversion.inc');
-    require_once(dirname(dirname(__FILE__)) . '/helpers/utilities.inc');
-
     // Validate whether the Swift Mailer module has been configured.
+    /*
     $library_path = variable_get('swiftmailer_path', SWIFTMAILER_VARIABLE_PATH_DEFAULT);
     if (empty($library_path)) {
       watchdog('swiftmailer', 'An attempt to send an e-mail failed. The Swift Mailer library could not be found by the Swift Mailer module.', array(), WATCHDOG_ERROR);
@@ -101,6 +127,7 @@ class SWIFTMailSystem implements MailSystemInterface {
 
     // Include the Swift Mailer library.
     require_once(DRUPAL_ROOT . '/' . $library_path . '/lib/swift_required.php');
+    */
 
     try {
 
@@ -114,7 +141,7 @@ class SWIFTMailSystem implements MailSystemInterface {
 
       // Keep track of whether we need to respect the provided e-mail
       // format or not
-      $respect_format = variable_get('swiftmailer_respect_format', SWIFTMAILER_VARIABLE_RESPECT_FORMAT_DEFAULT);
+      $respect_format = $this->config['message']['respect_format'];
 
       // Process headers provided by Drupal. We want to add all headers which
       // are provided by Drupal to be added to the message. For each header we
@@ -136,32 +163,32 @@ class SWIFTMailSystem implements MailSystemInterface {
           }
 
           // Get header type.
-          $header_type = swiftmailer_get_headertype($header_key, $header_value);
+          $header_type = Conversion::swiftmailer_get_headertype($header_key, $header_value);
 
           // Add the current header to the e-mail message.
           switch ($header_type) {
             case SWIFTMAILER_HEADER_ID:
-              swiftmailer_add_id_header($m, $header_key, $header_value);
+              Conversion::swiftmailer_add_id_header($m, $header_key, $header_value);
               break;
 
             case SWIFTMAILER_HEADER_PATH:
-              swiftmailer_add_path_header($m, $header_key, $header_value);
+              Conversion::swiftmailer_add_path_header($m, $header_key, $header_value);
               break;
 
             case SWIFTMAILER_HEADER_MAILBOX:
-              swiftmailer_add_mailbox_header($m, $header_key, $header_value);
+              Conversion::swiftmailer_add_mailbox_header($m, $header_key, $header_value);
               break;
 
             case SWIFTMAILER_HEADER_DATE:
-              swiftmailer_add_date_header($m, $header_key, $header_value);
+              Conversion::swiftmailer_add_date_header($m, $header_key, $header_value);
               break;
 
             case SWIFTMAILER_HEADER_PARAMETERIZED:
-              swiftmailer_add_parameterized_header($m, $header_key, $header_value);
+              Conversion::swiftmailer_add_parameterized_header($m, $header_key, $header_value);
               break;
 
             default:
-              swiftmailer_add_text_header($m, $header_key, $header_value);
+              Conversion::swiftmailer_add_text_header($m, $header_key, $header_value);
               break;
 
           }
@@ -169,13 +196,13 @@ class SWIFTMailSystem implements MailSystemInterface {
       }
 
       // Set basic message details.
-      swiftmailer_remove_header($m, 'From');
-      swiftmailer_remove_header($m, 'To');
-      swiftmailer_remove_header($m, 'Subject');
+      Conversion::swiftmailer_remove_header($m, 'From');
+      Conversion::swiftmailer_remove_header($m, 'To');
+      Conversion::swiftmailer_remove_header($m, 'Subject');
 
       // Parse 'from' and 'to' mailboxes.
-      $from = swiftmailer_parse_mailboxes($message['from']);
-      $to = swiftmailer_parse_mailboxes($message['to']);
+      $from = Conversion::swiftmailer_parse_mailboxes($message['from']);
+      $to = Conversion::swiftmailer_parse_mailboxes($message['to']);
 
       // Set 'from', 'to' and 'subject' headers.
       $m->setFrom($from);
@@ -184,7 +211,7 @@ class SWIFTMailSystem implements MailSystemInterface {
 
       // Get applicable format.
       $applicable_format = $this->getApplicableFormat($message);
-      
+
       // Get applicable character set.
       $applicable_charset = $this->getApplicableCharset($message);
 
@@ -196,7 +223,7 @@ class SWIFTMailSystem implements MailSystemInterface {
       if ($applicable_format == SWIFTMAILER_FORMAT_HTML && !empty($message['plain'])) {
         $m->addPart($message['plain'], SWIFTMAILER_FORMAT_PLAIN, $applicable_charset);
       }
-      
+
       // Validate that $message['params']['files'] is an array.
       if (empty($message['params']['files']) || !is_array($message['params']['files'])) {
         $message['params']['files'] = array();
@@ -224,17 +251,17 @@ class SWIFTMailSystem implements MailSystemInterface {
       if (empty($mailer)) {
 
         // Get the configured transport type.
-        $transport_type = variable_get('swiftmailer_transport', SWIFTMAILER_VARIABLE_TRANSPORT_DEFAULT);
+        $transport_type = $this->config['transport']['transport'];
 
         // Configure the mailer based on the configured transport type.
         switch ($transport_type) {
           case SWIFTMAILER_TRANSPORT_SMTP:
             // Get transport configuration.
-            $host = variable_get('swiftmailer_smtp_host', SWIFTMAILER_VARIABLE_SMTP_HOST_DEFAULT);
-            $port = variable_get('swiftmailer_smtp_port', SWIFTMAILER_VARIABLE_SMTP_PORT_DEFAULT);
-            $encryption = variable_get('swiftmailer_smtp_encryption', SWIFTMAILER_VARIABLE_SMTP_ENCRYPTION_DEFAULT);
-            $username = variable_get('swiftmailer_smtp_username', SWIFTMAILER_VARIABLE_SMTP_USERNAME_DEFAULT);
-            $password = variable_get('swiftmailer_smtp_password', SWIFTMAILER_VARIABLE_SMTP_PASSWORD_DEFAULT);
+            $host = $this->config['transport']['smtp_host'];
+            $port = $this->config['transport']['smtp_port'];
+            $encryption = $this->config['transport']['smtp_encryption'];
+            $username = $this->config['transport']['smtp_username'];
+            $password = $this->config['transport']['smtp_password'];
 
             // Instantiate transport.
             $transport = Swift_SmtpTransport::newInstance($host, $port);
@@ -260,8 +287,8 @@ class SWIFTMailSystem implements MailSystemInterface {
 
           case SWIFTMAILER_TRANSPORT_SENDMAIL:
             // Get transport configuration.
-            $path = variable_get('swiftmailer_sendmail_path', SWIFTMAILER_VARIABLE_SENDMAIL_PATH_DEFAULT);
-            $mode = variable_get('swiftmailer_sendmail_mode', SWIFTMAILER_VARIABLE_SENDMAIL_MODE_DEFAULT);
+            $path = $this->config['transport']['sendmail_path'];
+            $mode = $this->config['transport']['sendmail_mode'];
 
             // Instantiate transport.
             $transport = Swift_SendmailTransport::newInstance($path . ' -' . $mode);
@@ -276,14 +303,14 @@ class SWIFTMailSystem implements MailSystemInterface {
 
           case SWIFTMAILER_TRANSPORT_SPOOL:
             // Instantiate transport.
-            $spooldir = variable_get('swiftmailer_spool_directory', SWIFTMAILER_VARIABLE_SPOOL_DIRECTORY_DEFAULT);
+            $spooldir = $this->config['transport']['spool_directory'];
             $spool = new Swift_FileSpool($spooldir);
             $transport = Swift_SpoolTransport::newInstance($spool);
             $mailer = Swift_Mailer::newInstance($transport);
             break;
         }
       }
-      
+
       // Send the message.
       return $mailer->send($m);
 
@@ -331,7 +358,7 @@ class SWIFTMailSystem implements MailSystemInterface {
         else {
           $content = file_get_contents(drupal_realpath($file->uri));
         }
-        
+
         $filename = $file->filename;
         $filemime = $file->filemime;
 
@@ -373,7 +400,7 @@ class SWIFTMailSystem implements MailSystemInterface {
         else {
           $content = file_get_contents(drupal_realpath($image->uri));
         }
-        
+
         $filename = $image->filename;
         $filemime = $image->filemime;
 
@@ -402,10 +429,10 @@ class SWIFTMailSystem implements MailSystemInterface {
   private function getApplicableFormat($message) {
 
     // Get the configured default format.
-    $default_format = variable_get('swiftmailer_format', SWIFTMAILER_VARIABLE_FORMAT_DEFAULT);
+    $default_format = $this->config['message']['format'];
 
     // Get whether the provided format is to be respected.
-    $respect_format = variable_get('swiftmailer_respect_format', SWIFTMAILER_VARIABLE_RESPECT_FORMAT_DEFAULT);
+    $respect_format = $this->config['message']['respect_format'];
 
     // Check if a format has been provided particularly for this message. If
     // that is the case, then apply that format instead of the default format.
@@ -418,7 +445,7 @@ class SWIFTMailSystem implements MailSystemInterface {
     if ($respect_format && !empty($message['headers']['Content-Type'])) {
       $format = $message['headers']['Content-Type'];
       $format = preg_match('/.*\;/U', $format, $matches);
-      
+
       if ($format > 0) {
         $applicable_format = trim(substr($matches[0], 0, -1));
       } else {
@@ -444,10 +471,10 @@ class SWIFTMailSystem implements MailSystemInterface {
   private function getApplicableCharset($message) {
 
     // Get the configured default format.
-    $default_charset = variable_get('swiftmailer_character_set', SWIFTMAILER_VARIABLE_CHARACTER_SET_DEFAULT);
+    $default_charset = $this->config['message']['character_set'];
 
     // Get whether the provided format is to be respected.
-    $respect_charset = variable_get('swiftmailer_respect_format', SWIFTMAILER_VARIABLE_RESPECT_FORMAT_DEFAULT);
+    $respect_charset = $this->config['message']['respect_format'];
 
     // Check if a format has been provided particularly for this message. If
     // that is the case, then apply that format instead of the default format.
@@ -465,13 +492,13 @@ class SWIFTMailSystem implements MailSystemInterface {
         $applicable_charset = trim(substr($matches[0], 0, -1));
         $applicable_charset = preg_replace('/charset=/', '', $applicable_charset);
       } else {
-        $applicable_charset = $default_format;
+        $applicable_charset = $default_charset;
       }
-      
+
     }
 
     return $applicable_charset;
 
   }
-  
+
 }

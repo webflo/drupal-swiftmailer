@@ -1,0 +1,6 @@
+transport: smtp
+smtp_host: 127.0.0.1
+smtp_port: ''
+smtp_encryption: '0'
+smtp_username: ''
+smtp_password: ''
