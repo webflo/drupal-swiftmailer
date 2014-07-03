@@ -19,7 +19,7 @@ class SettingsForm extends ConfigFormBase {
 
   public function buildForm(array $form, array &$form_state) {
     $form = parent::buildForm($form, $form_state);
-    $config = $this->configFactory->get('swiftmailer.transport');
+    $config = $this->config('swiftmailer.transport');
 
     // Submitted form values should be nested.
     $form['#tree'] = TRUE;
@@ -234,7 +234,7 @@ class SettingsForm extends ConfigFormBase {
   }
 
   public function submitForm(array &$form, array &$form_state) {
-    $config = $this->configFactory->get('swiftmailer.transport');
+    $config = $this->config('swiftmailer.transport');
 
     if (isset($form_state['values']['transport']['type'])) {
       $config->set('transport', $form_state['values']['transport']['type']);
