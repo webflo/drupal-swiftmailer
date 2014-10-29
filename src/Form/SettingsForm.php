@@ -7,6 +7,7 @@
 
 namespace Drupal\swiftmailer\Form;
 use Drupal\Core\Form\ConfigFormBase;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Swift Mailer settings form.
@@ -17,7 +18,7 @@ class SettingsForm extends ConfigFormBase {
     return 'swiftmailer_settings_form';
   }
 
-  public function buildForm(array $form, array &$form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     $form = parent::buildForm($form, $form_state);
     $config = $this->config('swiftmailer.transport');
 
@@ -44,7 +45,7 @@ class SettingsForm extends ConfigFormBase {
       // currently selected transport type if the user has chosen to configure
       // another transport type.
       $transport = $config->get('transport', SWIFTMAILER_TRANSPORT_NATIVE);
-      $transport = (isset($form_state['values']['transport']['type'])) ? $form_state['values']['transport']['type'] : $transport;
+      $transport = ($form_state->hasValue(['transport', 'type'])) ? $form_state->getValue(['transport', 'type']) : $transport;
 
       $form['transport']['type'] = array(
         '#type' => 'radios',
@@ -61,7 +62,7 @@ class SettingsForm extends ConfigFormBase {
           'method' => 'replace',
           'effect' => 'fade',
         ),
-        '#description' => t('Not sure which transport type to choose? The !documentation gives you a good overview of the various transport types.', array('!documentation' => l(t('Swift Mailer documentation'), 'http://swiftmailer.org/docs/sending.html#transport-types'))),
+        '#description' => t('Not sure which transport type to choose? The !documentation gives you a good overview of the various transport types.', array('!documentation' => _l(t('Swift Mailer documentation'), 'http://swiftmailer.org/docs/sending.html#transport-types'))),
       );
 
       /*
@@ -233,26 +234,26 @@ class SettingsForm extends ConfigFormBase {
     return $form;
   }
 
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     $config = $this->config('swiftmailer.transport');
 
-    if (isset($form_state['values']['transport']['type'])) {
-      $config->set('transport', $form_state['values']['transport']['type']);
+    if ($form_state->hasValue(['transport', 'type'])) {
+      $config->set('transport', $form_state->getValue(['transport', 'type']));
 
-      switch ($form_state['values']['transport']['type']) {
+      switch ($form_state->getValue(['transport', 'type'])) {
         case SWIFTMAILER_TRANSPORT_SMTP:
-          $config->set('smtp_host', $form_state['values']['transport']['configuration'][SWIFTMAILER_TRANSPORT_SMTP]['server']);
-          $config->set('smtp_port', $form_state['values']['transport']['configuration'][SWIFTMAILER_TRANSPORT_SMTP]['port']);
-          $config->set('smtp_encryption', $form_state['values']['transport']['configuration'][SWIFTMAILER_TRANSPORT_SMTP]['encryption']);
-          $config->set('smtp_username', $form_state['values']['transport']['configuration'][SWIFTMAILER_TRANSPORT_SMTP]['username']);
-          $config->set('smtp_password', $form_state['values']['transport']['configuration'][SWIFTMAILER_TRANSPORT_SMTP]['password']);
+          $config->set('smtp_host', $form_state->getValue(['transport', 'configuration',SWIFTMAILER_TRANSPORT_SMTP,'server']));
+          $config->set('smtp_port', $form_state->getValue(['transport', 'configuration',SWIFTMAILER_TRANSPORT_SMTP,'port']));
+          $config->set('smtp_encryption', $form_state->getValue(['transport','configuration',SWIFTMAILER_TRANSPORT_SMTP,'encryption']));
+          $config->set('smtp_username', $form_state->getValue(['transport','configuration',SWIFTMAILER_TRANSPORT_SMTP,'username']));
+          $config->set('smtp_password', $form_state->getValue(['transport','configuration',SWIFTMAILER_TRANSPORT_SMTP,'password']));
           $config->save();
           drupal_set_message(t('Drupal has been configured to send all e-mails using the SMTP transport type.'), 'status');
           break;
 
         case SWIFTMAILER_TRANSPORT_SENDMAIL:
-          $config->set('sendmail_path', $form_state['values']['transport']['configuration'][SWIFTMAILER_TRANSPORT_SENDMAIL]['path']);
-          $config->set('sendmail_mode', $form_state['values']['transport']['configuration'][SWIFTMAILER_TRANSPORT_SENDMAIL]['mode']);
+          $config->set('sendmail_path', $form_state->getValue(['transport','configuration',SWIFTMAILER_TRANSPORT_SENDMAIL,'path']));
+          $config->set('sendmail_mode', $form_state->getValue(['transport','configuration',SWIFTMAILER_TRANSPORT_SENDMAIL,'mode']));
           $config->save();
           drupal_set_message(t('Drupal has been configured to send all e-mails using the Sendmail transport type.'), 'status');
           break;
@@ -263,7 +264,7 @@ class SettingsForm extends ConfigFormBase {
           break;
 
         case SWIFTMAILER_TRANSPORT_SPOOL:
-          $config->set('spool_directory', $form_state['values']['transport']['configuration'][SWIFTMAILER_TRANSPORT_SPOOL]['directory']);
+          $config->set('spool_directory', $form_state->getValue(['transport','configuration',SWIFTMAILER_TRANSPORT_SPOOL,'directory']));
           $config->save();
           drupal_set_message(t('Drupal has been configured to send all e-mails using the Spool transport type.'), 'status');
           break;

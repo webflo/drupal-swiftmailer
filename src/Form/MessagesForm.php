@@ -8,6 +8,7 @@
 namespace Drupal\swiftmailer\Form;
 
 use Drupal\Core\Form\ConfigFormBase;
+use Drupal\Core\Form\FormStateInterface;
 
 class MessagesForm extends ConfigFormBase {
 
@@ -16,7 +17,7 @@ class MessagesForm extends ConfigFormBase {
     return 'swiftmailer_messages_form';
   }
 
-  public function buildForm(array $form, array &$form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     $form = parent::buildForm($form, $form_state);
     $config = $this->configFactory->get('swiftmailer.message');
 
@@ -89,7 +90,7 @@ class MessagesForm extends ConfigFormBase {
       $form['message'] = array(
         '#markup' => '<p>' . t('You need to configure the location of the Swift Mailer library. Please visit the !page
           and configure the library to enable the configuration options on this page.',
-          array('!page' => l(t('library configuration page'), 'admin/config/people/swiftmailer'))) . '</p>',
+          array('!page' => _l(t('library configuration page'), 'admin/config/people/swiftmailer'))) . '</p>',
       );
 
     }
@@ -97,24 +98,12 @@ class MessagesForm extends ConfigFormBase {
     return $form;
   }
 
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     $config = $this->configFactory->get('swiftmailer.message');
-
-    if (isset($form_state['values']['format']['type'])) {
-      $config->set('format', $form_state['values']['format']['type']);
-    }
-
-    if (isset($form_state['values']['format']['respect'])) {
-      $config->set('respect_format', $form_state['values']['format']['respect']);
-    }
-
-    if (isset($form_state['values']['convert']['mode'])) {
-      $config->set('convert_mode', $form_state['values']['convert']['mode']);
-    }
-
-    if (isset($form_state['values']['character_set']['type'])) {
-      $config->set('character_set', $form_state['values']['character_set']['type']);
-    }
+    $config->set('format', $form_state->getValue(['format', 'type']));
+    $config->set('respect_format', $form_state->getValue(['format', 'respect']));
+    $config->set('convert_mode', $form_state->getValue(['convert', 'mode']));
+    $config->set('character_set', $form_state->getValue(['character_set', 'type']));
 
     $config->save();
     parent::submitForm($form, $form_state);
