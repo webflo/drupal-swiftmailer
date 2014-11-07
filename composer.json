@@ -1,4 +1,9 @@
 {
+    "name": "drupal/swiftmailer",
+    "description": "Swiftmailer",
+    "type": "drupal-module",
+    "license": "GPL-2.0+",
+    "minimum-stability": "dev",
     "require": {
       "swiftmailer/swiftmailer": "5.2.*@stable",
       "html2text/html2text": "*"
