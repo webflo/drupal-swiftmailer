@@ -44,11 +44,17 @@ class SwiftMailer implements MailInterface {
    */
   protected $renderer;
 
+  /**
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface
+   */
+  protected $moduleHandler;
+
   function __construct() {
     $this->config['transport'] = \Drupal::config('swiftmailer.transport')->getRawData();
     $this->config['message'] = \Drupal::config('swiftmailer.message')->getRawData();
     $this->logger = \Drupal::logger('swiftmailer');
     $this->renderer = \Drupal::service('renderer');
+    $this->moduleHandler = \Drupal::moduleHandler();
   }
 
   /**
@@ -254,7 +260,7 @@ class SwiftMailer implements MailInterface {
       }
 
       // Let other modules get the chance to add attachable files.
-      $files = module_invoke_all('swiftmailer_attach', $message['key']);
+      $files = $this->moduleHandler->invokeAll('swiftmailer_attach', array('key' => $message['key'], 'message' => $message));
       if (!empty($files) && is_array($files)) {
         $message['params']['files'] = array_merge(array_values($message['params']['files']), array_values($files));
       }
