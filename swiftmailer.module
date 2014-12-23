@@ -157,6 +157,6 @@ function swiftmailer_permission() {
  *   - body: The processed body.
  */
 function template_preprocess_swiftmailer(&$variables) {
-  $variables['subject'] = $variables['messages']['subject'];
-  $variables['body'] = $variables['messages']['body'];
+  $variables['subject'] = $variables['message']['subject'];
+  $variables['body'] = $variables['message']['body'];
 }

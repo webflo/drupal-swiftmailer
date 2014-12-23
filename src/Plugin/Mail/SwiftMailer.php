@@ -7,6 +7,7 @@
 
 namespace Drupal\swiftmailer\Plugin\Mail;
 
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Mail\MailInterface;
 use Exception;
@@ -69,69 +70,55 @@ class SwiftMailer implements MailInterface {
    *   The message as it should be sent.
    */
   public function format(array $message) {
+    // Get default mail line endings and merge all lines in the e-mail body
+    // separated by the mail line endings.
+    $line_endings = $this->config['message']['mail_line_endings'];
+    $message['body'] = SafeMarkup::set(implode($line_endings, $message['body']));
 
-    if (!empty($message) && is_array($message)) {
+    // Get applicable format.
+    $applicable_format = $this->getApplicableFormat($message);
 
-      // Get default mail line endings and merge all lines in the e-mail body
-      // separated by the mail line endings.
-      $line_endings = $this->config['message']['mail_line_endings'];
-      $message['body'] = implode($line_endings, $message['body']);
+    // Theme message if format is set to be HTML.
+    if ($applicable_format == SWIFTMAILER_FORMAT_HTML) {
+      $render = array(
+        '#theme' => isset($message['params']['theme']) ? $message['params']['theme'] : 'swiftmailer',
+        '#message' => $message,
+      );
 
-      // Get applicable format.
-      $applicable_format = $this->getApplicableFormat($message);
+      $message['body'] = $this->renderer->renderRoot($render);
 
-      // Theme message if format is set to be HTML.
-      if ($applicable_format == SWIFTMAILER_FORMAT_HTML) {
-        if (isset($message['params']['theme'])) {
-          $render = array(
-            '#theme' => $message['params']['theme'],
-            '#message' => $message,
-          );
-
-          $message['body'] = $this->renderer->renderRoot($render);
-        }
-        else {
-          $render = array(
-            '#theme' => 'swiftmailer',
-            '#message' => $message,
-          );
-
-          $message['body'] = $this->renderer->renderRoot($render);
-        }
-
-        if ($this->config['message']['convert_mode'] || !empty($message['params']['convert'])) {
-          $converter = new Html2Text($message['body']);
-          $message['plain'] = $converter->get_text();
-        }
+      if ($this->config['message']['convert_mode'] || !empty($message['params']['convert'])) {
+        $converter = new Html2Text($message['body']);
+        $message['plain'] = $converter->get_text();
       }
-
-      // Process any images specified by 'image:' which are to be added later
-      // in the process. All we do here is to alter the message so that image
-      // paths are replaced with cid's. Each image gets added to the array
-      // which keeps track of which images to embed in the e-mail.
-      $embeddable_images = array();
-      preg_match_all('/"image:([^"]+)"/', $message['body'], $embeddable_images);
-      for ($i = 0; $i < count($embeddable_images[0]); $i++) {
-
-        $image_id = $embeddable_images[0][$i];
-        $image_path = trim($embeddable_images[1][$i]);
-        $image_name = basename($image_path);
-
-        if (Unicode::substr($image_path, 0, 1) == '/') {
-          $image_path = Unicode::substr($image_path, 1);
-        }
-
-        $image = new stdClass();
-        $image->uri = $image_path;
-        $image->filename = $image_name;
-        $image->filemime = file_get_mimetype($image_path);
-        $image->cid = rand(0, 9999999999);
-        $message['params']['images'][] = $image;
-        $message['body'] = preg_replace($image_id, 'cid:' . $image->cid, $message['body']);
-      }
-
-      return $message;
     }
+
+    // Process any images specified by 'image:' which are to be added later
+    // in the process. All we do here is to alter the message so that image
+    // paths are replaced with cid's. Each image gets added to the array
+    // which keeps track of which images to embed in the e-mail.
+    $embeddable_images = array();
+    preg_match_all('/"image:([^"]+)"/', $message['body'], $embeddable_images);
+    for ($i = 0; $i < count($embeddable_images[0]); $i++) {
+
+      $image_id = $embeddable_images[0][$i];
+      $image_path = trim($embeddable_images[1][$i]);
+      $image_name = basename($image_path);
+
+      if (Unicode::substr($image_path, 0, 1) == '/') {
+        $image_path = Unicode::substr($image_path, 1);
+      }
+
+      $image = new stdClass();
+      $image->uri = $image_path;
+      $image->filename = $image_name;
+      $image->filemime = file_get_mimetype($image_path);
+      $image->cid = rand(0, 9999999999);
+      $message['params']['images'][] = $image;
+      $message['body'] = preg_replace($image_id, 'cid:' . $image->cid, $message['body']);
+    }
+
+    return $message;
   }
 
   /**
