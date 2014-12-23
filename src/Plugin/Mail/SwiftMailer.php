@@ -7,6 +7,7 @@
 
 namespace Drupal\swiftmailer\Plugin\Mail;
 
+use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Mail\MailInterface;
 use Exception;
 use Html2Text\Html2Text;
@@ -33,9 +34,21 @@ class SwiftMailer implements MailInterface {
 
   protected $config;
 
+  /**
+   * @var \Psr\Log\LoggerInterface
+   */
+  protected $logger;
+
+  /**
+   * @var \Drupal\Core\Render\RendererInterface;
+   */
+  protected $renderer;
+
   function __construct() {
     $this->config['transport'] = \Drupal::config('swiftmailer.transport')->getRawData();
     $this->config['message'] = \Drupal::config('swiftmailer.message')->getRawData();
+    $this->logger = \Drupal::logger('swiftmailer');
+    $this->renderer = \Drupal::service('renderer');
   }
 
   /**
@@ -64,10 +77,20 @@ class SwiftMailer implements MailInterface {
       // Theme message if format is set to be HTML.
       if ($applicable_format == SWIFTMAILER_FORMAT_HTML) {
         if (isset($message['params']['theme'])) {
-          $message['body'] = _theme($message['params']['theme'], $message);
+          $render = array(
+            '#theme' => $message['params']['theme'],
+            '#message' => $message,
+          );
+
+          $message['body'] = $this->renderer->renderRoot($render);
         }
         else {
-          $message['body'] = _theme('swiftmailer', $message);
+          $render = array(
+            '#theme' => 'swiftmailer',
+            '#message' => $message,
+          );
+
+          $message['body'] = $this->renderer->renderRoot($render);
         }
 
         if ($this->config['message']['convert_mode'] || !empty($message['params']['convert'])) {
@@ -88,8 +111,8 @@ class SwiftMailer implements MailInterface {
         $image_path = trim($embeddable_images[1][$i]);
         $image_name = basename($image_path);
 
-        if (drupal_substr($image_path, 0, 1) == '/') {
-          $image_path = drupal_substr($image_path, 1);
+        if (Unicode::substr($image_path, 0, 1) == '/') {
+          $image_path = Unicode::substr($image_path, 1);
         }
 
         $image = new stdClass();
@@ -322,12 +345,11 @@ class SwiftMailer implements MailInterface {
 
       $headers = !empty($m) ? $m->getHeaders() : '';
       $headers = !empty($headers) ? nl2br($headers->toString()) : 'No headers were found.';
-      watchdog('swiftmailer',
+      $this->logger->error(
         'An attempt to send an e-mail message failed, and the following error
         message was returned : @exception_message<br /><br />The e-mail carried
         the following headers:<br /><br />!headers',
-        array('@exception_message' => $e->getMessage(), '!headers' => $headers),
-        WATCHDOG_ERROR);
+        array('@exception_message' => $e->getMessage(), '!headers' => $headers));
       drupal_set_message(t('An attempt to send an e-mail message failed.'), 'error');
     }
   }
