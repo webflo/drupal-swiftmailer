@@ -125,19 +125,14 @@ function swiftmailer_mail($key, &$message) {
  * Implements hook_theme().
  */
 function swiftmailer_theme($existing, $type, $theme, $path) {
-  $config = array(
+  return array(
     'swiftmailer' => array(
-      'template' => 'swiftmailer',
       'variables' => array(
-        'message' => '',
+        'message' => array(),
       ),
-      'path' => drupal_get_path('module', 'swiftmailer') . '/includes/theme',
       'mail theme' => TRUE,
     ),
   );
-
-  return $config;
-
 }
 
 /**
@@ -149,4 +144,19 @@ function swiftmailer_permission() {
       'title' => t('Administer Swift Mailer'),
     ),
   );
+}
+
+/**
+ * Prepares variables for swiftmailer templates.
+ *
+ * Default template: swiftmailer.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - message: An associative array containing the message array.
+ *   - body: The processed body.
+ */
+function template_preprocess_swiftmailer(&$variables) {
+  $variables['subject'] = $variables['messages']['subject'];
+  $variables['body'] = $variables['messages']['body'];
 }
