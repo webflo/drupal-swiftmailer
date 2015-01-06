@@ -94,7 +94,7 @@ class SettingsForm extends ConfigFormBase {
         server of your choice. You need to specify which SMTP server
         to use. Please refer to the !documentation for more details
         about this transport type.',
-            array('!documentation' => l(t('Swift Mailer documentation'), 'http://swiftmailer.org/docs/sending.html#the-smtp-transport'))) . '</p>',
+            array('!documentation' => _l(t('Swift Mailer documentation'), 'http://swiftmailer.org/docs/sending.html#the-smtp-transport'))) . '</p>',
       );
 
       $form['transport']['configuration'][SWIFTMAILER_TRANSPORT_SMTP]['server'] = array(
@@ -163,7 +163,7 @@ class SettingsForm extends ConfigFormBase {
         MTA. If you do not provide any path then Swift Mailer
         defaults to /usr/sbin/sendmail. You can read more about
         this transport type in the !documentation.',
-            array('!documentation' => l(t('Swift Mailer documentation'), 'http://swiftmailer.org/docs/sending.html#the-sendmail-transport'))) . '</p>',
+            array('!documentation' => _l(t('Swift Mailer documentation'), 'http://swiftmailer.org/docs/sending.html#the-sendmail-transport'))) . '</p>',
       );
 
       $form['transport']['configuration'][SWIFTMAILER_TRANSPORT_SENDMAIL]['path'] = array(
@@ -177,7 +177,7 @@ class SettingsForm extends ConfigFormBase {
         '#type' => 'radios',
         '#title' => t('Mode'),
         '#options' => array('bs' => 'bs', 't' => 't '),
-        '#description' => t('Not sure which option to choose? Go with <em>bs</em>. You can read more about the above two modes in the !documentation.', array('!documentation' => l(t('Swift Mailer documentation'), 'http://swiftmailer.org/docs/sendmail-transport'))),
+        '#description' => t('Not sure which option to choose? Go with <em>bs</em>. You can read more about the above two modes in the !documentation.', array('!documentation' => _l(t('Swift Mailer documentation'), 'http://swiftmailer.org/docs/sendmail-transport'))),
         '#default_value' => $config->get('sendmail_mode', SWIFTMAILER_VARIABLE_SENDMAIL_MODE_DEFAULT),
       );
 
@@ -196,7 +196,7 @@ class SettingsForm extends ConfigFormBase {
         configured here. Please refer to the !documentation if you
         would like to read more about how the built-in mail functionality
         in PHP can be configured.',
-            array('!documentation' => l(t('PHP documentation'), 'http://www.php.net/manual/en/mail.configuration.php'))) . '</p>',
+            array('!documentation' => _l(t('PHP documentation'), 'http://www.php.net/manual/en/mail.configuration.php'))) . '</p>',
       );
 
       $form['transport']['configuration'][SWIFTMAILER_TRANSPORT_SPOOL] = array(
@@ -226,7 +226,7 @@ class SettingsForm extends ConfigFormBase {
       $form['message'] = array(
         '#markup' => t('<p>You need to configure the location of the Swift Mailer library. Please visit the !page
         and configure the library to enable the configuration options on this page.</p>',
-          array('!page' => l(t('library configuration page'), 'admin/config/people/swiftmailer'))),
+          array('!page' => _l(t('library configuration page'), 'admin/config/people/swiftmailer'))),
       );
 
     }

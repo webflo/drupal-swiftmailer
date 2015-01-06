@@ -1,15 +1,23 @@
+swiftmailer.admin:
+  path: '/admin/config/swiftmailer'
+  defaults:
+    _controller: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+    _title: 'Swift Mailer'
+  requirements:
+    _permission: 'administer swiftmailer'
+
 swiftmailer.transport_settings:
-  path: '/admin/config/people/swiftmailer'
+  path: '/admin/config/swiftmailer/transport'
   defaults:
     _form: '\Drupal\swiftmailer\Form\SettingsForm'
-    _title: 'Swift Mailer settings'
+    _title: 'Transport settings'
   requirements:
     _permission: 'administer swiftmailer'
 
 swiftmailer.message_settings:
-  path: '/admin/config/people/swiftmailer/messages'
+  path: '/admin/config/swiftmailer/messages'
   defaults:
     _form: '\Drupal\swiftmailer\Form\MessagesForm'
-    _title: 'Swift Mailer settings'
+    _title: 'Message settings'
   requirements:
     _permission: 'administer swiftmailer'

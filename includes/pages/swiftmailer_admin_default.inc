@@ -22,7 +22,7 @@ function swiftmailer_admin_default_form($form, &$form_state) {
 
   // Include helper functions.
   require_once(dirname(dirname(__FILE__)) . '/helpers/utilities.inc');
-  
+
   $form['#tree'] = TRUE;
 
   $form['description'] = array(
