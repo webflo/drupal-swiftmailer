@@ -244,7 +244,7 @@ class SettingsForm extends ConfigFormBase {
   }
 
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $config = $this->configFactory->getEditable('swiftmailer.transport');
+    $config = $this->config('swiftmailer.transport');
 
     if ($form_state->hasValue(['transport', 'type'])) {
       $config->set('transport', $form_state->getValue(['transport', 'type']));
