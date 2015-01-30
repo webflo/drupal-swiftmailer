@@ -17,9 +17,18 @@ class MessagesForm extends ConfigFormBase {
     return 'swiftmailer_messages_form';
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  protected function getEditableConfigNames() {
+    return [
+      'swiftmailer.message',
+    ];
+  }
+
   public function buildForm(array $form, FormStateInterface $form_state) {
     $form = parent::buildForm($form, $form_state);
-    $config = $this->configFactory->get('swiftmailer.message');
+    $config = $this->config('swiftmailer.message');
 
     $form['#tree'] = TRUE;
 
@@ -99,7 +108,7 @@ class MessagesForm extends ConfigFormBase {
   }
 
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $config = $this->configFactory->get('swiftmailer.message');
+    $config = $this->config('swiftmailer.message');
     $config->set('format', $form_state->getValue(['format', 'type']));
     $config->set('respect_format', $form_state->getValue(['format', 'respect']));
     $config->set('convert_mode', $form_state->getValue(['convert', 'mode']));

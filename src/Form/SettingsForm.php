@@ -18,6 +18,15 @@ class SettingsForm extends ConfigFormBase {
     return 'swiftmailer_settings_form';
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  protected function getEditableConfigNames() {
+    return [
+      'swiftmailer.transport',
+    ];
+  }
+
   public function buildForm(array $form, FormStateInterface $form_state) {
     $form = parent::buildForm($form, $form_state);
     $config = $this->config('swiftmailer.transport');
