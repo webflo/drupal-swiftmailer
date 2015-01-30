@@ -43,75 +43,17 @@ define('SWIFTMAILER_VARIABLE_SENDMAIL_MODE_DEFAULT', 'bs');
 define('SWIFTMAILER_VARIABLE_CHARACTER_SET_DEFAULT', 'UTF-8');
 define('SWIFTMAILER_VARIABLE_SPOOL_DIRECTORY_DEFAULT', sys_get_temp_dir() . '/swiftmailer-spool');
 
-/**
- * Implements hook_menu().
- */
-function swiftmailer_menu() {
-  return;
-
-  $items['admin/config/people/swiftmailer'] = array(
-    'type'              => MENU_NORMAL_ITEM,
-    'title'             => 'E-mail delivery',
-    'description'       => 'Configure settings for e-mail delivery.',
-    'page callback'     => 'swiftmailer_admin_default_page',
-    'file'              => 'includes/pages/swiftmailer_admin_default.inc',
-    'access arguments'  => array(SWIFTMAILER_ADMINISTER),
-  );
-
-
-  $items['admin/config/people/swiftmailer/default'] = array(
-    'type'              => MENU_DEFAULT_LOCAL_TASK,
-    'title'             => 'Library',
-    'description'       => 'Configure where the Swift Mailer Library is located.',
-    'page callback'     => 'swiftmailer_admin_default_page',
-    'file'              => 'includes/pages/swiftmailer_admin_default.inc',
-    'access arguments'  => array(SWIFTMAILER_ADMINISTER),
-    'weight'            => 0,
-  );
-
-  $items['admin/config/people/swiftmailer/transport'] = array(
-    'type'              => MENU_LOCAL_TASK,
-    'title'             => 'Transport',
-    'description'       => 'Configure how Swift Mailer will send e-mails.',
-    'page callback'     => 'swiftmailer_admin_transport_page',
-    'file'              => 'includes/pages/swiftmailer_admin_transport.inc',
-    'access arguments'  => array(SWIFTMAILER_ADMINISTER),
-    'weight'            => 1,
-  );
-
-  $items['admin/config/people/swiftmailer/messages'] = array(
-    'type'              => MENU_LOCAL_TASK,
-    'title'             => 'Messages',
-    'description'       => 'Configure how Swift Mailer will compose messages.',
-    'page callback'     => 'swiftmailer_admin_messages_page',
-    'file'              => 'includes/pages/swiftmailer_admin_messages.inc',
-    'access arguments'  => array(SWIFTMAILER_ADMINISTER),
-    'weight'            => 2,
-  );
-
-  $items['admin/config/people/swiftmailer/test'] = array(
-    'type'              => MENU_LOCAL_TASK,
-    'title'             => 'Test',
-    'description'       => 'Send a test e-mail to verify that the configuration works.',
-    'page callback'     => 'swiftmailer_admin_test_page',
-    'file'              => 'includes/pages/swiftmailer_admin_test.inc',
-    'access arguments'  => array(SWIFTMAILER_ADMINISTER),
-    'weight'            => 2,
-  );
-
-  return $items;
-}
 
 /**
  * Implements hook_mail().
  */
 function swiftmailer_mail($key, &$message) {
 
-  global $user;
+  $user = \Drupal::currentUser();
 
   //$message['params']['format'] = SWIFTMAILER_FORMAT_HTML;
 
-  $text[] = '<h3>' . t('Dear !user,', array('!user' => $user->name)) . '</h3>';
+  $text[] = '<h3>' . t('Dear !user,', array('!user' => $user->getUsername())) . '</h3>';
   $text[] = '<p>' . t('This e-mail has been sent from !site by the Swift Mailer module. The module has been successfully configured.', array('!site' => variable_get('site_name', 'a Drupal site'))) . '</p>';
   $text[] = t('Kind regards') . '<br /><br />';
   $text[] = t('The Swift Mailer module');
@@ -131,17 +73,6 @@ function swiftmailer_theme($existing, $type, $theme, $path) {
         'message' => array(),
       ),
       'mail theme' => TRUE,
-    ),
-  );
-}
-
-/**
- * Implements hook_permission()
- */
-function swiftmailer_permission() {
-  return array(
-    'administer swiftmailer' => array(
-      'title' => t('Administer Swift Mailer'),
     ),
   );
 }
