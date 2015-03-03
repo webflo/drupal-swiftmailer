@@ -46,9 +46,10 @@ class SettingsForm extends ConfigFormBase {
 
       $form['transport'] = array(
         '#id' => 'transport',
-        '#type' => 'fieldset',
+        '#type' => 'details',
         '#title' => t('Transport types'),
         '#description' => t('Which transport type should Drupal use to send e-mails?'),
+        '#open' => TRUE,
       );
 
       // Display the currently configured transport type, or alternatively the
@@ -112,14 +113,14 @@ class SettingsForm extends ConfigFormBase {
         '#title' => t('SMTP server'),
         '#description' => t('The hostname or IP address at which the SMTP server can be reached.'),
         '#required' => TRUE,
-        '#default_value' => $config->get('smtp_host', SWIFTMAILER_VARIABLE_SMTP_HOST_DEFAULT),
+        '#default_value' => $config->get('smtp_host'),
       );
 
       $form['transport']['configuration'][SWIFTMAILER_TRANSPORT_SMTP]['port'] = array(
         '#type' => 'textfield',
         '#title' => t('Port'),
         '#description' => t('The port at which the SMTP server can be reached (defaults to 25)'),
-        '#default_value' => $config->get('smtp_port', SWIFTMAILER_VARIABLE_SMTP_PORT_DEFAULT),
+        '#default_value' => $config->get('smtp_port'),
         '#size' => 10,
       );
 
@@ -128,14 +129,14 @@ class SettingsForm extends ConfigFormBase {
         '#title' => t('Encryption'),
         '#options' => swiftmailer_get_encryption_options(),
         '#description' => t('The type of encryption which should be used (if any)'),
-        '#default_value' => $config->get('smtp_encryption', SWIFTMAILER_VARIABLE_SMTP_ENCRYPTION_DEFAULT),
+        '#default_value' => $config->get('smtp_encryption'),
       );
 
       $form['transport']['configuration'][SWIFTMAILER_TRANSPORT_SMTP]['username'] = array(
         '#type' => 'textfield',
         '#title' => t('Username'),
         '#description' => t('A username required by the SMTP server (leave blank if not required)'),
-        '#default_value' => $config->get('_smtp_username', SWIFTMAILER_VARIABLE_SMTP_USERNAME_DEFAULT),
+        '#default_value' => $config->get('smtp_username'),
         '#attributes' => array(
           'autocomplete' => 'off',
         ),
@@ -145,7 +146,7 @@ class SettingsForm extends ConfigFormBase {
         '#type' => 'password',
         '#title' => t('Password'),
         '#description' => t('A password required by the SMTP server (leave blank if not required)'),
-        '#default_value' => $config->get('_smtp_password', SWIFTMAILER_VARIABLE_SMTP_PASSWORD_DEFAULT),
+        '#default_value' => $config->get('smtp_password'),
         '#attributes' => array(
           'autocomplete' => 'off',
         ),
@@ -228,7 +229,7 @@ class SettingsForm extends ConfigFormBase {
         '#type' => 'textfield',
         '#title' => t('Spool directory'),
         '#description' => t('The absolute path to the spool directory.'),
-        '#default_value' => $config->get('_spool_directory', SWIFTMAILER_VARIABLE_SPOOL_DIRECTORY_DEFAULT),
+        '#default_value' => $config->get('spool_directory'),
       );
     }
     else {
