@@ -461,12 +461,11 @@ class SwiftMailer implements MailInterface {
     // through $message['params']['format'].
     if ($respect_format && !empty($message['headers']['Content-Type'])) {
       $format = $message['headers']['Content-Type'];
-      $format = preg_match('/.*\;/U', $format, $matches);
 
-      if ($format > 0) {
+      if (preg_match('/.*\;/U', $format, $matches)) {
         $applicable_format = trim(substr($matches[0], 0, -1));
       } else {
-        $applicable_format = $default_format;
+        $applicable_format = $message['headers']['Content-Type'];
       }
 
     }
