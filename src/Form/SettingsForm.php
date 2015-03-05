@@ -152,7 +152,7 @@ class SettingsForm extends ConfigFormBase {
         ),
       );
 
-      $current_password = $config->get('_smtp_password');
+      $current_password = $config->get('smtp_password');
       if (!empty($current_password)) {
         $form['transport']['configuration'][SWIFTMAILER_TRANSPORT_SMTP]['password']['#description'] = t('A password
         required by the SMTP server. <em>The currently set password is hidden for security reasons</em>.');
@@ -229,7 +229,7 @@ class SettingsForm extends ConfigFormBase {
         '#type' => 'textfield',
         '#title' => t('Spool directory'),
         '#description' => t('The absolute path to the spool directory.'),
-        '#default_value' => $config->get('spool_directory'),
+        '#default_value' => $config->get('spool_directory', sys_get_temp_dir() . '/swiftmailer-spool'),
       );
     }
     else {
