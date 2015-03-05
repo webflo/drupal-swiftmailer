@@ -8,6 +8,7 @@
 namespace Drupal\swiftmailer\Form;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 
 /**
  * Swift Mailer settings form.
@@ -45,9 +46,10 @@ class SettingsForm extends ConfigFormBase {
 
       $form['transport'] = array(
         '#id' => 'transport',
-        '#type' => 'fieldset',
+        '#type' => 'details',
         '#title' => t('Transport types'),
         '#description' => t('Which transport type should Drupal use to send e-mails?'),
+        '#open' => TRUE,
       );
 
       // Display the currently configured transport type, or alternatively the
@@ -71,7 +73,7 @@ class SettingsForm extends ConfigFormBase {
           'method' => 'replace',
           'effect' => 'fade',
         ),
-        '#description' => t('Not sure which transport type to choose? The !documentation gives you a good overview of the various transport types.', array('!documentation' => _l(t('Swift Mailer documentation'), 'http://swiftmailer.org/docs/sending.html#transport-types'))),
+        '#description' => t('Not sure which transport type to choose? The !documentation gives you a good overview of the various transport types.', array('!documentation' => \Drupal::l($this->t('Swift Mailer documentation'), Url::fromUri('http://swiftmailer.org/docs/sending.html#transport-types')))),
       );
 
       /*
@@ -103,7 +105,7 @@ class SettingsForm extends ConfigFormBase {
         server of your choice. You need to specify which SMTP server
         to use. Please refer to the !documentation for more details
         about this transport type.',
-            array('!documentation' => _l(t('Swift Mailer documentation'), 'http://swiftmailer.org/docs/sending.html#the-smtp-transport'))) . '</p>',
+            array('!documentation' => \Drupal::l($this->t('Swift Mailer documentation'), Url::fromUri('http://swiftmailer.org/docs/sending.html#the-smtp-transport')))) . '</p>',
       );
 
       $form['transport']['configuration'][SWIFTMAILER_TRANSPORT_SMTP]['server'] = array(
@@ -111,14 +113,14 @@ class SettingsForm extends ConfigFormBase {
         '#title' => t('SMTP server'),
         '#description' => t('The hostname or IP address at which the SMTP server can be reached.'),
         '#required' => TRUE,
-        '#default_value' => $config->get('smtp_host', SWIFTMAILER_VARIABLE_SMTP_HOST_DEFAULT),
+        '#default_value' => $config->get('smtp_host'),
       );
 
       $form['transport']['configuration'][SWIFTMAILER_TRANSPORT_SMTP]['port'] = array(
         '#type' => 'textfield',
         '#title' => t('Port'),
         '#description' => t('The port at which the SMTP server can be reached (defaults to 25)'),
-        '#default_value' => $config->get('smtp_port', SWIFTMAILER_VARIABLE_SMTP_PORT_DEFAULT),
+        '#default_value' => $config->get('smtp_port'),
         '#size' => 10,
       );
 
@@ -127,14 +129,14 @@ class SettingsForm extends ConfigFormBase {
         '#title' => t('Encryption'),
         '#options' => swiftmailer_get_encryption_options(),
         '#description' => t('The type of encryption which should be used (if any)'),
-        '#default_value' => $config->get('smtp_encryption', SWIFTMAILER_VARIABLE_SMTP_ENCRYPTION_DEFAULT),
+        '#default_value' => $config->get('smtp_encryption'),
       );
 
       $form['transport']['configuration'][SWIFTMAILER_TRANSPORT_SMTP]['username'] = array(
         '#type' => 'textfield',
         '#title' => t('Username'),
         '#description' => t('A username required by the SMTP server (leave blank if not required)'),
-        '#default_value' => $config->get('_smtp_username', SWIFTMAILER_VARIABLE_SMTP_USERNAME_DEFAULT),
+        '#default_value' => $config->get('smtp_username'),
         '#attributes' => array(
           'autocomplete' => 'off',
         ),
@@ -144,13 +146,13 @@ class SettingsForm extends ConfigFormBase {
         '#type' => 'password',
         '#title' => t('Password'),
         '#description' => t('A password required by the SMTP server (leave blank if not required)'),
-        '#default_value' => $config->get('_smtp_password', SWIFTMAILER_VARIABLE_SMTP_PASSWORD_DEFAULT),
+        '#default_value' => $config->get('smtp_password'),
         '#attributes' => array(
           'autocomplete' => 'off',
         ),
       );
 
-      $current_password = $config->get('_smtp_password');
+      $current_password = $config->get('smtp_password');
       if (!empty($current_password)) {
         $form['transport']['configuration'][SWIFTMAILER_TRANSPORT_SMTP]['password']['#description'] = t('A password
         required by the SMTP server. <em>The currently set password is hidden for security reasons</em>.');
@@ -172,7 +174,7 @@ class SettingsForm extends ConfigFormBase {
         MTA. If you do not provide any path then Swift Mailer
         defaults to /usr/sbin/sendmail. You can read more about
         this transport type in the !documentation.',
-            array('!documentation' => _l(t('Swift Mailer documentation'), 'http://swiftmailer.org/docs/sending.html#the-sendmail-transport'))) . '</p>',
+            array('!documentation' => \Drupal::l($this->t('Swift Mailer documentation'), Url::fromUri('http://swiftmailer.org/docs/sending.html#the-sendmail-transport')))) . '</p>',
       );
 
       $form['transport']['configuration'][SWIFTMAILER_TRANSPORT_SENDMAIL]['path'] = array(
@@ -186,7 +188,7 @@ class SettingsForm extends ConfigFormBase {
         '#type' => 'radios',
         '#title' => t('Mode'),
         '#options' => array('bs' => 'bs', 't' => 't '),
-        '#description' => t('Not sure which option to choose? Go with <em>bs</em>. You can read more about the above two modes in the !documentation.', array('!documentation' => _l(t('Swift Mailer documentation'), 'http://swiftmailer.org/docs/sendmail-transport'))),
+        '#description' => t('Not sure which option to choose? Go with <em>bs</em>. You can read more about the above two modes in the !documentation.', array('!documentation' => \Drupal::l($this->t('Swift Mailer documentation'), Url::fromUri('http://swiftmailer.org/docs/sendmail-transport')))),
         '#default_value' => $config->get('sendmail_mode', SWIFTMAILER_VARIABLE_SENDMAIL_MODE_DEFAULT),
       );
 
@@ -205,7 +207,7 @@ class SettingsForm extends ConfigFormBase {
         configured here. Please refer to the !documentation if you
         would like to read more about how the built-in mail functionality
         in PHP can be configured.',
-            array('!documentation' => _l(t('PHP documentation'), 'http://www.php.net/manual/en/mail.configuration.php'))) . '</p>',
+            array('!documentation' => \Drupal::l($this->t('PHP documentation'), Url::fromUri('http://www.php.net/manual/en/mail.configuration.php')))) . '</p>',
       );
 
       $form['transport']['configuration'][SWIFTMAILER_TRANSPORT_SPOOL] = array(
@@ -227,7 +229,7 @@ class SettingsForm extends ConfigFormBase {
         '#type' => 'textfield',
         '#title' => t('Spool directory'),
         '#description' => t('The absolute path to the spool directory.'),
-        '#default_value' => $config->get('_spool_directory', SWIFTMAILER_VARIABLE_SPOOL_DIRECTORY_DEFAULT),
+        '#default_value' => $config->get('spool_directory', sys_get_temp_dir() . '/swiftmailer-spool'),
       );
     }
     else {
@@ -235,7 +237,7 @@ class SettingsForm extends ConfigFormBase {
       $form['message'] = array(
         '#markup' => t('<p>You need to configure the location of the Swift Mailer library. Please visit the !page
         and configure the library to enable the configuration options on this page.</p>',
-          array('!page' => _l(t('library configuration page'), 'admin/config/people/swiftmailer'))),
+          array('!page' => \Drupal::l($this->t('library configuration page'), 'admin/config/people/swiftmailer'))),
       );
 
     }

@@ -90,7 +90,9 @@ class Conversion {
    *   and otherwise FALSE.
    */
   public static function swiftmailer_is_parameterized_header($key, $value) {
-    if (preg_match('/;/', $value)) {
+    // Assume the header is parameterized if there is at least one ;, always
+    // treat the Content-Type header as parameterized.
+    if (preg_match('/;/', $value) || $key == 'Content-Type') {
       return TRUE;
     }
     else {
