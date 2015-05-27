@@ -9,6 +9,7 @@ namespace Drupal\swiftmailer\Plugin\Mail;
 
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\Unicode;
+use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Mail\MailInterface;
 use Drupal\Core\Site\Settings;
 use Exception;
@@ -361,7 +362,7 @@ class SwiftMailer implements MailInterface {
     // Iterate through each array element.
     foreach ($files as $file) {
 
-      if ($file instanceof stdClass) {
+      if ($file instanceof \stdClass) {
 
         // Validate required fields.
         if (empty($file->uri) || empty($file->filename) || empty($file->filemime)) {
@@ -369,11 +370,11 @@ class SwiftMailer implements MailInterface {
         }
 
         // Get file data.
-        if (valid_url($file->uri, TRUE)) {
+        if (UrlHelper::isValid($file->uri, TRUE)) {
           $content = file_get_contents($file->uri);
         }
         else {
-          $content = file_get_contents(drupal_realpath($file->uri));
+          $content = file_get_contents(\Drupal::service('file_system')->realpath($file->uri));
         }
 
         $filename = $file->filename;
@@ -400,7 +401,7 @@ class SwiftMailer implements MailInterface {
     // Iterate through each array element.
     foreach ($images as $image) {
 
-      if ($image instanceof stdClass) {
+      if ($image instanceof \stdClass) {
 
         // Validate required fields.
         if (empty($image->uri) || empty($image->filename) || empty($image->filemime) || empty($image->cid)) {
@@ -411,11 +412,11 @@ class SwiftMailer implements MailInterface {
         $cid = NULL;
 
         // Get image data.
-        if (valid_url($image->uri, TRUE)) {
+        if (UrlHelper::isValid($image->uri, TRUE)) {
           $content = file_get_contents($image->uri);
         }
         else {
-          $content = file_get_contents(drupal_realpath($image->uri));
+          $content = file_get_contents(\Drupal::service('file_system')->realpath($image->uri));
         }
 
         $filename = $image->filename;
