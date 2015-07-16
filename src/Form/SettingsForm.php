@@ -181,7 +181,7 @@ class SettingsForm extends ConfigFormBase {
         '#type' => 'textfield',
         '#title' => t('MTA path'),
         '#description' => t('The absolute path to the locally installed MTA.'),
-        '#default_value' => $config->get('sendmail_path', SWIFTMAILER_VARIABLE_SENDMAIL_PATH_DEFAULT),
+        '#default_value' => $config->get('sendmail_path'),
       );
 
       $form['transport']['configuration'][SWIFTMAILER_TRANSPORT_SENDMAIL]['mode'] = array(
@@ -189,7 +189,7 @@ class SettingsForm extends ConfigFormBase {
         '#title' => t('Mode'),
         '#options' => array('bs' => 'bs', 't' => 't '),
         '#description' => t('Not sure which option to choose? Go with <em>bs</em>. You can read more about the above two modes in the !documentation.', array('!documentation' => \Drupal::l($this->t('Swift Mailer documentation'), Url::fromUri('http://swiftmailer.org/docs/sendmail-transport')))),
-        '#default_value' => $config->get('sendmail_mode', SWIFTMAILER_VARIABLE_SENDMAIL_MODE_DEFAULT),
+        '#default_value' => $config->get('sendmail_mode'),
       );
 
       $form['transport']['configuration'][SWIFTMAILER_TRANSPORT_NATIVE] = array(
