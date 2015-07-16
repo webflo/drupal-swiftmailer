@@ -26,7 +26,7 @@ swiftmailer.transport:
       type: string
       label: 'SMTP Host'
     smtp_port:
-      type: string
+      type: integer
       label: 'SMTP Port'
     smtp_encryption:
       type: string
