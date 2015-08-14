@@ -1,5 +1,5 @@
 swiftmailer.message:
-  type: mapping
+  type: config_object
   label: 'Swift Mailer message settings'
   mapping:
     format:
@@ -16,7 +16,7 @@ swiftmailer.message:
       label: 'Character set'
 
 swiftmailer.transport:
-  type: mapping
+  type: config_object
   label: 'Swift Mailer transport settings'
   mapping:
     transport:
