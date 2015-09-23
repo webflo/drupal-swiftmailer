@@ -21,8 +21,18 @@ class SwiftMailerSettingsTest extends WebTestBase {
    * @var array
    */
   public static $modules = [
-    'swiftmailer'
+    'swiftmailer',
+    'block',
   ];
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp() {
+    parent::setUp();
+    $this->drupalPlaceBlock('local_tasks_block');
+    $this->drupalPlaceBlock('local_actions_block');
+  }
 
   /**
    * Tests the Transport Settings.
