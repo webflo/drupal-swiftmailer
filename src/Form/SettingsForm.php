@@ -73,7 +73,7 @@ class SettingsForm extends ConfigFormBase {
           'method' => 'replace',
           'effect' => 'fade',
         ),
-        '#description' => t('Not sure which transport type to choose? The !documentation gives you a good overview of the various transport types.', array('!documentation' => \Drupal::l($this->t('Swift Mailer documentation'), Url::fromUri('http://swiftmailer.org/docs/sending.html#transport-types')))),
+        '#description' => t('Not sure which transport type to choose? The @documentation gives you a good overview of the various transport types.', array('@documentation' => \Drupal::l($this->t('Swift Mailer documentation'), Url::fromUri('http://swiftmailer.org/docs/sending.html#transport-types')))),
       );
 
       /*
@@ -103,9 +103,9 @@ class SettingsForm extends ConfigFormBase {
       $form['transport']['configuration'][SWIFTMAILER_TRANSPORT_SMTP]['description'] = array(
         '#markup' => '<p>' . t('This transport type will send all e-mails using a SMTP
         server of your choice. You need to specify which SMTP server
-        to use. Please refer to the !documentation for more details
+        to use. Please refer to the @documentation for more details
         about this transport type.',
-            array('!documentation' => \Drupal::l($this->t('Swift Mailer documentation'), Url::fromUri('http://swiftmailer.org/docs/sending.html#the-smtp-transport')))) . '</p>',
+            array('@documentation' => \Drupal::l($this->t('Swift Mailer documentation'), Url::fromUri('http://swiftmailer.org/docs/sending.html#the-smtp-transport')))) . '</p>',
       );
 
       $form['transport']['configuration'][SWIFTMAILER_TRANSPORT_SMTP]['server'] = array(
@@ -173,8 +173,8 @@ class SettingsForm extends ConfigFormBase {
         locally installed MTA to use by providing a path to the
         MTA. If you do not provide any path then Swift Mailer
         defaults to /usr/sbin/sendmail. You can read more about
-        this transport type in the !documentation.',
-            array('!documentation' => \Drupal::l($this->t('Swift Mailer documentation'), Url::fromUri('http://swiftmailer.org/docs/sending.html#the-sendmail-transport')))) . '</p>',
+        this transport type in the @documentation.',
+            array('@documentation' => \Drupal::l($this->t('Swift Mailer documentation'), Url::fromUri('http://swiftmailer.org/docs/sending.html#the-sendmail-transport')))) . '</p>',
       );
 
       $form['transport']['configuration'][SWIFTMAILER_TRANSPORT_SENDMAIL]['path'] = array(
@@ -188,7 +188,7 @@ class SettingsForm extends ConfigFormBase {
         '#type' => 'radios',
         '#title' => t('Mode'),
         '#options' => array('bs' => 'bs', 't' => 't '),
-        '#description' => t('Not sure which option to choose? Go with <em>bs</em>. You can read more about the above two modes in the !documentation.', array('!documentation' => \Drupal::l($this->t('Swift Mailer documentation'), Url::fromUri('http://swiftmailer.org/docs/sendmail-transport')))),
+        '#description' => t('Not sure which option to choose? Go with <em>bs</em>. You can read more about the above two modes in the @documentation.', array('@documentation' => \Drupal::l($this->t('Swift Mailer documentation'), Url::fromUri('http://swiftmailer.org/docs/sendmail-transport')))),
         '#default_value' => $config->get('sendmail_mode'),
       );
 
@@ -204,10 +204,10 @@ class SettingsForm extends ConfigFormBase {
       $form['transport']['configuration'][SWIFTMAILER_TRANSPORT_NATIVE]['description'] = array(
         '#markup' => '<p>' . t('This transport type will send all e-mails using the built-in
         mail functionality of PHP. This transport type can not be
-        configured here. Please refer to the !documentation if you
+        configured here. Please refer to the @documentation if you
         would like to read more about how the built-in mail functionality
         in PHP can be configured.',
-            array('!documentation' => \Drupal::l($this->t('PHP documentation'), Url::fromUri('http://www.php.net/manual/en/mail.configuration.php')))) . '</p>',
+            array('@documentation' => \Drupal::l($this->t('PHP documentation'), Url::fromUri('http://www.php.net/manual/en/mail.configuration.php')))) . '</p>',
       );
 
       $form['transport']['configuration'][SWIFTMAILER_TRANSPORT_SPOOL] = array(

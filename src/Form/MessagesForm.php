@@ -78,7 +78,7 @@ class MessagesForm extends ConfigFormBase {
         '#type' => 'checkbox',
         '#title' => t('Generate alternative plain text version.'),
         '#default_value' => $config->get('convert_mode', SWIFTMAILER_VARIABLE_CONVERT_MODE_DEFAULT),
-        '#description' => t('Please refer to !link for more details about how the alternative plain text version will be generated.', array('!link' => \Drupal::l('html2text', Url::fromUri('http://www.chuggnutt.com/html2text')))),
+        '#description' => t('Please refer to @link for more details about how the alternative plain text version will be generated.', array('@link' => \Drupal::l('html2text', Url::fromUri('http://www.chuggnutt.com/html2text')))),
       );
 
       $form['character_set'] = array(
